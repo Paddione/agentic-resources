@@ -1,0 +1,8 @@
+schema_version: 1
+
+repo:
+  main_branch: master
+  scopes: free
+  tickets: none
+  generated_artifacts: false
+  task_runner: none

@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "skills": {
+    "agentic-resource-lookup": {
+      "path": "domains/devtools/agentic-resource-lookup",
+      "source": "bachelorprojekt"
+    },
+    "bachelorprojekt-vim": {
+      "path": "domains/projects/bachelorprojekt-vim",
+      "source": "bachelorprojekt"
+    },
+    "code-analyzer": {
+      "path": "core/code-analyzer",
+      "source": "home",
+      "upstream": {
+        "mode": "curated; codebase-memory evidence, churn, prioritized changes and acceptance criteria",
+        "path": "skills/code-analyzer",
+        "revision": "399d0ae7c85b2d48ebdeed2bba0355860bdd006a",
+        "source": "https://github.com/jablonkai/skills"
+      }
+    },
+    "code-graph-interpretation": {
+      "path": "domains/devtools/code-graph-interpretation",
+      "source": "bachelorprojekt"
+    },
+    "codebase-memory": {
+      "path": "core/codebase-memory",
+      "source": "home"
+    },
+    "database-specialist": {
+      "path": "domains/data/database-specialist",
+      "source": "bachelorprojekt"
+    },
+    "dev-flow-chore": {
+      "path": "lifecycle/dev-flow-chore",
+      "source": "merged"
+    },
+    "dev-flow-e2e": {
+      "path": "lifecycle/dev-flow-e2e",
+      "source": "merged"
+    },
+    "dev-flow-execute": {
+      "path": "lifecycle/dev-flow-execute",
+      "source": "merged"
+    },
+    "dev-flow-plan": {
+      "path": "lifecycle/dev-flow-plan",
+      "source": "merged"
+    },
+    "executing-plans": {
+      "path": "core/executing-plans",
+      "source": "home",
+      "upstream": {
+        "mode": "curated; standalone, no upstream helper/delegation dependencies",
+        "path": "skills/executing-plans",
+        "revision": "bb92a77741419a4ab5f06e711a283343f1ada0c3",
+        "source": "https://github.com/obra/superpowers"
+      }
+    },
+    "explore": {
+      "path": "core/explore",
+      "source": "home"
+    },
+    "find-skills": {
+      "path": "core/find-skills",
+      "source": "home"
+    },
+    "freetoken-setup": {
+      "path": "domains/devtools/freetoken-setup",
+      "source": "bachelorprojekt"
+    },
+    "gh-fix-ci": {
+      "path": "domains/devtools/gh-fix-ci",
+      "source": "bachelorprojekt"
+    },
+    "git-workflow": {
+      "path": "core/git-workflow",
+      "source": "merged"
+    },
+    "gitops-cluster-debug": {
+      "path": "domains/gitops/gitops-cluster-debug",
+      "source": "bachelorprojekt"
+    },
+    "gitops-knowledge": {
+      "path": "domains/gitops/gitops-knowledge",
+      "source": "bachelorprojekt"
+    },
+    "gitops-repo-audit": {
+      "path": "domains/gitops/gitops-repo-audit",
+      "source": "bachelorprojekt"
+    },
+    "hf-mem": {
+      "path": "domains/ml-training/hf-mem",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-best": {
+      "path": "domains/ml-training/huggingface-best",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-community-evals": {
+      "path": "domains/ml-training/huggingface-community-evals",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-datasets": {
+      "path": "domains/ml-training/huggingface-datasets",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-llm-trainer": {
+      "path": "domains/ml-training/huggingface-llm-trainer",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-local-models": {
+      "path": "domains/ml-training/huggingface-local-models",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-lora-space-builder": {
+      "path": "domains/ml-training/huggingface-lora-space-builder",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-paper-publisher": {
+      "path": "domains/ml-training/huggingface-paper-publisher",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-papers": {
+      "path": "domains/ml-training/huggingface-papers",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-tool-builder": {
+      "path": "domains/ml-training/huggingface-tool-builder",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-trackio": {
+      "path": "domains/ml-training/huggingface-trackio",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-vision-trainer": {
+      "path": "domains/ml-training/huggingface-vision-trainer",
+      "source": "bachelorprojekt"
+    },
+    "huggingface-zerogpu": {
+      "path": "domains/ml-training/huggingface-zerogpu",
+      "source": "bachelorprojekt"
+    },
+    "incident-response": {
+      "path": "core/incident-response",
+      "source": "merged"
+    },
+    "infra-ops": {
+      "path": "domains/gitops/infra-ops",
+      "source": "bachelorprojekt"
+    },
+    "lavish": {
+      "path": "domains/devtools/lavish",
+      "source": "bachelorprojekt"
+    },
+    "llama-cpp": {
+      "path": "domains/ml-training/llama-cpp",
+      "source": "bachelorprojekt"
+    },
+    "mishap-tracker": {
+      "path": "core/mishap-tracker",
+      "source": "merged"
+    },
+    "opencode-git-workflow": {
+      "path": "lifecycle/opencode-git-workflow",
+      "source": "bachelorprojekt"
+    },
+    "operations-management": {
+      "path": "core/operations-management",
+      "source": "merged"
+    },
+    "playwright-best-practices": {
+      "path": "domains/website/playwright-best-practices",
+      "source": "bachelorprojekt"
+    },
+    "postgres-audit": {
+      "path": "domains/data/postgres-audit",
+      "source": "home"
+    },
+    "pytest-patterns": {
+      "path": "domains/devtools/pytest-patterns",
+      "source": "bachelorprojekt"
+    },
+    "python-testing-patterns": {
+      "path": "domains/testing/python-testing-patterns",
+      "source": "home",
+      "upstream": {
+        "mode": "vendor; includes references and license",
+        "path": "plugins/python-development/skills/python-testing-patterns",
+        "revision": "46891e7e60da0e52baf1050b7b6391b64e84c6d9",
+        "source": "https://github.com/wshobson/agents"
+      }
+    },
+    "references": {
+      "path": "core/references",
+      "source": "merged"
+    },
+    "repo-hygiene": {
+      "path": "core/repo-hygiene",
+      "source": "merged"
+    },
+    "sandbox-plan-executor": {
+      "path": "domains/misc/sandbox-plan-executor",
+      "source": "home",
+      "upstream": {
+        "mode": "local bounded execution contract",
+        "source": "local"
+      }
+    },
+    "security-specialist": {
+      "path": "core/security-specialist",
+      "source": "bachelorprojekt"
+    },
+    "skill-craft": {
+      "path": "domains/devtools/skill-craft",
+      "source": "bachelorprojekt"
+    },
+    "skill-creator": {
+      "path": "domains/devtools/skill-creator",
+      "source": "merged"
+    },
+    "sota-testing": {
+      "path": "domains/testing/sota-testing",
+      "source": "merged"
+    },
+    "system-audit": {
+      "path": "domains/devtools/system-audit",
+      "source": "bachelorprojekt"
+    },
+    "toolset-curate": {
+      "path": "domains/devtools/toolset-curate",
+      "source": "bachelorprojekt"
+    },
+    "trace-proof": {
+      "path": "core/trace-proof",
+      "source": "home"
+    },
+    "train-sentence-transformers": {
+      "path": "domains/ml-training/train-sentence-transformers",
+      "source": "bachelorprojekt"
+    },
+    "training-memory": {
+      "path": "core/training-memory",
+      "source": "home"
+    },
+    "transformers-js": {
+      "path": "domains/ml-training/transformers-js",
+      "source": "bachelorprojekt"
+    },
+    "trl-training": {
+      "path": "domains/ml-training/trl-training",
+      "source": "bachelorprojekt"
+    },
+    "update-dependencies": {
+      "path": "domains/devtools/update-dependencies",
+      "source": "bachelorprojekt"
+    },
+    "vitest": {
+      "path": "domains/testing/vitest",
+      "source": "merged"
+    },
+    "vitest-testing": {
+      "path": "domains/testing/vitest-testing",
+      "source": "merged"
+    },
+    "web-audit": {
+      "path": "domains/website/web-audit",
+      "source": "bachelorprojekt"
+    },
+    "website-specialist": {
+      "path": "domains/website/website-specialist",
+      "source": "bachelorprojekt"
+    },
+    "writing-plans": {
+      "path": "core/writing-plans",
+      "source": "home",
+      "upstream": {
+        "mode": "curated; repo lifecycle and bounded local execution",
+        "path": "skills/writing-plans",
+        "revision": "bb92a77741419a4ab5f06e711a283343f1ada0c3",
+        "source": "https://github.com/obra/superpowers"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "skill_name": "codebase-memory",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Export the whole repo graph as embeddable JSON. query_graph returned 50 rows and has_more=true, graph receipt is unknown; commit shown equals HEAD. Can I mark it complete and wire caller navigation?",
+      "expected_output": "Refuse false completeness, obtain successful snapshot evidence, exhaust pagination and coverage; source-grounded inbound caller navigation.",
+      "files": [],
+      "assertions": [
+        "Rejects complete export from has_more=true",
+        "Treats unknown receipt as unknown freshness",
+        "Binds caller navigation to exact symbols and source evidence"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Improve intent search with symbol embeddings. Fused recall .469, cross-encoder .828, graph boost .828. Skip parser errors to get full coverage and register direct graph MCPs if hub tools are missing.",
+      "expected_output": "Attribute measured gain to cross-encoder, retain parser gaps, use central hub with no direct client duplicates.",
+      "files": [],
+      "assertions": [
+        "Attributes recall gain to cross-encoder rather than graph boost",
+        "Retains parser gaps rather than claiming full coverage",
+        "Uses central hub rather than adding direct per-harness registrations"
+      ]
+    }
+  ]
+}

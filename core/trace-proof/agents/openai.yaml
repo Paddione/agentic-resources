@@ -1,0 +1,4 @@
+interface:
+  display_name: "Trace Proof"
+  short_description: "Verify tracing and inspect local AI telemetry"
+  default_prompt: "Use $trace-proof to verify tracing end to end and report errors, latency, and token usage."

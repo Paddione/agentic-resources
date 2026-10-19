@@ -1,0 +1,78 @@
+{
+  "runtime_commit": "fe1497fbff92a0067ef605eef2428895838cfb3b",
+  "scope": "Six local Linux/WSL harnesses, through HTTPS gateway and owner ToolHive views",
+  "results": [
+    {
+      "owner": "codex",
+      "tool_count": 287,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    },
+    {
+      "owner": "claude",
+      "tool_count": 287,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    },
+    {
+      "owner": "muse",
+      "tool_count": 287,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    },
+    {
+      "owner": "gemini",
+      "tool_count": 287,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    },
+    {
+      "owner": "opencode",
+      "tool_count": 287,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    },
+    {
+      "owner": "qwen",
+      "tool_count": 270,
+      "graph_query": "ok",
+      "unavailable": [
+        "bge-mcp"
+      ]
+    }
+  ],
+  "checks": {
+    "artifact_contract": {
+      "passed": 15,
+      "total": 15
+    },
+    "hub_regressions": {
+      "passed": 8,
+      "total": 8
+    },
+    "python_setup_renderer": {
+      "passed": 8,
+      "total": 8
+    },
+    "pinned_toolhive_integration": {
+      "passed": 2,
+      "total": 2
+    },
+    "skill_evaluations": "Two paired read-only simulations; not a real-repository navigation benchmark"
+  },
+  "limitations": [
+    "bge-mcp unavailable: devmesh host gpu-metal unreachable",
+    "Portable artifact contract and validator supplied; no full repository export built",
+    "Project-owned MCP registries and native Windows profiles were not migrated"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-08",
+  "repositories": [
+    "/home/patrick/unsloth-boxes",
+    "/home/patrick"
+  ],
+  "roles": [
+    "coordinator",
+    "plan-executor",
+    "coderepograph-specialist",
+    "script-task-specialist"
+  ],
+  "platforms": [
+    "Ubuntu",
+    "WSL2"
+  ],
+  "training_gpu": "RTX 5070 Ti 16 GB",
+  "targets": [
+    {
+      "name": "ThinkPad T14s Gen 3 21BR00CDGE",
+      "ram_gb": 16,
+      "ram_type": "DDR5",
+      "cpu": "unverified",
+      "igpu": "Intel integrated; exact configuration unverified"
+    },
+    {
+      "name": "HP Pavilion x360 14-dw",
+      "ram_gb": 16,
+      "ram_type": "DDR4",
+      "cpu": "unverified",
+      "igpu": "configuration unverified"
+    },
+    {
+      "name": "3 desktop hosts",
+      "ram_gb_each": 16,
+      "cpu": "quadcore i5; exact models unverified",
+      "gpu": null
+    }
+  ],
+  "deployment_goal": "One selected standalone GGUF per role; coordinator plus one specialist resident; optional LAN orchestration",
+  "candidates": [
+    "Qwen3.5-0.8B",
+    "Qwen3.5-2B",
+    "Qwen3.5-4B",
+    "LiquidAI/LFM2.5-1.2B-Instruct (optional coordinator)"
+  ],
+  "history_status": "No run manifests or finished GGUF reports imported yet. Repository documents mention historical smoke tests; not independently verified.",
+  "next_action": "Inventory existing local manifests and GGUF evaluation reports; establish held-out task suites for both repositories before training."
+}

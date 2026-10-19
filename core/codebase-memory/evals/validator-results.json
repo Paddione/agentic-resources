@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "name": "valid-source",
+      "passed": true
+    },
+    {
+      "name": "reject-out-of-file-span",
+      "passed": true
+    },
+    {
+      "name": "reject-stale-source",
+      "passed": true
+    },
+    {
+      "name": "reject-dangling-edge",
+      "passed": true
+    },
+    {
+      "name": "reject-traversal",
+      "passed": true
+    },
+    {
+      "name": "reject-windows-path",
+      "passed": true
+    },
+    {
+      "name": "reject-unexhausted-complete",
+      "passed": true
+    },
+    {
+      "name": "reject-missing-generation",
+      "passed": true
+    },
+    {
+      "name": "reject-unknown-coverage-complete",
+      "passed": true
+    },
+    {
+      "name": "reject-duplicate-id",
+      "passed": true
+    },
+    {
+      "name": "reject-bool-confidence",
+      "passed": true
+    },
+    {
+      "name": "reject-embedding-drift",
+      "passed": true
+    },
+    {
+      "name": "reject-nonfinite-vector",
+      "passed": true
+    },
+    {
+      "name": "reject-malformed-node",
+      "passed": true
+    },
+    {
+      "name": "partial-labelled",
+      "passed": true
+    }
+  ]
+}

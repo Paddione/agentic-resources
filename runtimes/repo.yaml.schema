@@ -1,0 +1,19 @@
+# repo.yaml — Consumer-Profil für agentic-resources (Schema v1).
+# Liegt im Root des Consumer-Repos. Geteilte Skills lesen daraus die
+# Repo-Spezifika, statt sie als Fork zu duplizieren. Alle Schlüssel optional;
+# fehlende Schlüssel → Skill nennt die Annahme explizit.
+schema_version: 1
+
+repo:
+  # Default-Branch für Pull-First/Rebase (z.B. main, master).
+  main_branch: main
+  # Commit-Scopes: "free" oder Pfad zur Allowlist-Quelle.
+  scopes: free
+  # Ticket-System: "none" oder "github".
+  tickets: none
+  # true, wenn das Repo committete generierte Artefakte + Freshness-Guard hat.
+  generated_artifacts: false
+  # Task-Runner für verifizierende Kommandos ("taskfile" oder "none").
+  task_runner: none
+
+# Beispielprofile liegen in runtimes/profiles/ (dotfiles.yaml, bachelorprojekt.yaml).

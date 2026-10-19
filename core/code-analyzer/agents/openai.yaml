@@ -1,0 +1,4 @@
+interface:
+  display_name: "Actionable Code Analysis"
+  short_description: "Turn verified graph findings into prioritized code improvements"
+  default_prompt: "Use $code-analyzer with $codebase-memory to derive source-verified improvements, rank impact and effort, and specify changes, tests and acceptance criteria."

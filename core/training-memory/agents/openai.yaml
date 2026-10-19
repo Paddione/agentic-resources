@@ -1,0 +1,4 @@
+interface:
+  display_name: "Training Memory"
+  short_description: "Trainingsstand und GGUF-Evaluationen fortführen"
+  default_prompt: "Nutze $training-memory, um den Trainingsstand und die GGUF-Evaluationen zu prüfen und fortzuführen."

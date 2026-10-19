@@ -1,0 +1,25 @@
+{
+  "skill_name": "code-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Priorisiere anhand dieser vollständigen Fallbeschreibung: stable.py ist eine getestete stabile Utility mit 180 Aufrufern und 1 Commit in sechs Monaten. billing.py hat 9 Aufrufer, 28 Commits und einen im aktuellen Quelltext belegten Importzyklus billing -> taxes -> billing. Der Zyklus erzwingt einen fragilen verzögerten Import. Projektchecks: pytest tests/billing -q. Aktueller Graph vollständig und source-verifiziert. Leite einen begrenzten Vorschlag mit Abnahme ab. Erfinde keine Dateizeilen.",
+      "expected_output": "billing vor Utility; konkrete Kantenänderung als zu prüfender Vorschlag, Verhalten erhalten, Testkommando und messbare Abnahme; fehlende Details offen.",
+      "assertions": [
+        "Prioritizes billing over stable utility",
+        "Does not fabricate source lines or claim executed tests",
+        "Proposes bounded investigation/change with behavior preservation and measurable acceptance"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Der Graph vom vorletzten Commit zeigt null Aufrufer für plugins/send.py:12 register_handler. Plugin-Verzeichnis ist teilweise nicht indexiert. Ein dynamischer Loader ist vorhanden, dessen Konfiguration noch nicht gelesen wurde. Kann das weg? Gib den nächsten umsetzbaren Schritt an.",
+      "expected_output": "Keine Löschfreigabe; Aktualität und Coverage benennen, Registrierung/Loader-Konfiguration prüfen, Unsicherheit ausweisen.",
+      "assertions": [
+        "Does not authorize deletion",
+        "Explicitly identifies stale graph and partial coverage",
+        "Checks dynamic loader/registration before action"
+      ]
+    }
+  ]
+}

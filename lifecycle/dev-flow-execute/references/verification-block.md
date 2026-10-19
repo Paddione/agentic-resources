@@ -1,0 +1,1 @@
+../../../core/references/verification-block.md

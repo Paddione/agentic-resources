@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "manifest": {
+    "repo": "fixture",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "generation": "receipt-1",
+    "tool_version": "fixture-1",
+    "scope": [
+      "."
+    ],
+    "dirty": false,
+    "complete": true,
+    "pagination_exhausted": true
+  },
+  "files": [
+    {
+      "path": "app.py",
+      "sha256": "345a09077e88e5b84f401d3d3e82aee36008984b51eab4f049c08e4362539d3c",
+      "coverage": "indexed"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "hello",
+      "kind": "Function",
+      "qualified_name": "app.hello",
+      "origin": "source",
+      "path": "app.py",
+      "start_line": 1,
+      "end_line": 2
+    }
+  ],
+  "edges": [
+    {
+      "id": "self",
+      "source": "hello",
+      "target": "hello",
+      "kind": "CALLS",
+      "evidence": "parsed",
+      "strategy": "fixture"
+    }
+  ]
+}

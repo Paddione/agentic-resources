@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Code Graph"
+  short_description: "Generate, embed and navigate source-grounded code graphs"
+  default_prompt: "Use $codebase-memory to build or navigate the repository graph via the central MCP hub, verify its snapshot and coverage, and validate portable artifacts."
