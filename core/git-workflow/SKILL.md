@@ -122,9 +122,11 @@ Allowlist ist: Scope-Preflight vor `gh pr create` laufen lassen.
 
 ## Schritt 5 — CI Fix Loop
 
-Nach dem Push `gh pr checks <n> --watch` — warten bis grün. Bei Fehlern: Log
-lesen, lokal fixen, committen, pushen, wiederholen. Merge-Konflikte sofort per
-Rebase auflösen, nicht aussitzen:
+Nach dem Push CI- und Merge-Status überwachen: `bash scripts/pr-health-check.sh <n>`
+(repo-eigenes Äquivalent, falls vorhanden) prüft CI-Rollup UND Git-Mergeability
+(`DIRTY`/`CONFLICTING`/`BEHIND`); danach `gh pr checks <n> --watch` — warten bis
+grün. Bei Fehlern: Log lesen, lokal fixen, committen, pushen, wiederholen.
+Merge-Konflikte sofort per Rebase auflösen, nicht aussitzen:
 
 ```bash
 git fetch origin <main_branch> && git rebase origin/<main_branch>
