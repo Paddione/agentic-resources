@@ -54,7 +54,11 @@ Betroffene Suiten laufen lassen (Befehle aus `repo.task_runner`; bei
 
 Nur-wenn-`generated_artifacts`: Vor der Artefakt-Regeneration erneut auf
 Divergenz zu `origin/<main_branch>` prüfen (seit Schritt 0 kann die Basis
-weitergerückt sein) und erst danach regenerieren. Divergenz zählen:
+weitergerückt sein) und erst danach regenerieren.
+
+### Rebase-Preflight
+
+Divergenz zählen (nötigenfalls Rebase vor dem Regen-Lauf):
 
 ```bash
 git fetch origin <main_branch>

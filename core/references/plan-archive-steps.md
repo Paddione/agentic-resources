@@ -3,7 +3,7 @@
 Branch aus `repo.main_branch` auflösen (`MAIN=$(yq .repo.main_branch repo.yaml)`).
 
 Retiriert: `ticket.sh archive-plan` ist kein primärer Pfad mehr — Archiv läuft
-über Finalizer bzw. die manuelle Einheit unten. Kein MCP-first als Ersatz.
+über Finalizer bzw. die manuelle Einheit unten.
 
 Mit Finalizer (nur wenn `scripts/devflow-post-merge-finalize.sh` ohne Ticket-Backend läuft):
 
