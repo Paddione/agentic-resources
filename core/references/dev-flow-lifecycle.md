@@ -17,7 +17,7 @@ Jede Mutation hat einen isolierten Worktree, eine propagierte Session-SID und ei
 
 ## Execute-Swimlane und Exception-Loop
 
-Der Implementer wendet den Plan an, verifiziert RED→GREEN, committet, pusht, erstellt den PR, berichtet und stoppt. Der Orchestrator reviewt nur auf Wunsch, prüft aber immer fail-closed das lokale Phase-Chain-Gate vor `gh pr merge --auto --squash`; bereits aktives Auto-Merge bleibt an. Danach hält er den CI-/Konflikt-Exception-Loop bis `MERGED`; spätere rote Checks, Ersatzläufe nach Korrektur-Push oder `DIRTY`/`CONFLICTING` nach Main-Branch-Vorsprung gehen an denselben Implementer. Jeder neue Commit tritt erneut in Phase-Chain-Gate und invalidierte CI-Gates ein (plus Review nur auf Wunsch).
+Der Implementer wendet den Plan an, verifiziert RED→GREEN, committet, pusht, erstellt den PR, berichtet und stoppt. Der Orchestrator reviewt nur auf Zuruf, prüft aber immer fail-closed das lokale Phase-Chain-Gate vor `gh pr merge --auto --squash`; bereits aktives Auto-Merge bleibt an. Danach hält er den CI-/Konflikt-Exception-Loop bis `MERGED`; spätere rote Checks, Ersatzläufe nach Korrektur-Push oder `DIRTY`/`CONFLICTING` nach Main-Branch-Vorsprung gehen an denselben Implementer. Jeder neue Commit tritt erneut in Phase-Chain-Gate und invalidierte CI-Gates ein (plus Review nur auf Wunsch) — dies ist die geforderte phase-chain re-entry.
 
 Nach dem Merge-Request wartet ein frischer Finalizer per `ci-fix-loop` und behauptet bei Timeout, offenem/geschlossenem PR, spätem CI-Fehler oder Konflikt keinen Abschluss (mit Tickets: kein Ticket schließen). Erst nach `MERGED` läuft das manuelle Archiv; die Operation ist idempotent.
 

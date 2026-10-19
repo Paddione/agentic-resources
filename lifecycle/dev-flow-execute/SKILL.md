@@ -127,6 +127,9 @@ Code-Review ist **keine** Merge-Voraussetzung.
    kein Review-Subagent gestartet.
 3. Fail-closed den Phase-Chain-Gate prüfen, dann Auto-Merge anfordern:
 ```bash
+bash scripts/devflow-phase.sh check
+```
+```bash
 # GitHub merged selbstständig, sobald Required Checks grün sind.
 # KEIN --delete-branch: die Archivierung braucht den Branch noch (Löschung in 7.5).
 # Die Anforderung ist idempotent, wenn Auto-Merge bereits aktiv ist.
@@ -144,7 +147,7 @@ Spawne einen **frischen Finalizer-Subagenten** (nativer Dispatch, `general-purpo
 (only-if-tickets: zusätzlich Ticket-ID `$TICKET_ID` und Resolution `shipped`/`fixed`).
 
 Auftrag an den Finalizer (wörtlich Teil des Prompts):
-- **Merge-Wait-Loop zuerst:** [ci-fix-loop](references/ci-fix-loop.md) §"PR-Merge-Wait-Loop" lesen und von dort ausführen. Bei Timeout strukturiert berichten — keine Closure behaupten (only-if-tickets: bei Timeout KEIN Ticket schließen — Drift Ticket=done bei PR=OPEN vermeiden).
+- **Merge-Wait-Loop zuerst (T001149-M1):** [ci-fix-loop](references/ci-fix-loop.md) §"PR-Merge-Wait-Loop" lesen und von dort ausführen. Bei Timeout strukturiert berichten — keine Closure behaupten (only-if-tickets: bei Timeout KEIN Ticket schließen — Drift Ticket=done bei PR=OPEN vermeiden).
 - **Abschluss über die manuelle Einheit,** keine freie Rekonstruktion der Einzelschritte: [plan-archive-steps](references/plan-archive-steps.md) der Reihe nach (Merge verifizieren → Plan `completed` → Claim freigeben → Worktree/Branch entfernen). Only-if-tickets: stattdessen die idempotente Einheit `bash scripts/devflow-post-merge-finalize.sh "$TICKET_ID" --pr "$PR_NUM"` (PR verlinken, Ticket `done`, `verify:done`-Event, Plan archivieren, Claims freigeben, Worktree/Branch entfernen).
 - **Standing-Direktive bei Kontext-Überlauf:** stoppen und einen strukturierten Handoff-Report liefern (erledigte Schritte, Git-Zustand, offene Schritte).
 - **Positiven Endzustand prüfen:** Zum tatsächlichen PR-Head müssen die Required Checks `SUCCESS` belegen; `SKIPPED` genügt nicht. Danach unabhängig prüfen, dass Plan-`completed` gesetzt ist (only-if-tickets: zusätzlich Ticket-Closure mit strukturiertem Receipt) und der eigene Worktree sowie lokaler und Remote-Branch tatsächlich fehlen; Exit 0 allein beweist keinen Abschluss. Bei verbleibenden Refs/Worktrees offen berichten.
