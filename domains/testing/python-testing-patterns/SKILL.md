@@ -68,7 +68,7 @@ def test_add_negative():
 
 ## Detailed patterns and worked examples
 
-Detailed pattern documentation lives in `references/details.md`. Read that file when the navigation tier above is insufficient. Advanced topics (async, monkeypatch, tmp files, conftest, property-based, databases, CI, config, caplog/capsys, plugins, troubleshooting) live in `references/advanced-patterns.md`; worked fixture examples live in `references/examples.md`.
+Detailed pattern documentation lives in `references/details.md`. Read that file when the navigation tier above is insufficient. Advanced topics (async, monkeypatch, tmp files, conftest, property-based, databases, CI, config, caplog/capsys, plugins, troubleshooting) live in `references/advanced-patterns.md`; worked fixture examples live in `references/examples.md`. Evidence-based review gates (scope/evidence gates, async-mode handling, mock-vs-await checks) live in `references/review-gates.md` — read it before reporting review findings.
 
 ## Testing Best Practices
 

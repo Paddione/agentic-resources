@@ -1,7 +1,14 @@
 # Follow-ups (offen, nach v1)
 
-- vitest-`references/`: Home-Deltas gegen BP-Stand abgleichen (Upstream-Doku-Drift,
-  Dateien identisch benannt, Inhalte teils neuer).
+- vitest-`references/` (erledigt 2026-10-20): kein lebender Drift — Home- und
+  Bachelorprojekt-Harnesses verlinken per Symlink auf dieselben
+  `domains/testing/vitest[-testing]`-Kopien; `staging/` hält nur ältere
+  Merge-Arbeitskopien (kein Vererbungsinhalt).
+- Consumer-Re-Link nach Rename `domains/website` → `domains/brand-site` und
+  nach dem pytest-Merge: Bachelorprojekt `link-from-repo.py` neu laufen lassen
+  (`website-specialist`, `web-audit`, `playwright-best-practices`,
+  `pytest-patterns` → `python-testing-patterns`); Home-Seite `init.sh --layers`
+  prüfen.
 - Consumer-Umschaltung (erledigt 2026-10-20): Bachelorprojekt via
   `scripts/agent-skills/link-from-repo.py` (53 Skills), Home-Harnesses zeigen
   direkt aufs Repo (`~/.agents/skills/*` → `agentic-resources/...`), `dotfiles/`
