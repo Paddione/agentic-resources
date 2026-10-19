@@ -19,6 +19,8 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
 - `registry.json` — alle Skills mit Herkunft (`merged`, `home`,
   `bachelorprojekt`) und ggf. Upstream-Revision.
 - `staging/` — Arbeitsablage für Merges, kein Vererbungsinhalt.
+- `AGENTS.md` + `CLAUDE.md` — zentrale Anleitungsdateien (geteilte
+  Doktrin: Layer-Modell, Skill-Konventionen, Consumer-Vertrag, Workflows).
 
 ## Vererbung (live)
 
@@ -28,7 +30,9 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
 
 Verlinkt die Layer als Symlinks (additiv, überschreibt nie echte Dateien) und
 legt `repo.yaml` aus dem Profil an. `--layers all` für alles, `--dry-run` für
-Vorschau. Geteilte Skills lesen Repo-Spezifika (Branch, Scopes, Tickets,
+Vorschau. Anleitungsdateien vererben nach demselben Muster: Repos ohne eigene
+`AGENTS.md`/`CLAUDE.md` symlinken beide Namen hierher; Repos mit eigenen
+Dateien (Bachelorprojekt) verweisen per Abschnitt auf diese Dateien. Geteilte Skills lesen Repo-Spezifika (Branch, Scopes, Tickets,
 generierte Artefakte, Task-Runner) aus `repo.yaml` im Consumer-Root; siehe
 `runtimes/repo.yaml.schema`.
 
