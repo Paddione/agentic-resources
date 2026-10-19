@@ -118,7 +118,7 @@ Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-
 - Alle weiteren Guards (Kollisions-Check T002444, Brainstorming-Pflicht, Ticket-vor-Branch nur-wenn-Tickets, disjunkte Partials, Plan-Mutation, Slot-Gating, Design-Asset-Qualität): [feature-path-guards](references/feature-path-guards.md).
 
 ### Schritt 3.7: Plan-Erstellung — Decompose, dann paralleler Fan-out (T002074)
-Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
+Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos, `scripts/plan-intel.sh` bzw. Repo-Äquivalent) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
 
 **SID-Propagation (PFLICHT, T006365):** Ermittle deine Session-SID mit
 `bash scripts/agent-lock.sh mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst
