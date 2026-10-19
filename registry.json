@@ -31,6 +31,10 @@
    "path": "domains/data/database-specialist",
    "source": "bachelorprojekt"
   },
+  "deep-research": {
+   "path": "domains/research/deep-research",
+   "source": "home"
+  },
   "dev-flow": {
    "path": "lifecycle/dev-flow",
    "source": "bachelorprojekt",
@@ -51,6 +55,10 @@
   "dev-flow-plan": {
    "path": "lifecycle/dev-flow-plan",
    "source": "merged"
+  },
+  "docs": {
+   "path": "domains/formats/docs",
+   "source": "home"
   },
   "executing-plans": {
    "path": "core/executing-plans",
@@ -93,6 +101,10 @@
   "gitops-repo-audit": {
    "path": "domains/gitops/gitops-repo-audit",
    "source": "bachelorprojekt"
+  },
+  "google-workspace": {
+   "path": "domains/mcp/google-workspace",
+   "source": "home"
   },
   "hf-mem": {
    "path": "domains/ml-training/hf-mem",
@@ -162,9 +174,17 @@
    "path": "domains/ml-training/llama-cpp",
    "source": "bachelorprojekt"
   },
+  "mcp-builder": {
+   "path": "domains/mcp/mcp-builder",
+   "source": "home"
+  },
   "mishap-tracker": {
    "path": "core/mishap-tracker",
    "source": "merged"
+  },
+  "morning": {
+   "path": "domains/misc/morning",
+   "source": "home"
   },
   "opencode-git-workflow": {
    "path": "lifecycle/opencode-git-workflow",
@@ -232,6 +252,10 @@
    "path": "domains/devtools/system-audit",
    "source": "bachelorprojekt"
   },
+  "theme-factory": {
+   "path": "domains/web/theme-factory",
+   "source": "home"
+  },
   "toolset-curate": {
    "path": "domains/devtools/toolset-curate",
    "source": "bachelorprojekt"
@@ -267,6 +291,10 @@
   "vitest-testing": {
    "path": "domains/testing/vitest-testing",
    "source": "merged"
+  },
+  "web-artifacts-builder": {
+   "path": "domains/web/web-artifacts-builder",
+   "source": "home"
   },
   "web-audit": {
    "path": "domains/website/web-audit",
