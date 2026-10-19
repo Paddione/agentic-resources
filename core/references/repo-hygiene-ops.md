@@ -90,6 +90,8 @@ Branch-Bestände mutierten während desselben Laufs mehrfach.
 
    ```bash
    git grep -F <marker> "origin/$MAIN" -- <pfad>
+   # Beispiel ausgerollt (repo.main_branch: main):
+   # git grep -F <marker> origin/main -- <pfad>
    ```
 
    Beleg: die drei Stashes vom 2026-08-08 waren über Commit `0a2493ffd` längst in `main`

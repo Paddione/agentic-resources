@@ -37,7 +37,7 @@ Hier nur Leistung und Abbruchbedingung:
 |---|---|---|
 | **−1 Pre-Flight-Lock** | Branch claimen (`agent-lock claim branch` — kein ticket-Scope), Broadcast an andere Sessions | eine lebende Session den Branch schon hält |
 | **0 Main-Sync** | Reaper, ungelesene Agent-Nachrichten, `git pull --rebase` im Haupt-Repo | — |
-| **0 Worktree-Konsistenz** | Branch-Guard: gültiger Branch ausgecheckt **und** unter `.worktrees/*` gearbeitet; legt sonst einen an | detached HEAD, oder Worktree-Erstellung schlägt fehl |
+| **0 Worktree-Konsistenz** | Branch-Guard [T001363]: gültiger Branch ausgecheckt **und** unter `.worktrees/*` gearbeitet; legt sonst per `scripts/worktree-create.sh` (bzw. Repo-Äquivalent) einen an | detached HEAD, oder Worktree-Erstellung schlägt fehl |
 | **0.5 Rebase** | `git fetch origin <repo.main_branch> && git rebase origin/<repo.main_branch>` | Konflikt — dann manuell lösen |
 | **1 Plan-Pfad laden** | Plan-Datei **im Git-Tree** prüfen — only-if-tickets: `FACTORY-PLAN-REF` aus der DB (`stage-plan` setzt sie); sonst: Slug aus dem Branch-Namen, `.agents/plans/<slug>/tasks.md` (Slug = Branch-Name ohne `feature/`- bzw. `fix/`-Präfix) | Pfad fehlt, Datei nicht in `HEAD` (only-if-tickets: kein `plan_ref`) |
 | **1.4–1.7** | Doppelarbeit-Guard, Pipeline-Modus (`slot_count`), Claim gehört noch dieser Session (only-if-tickets: zusätzlich Ticket auf `in_progress`, `touched_files`, Ticket-Anhänge laden) | Claim gehört nicht mehr dieser Session |
@@ -175,6 +175,10 @@ Rufe `commit-commands:commit-push-pr` auf oder führe `gh pr create` manuell aus
 ## Schritt 5.5: CI/CD-Fix-Schleife (Orchestrator-Zuständigkeit)
 
 **Orchestrator-Schritt, nie als Hintergrund-Monitor.** Auto-Merge ist seit 3.8 angefordert und greift bei grünen Required Checks. Details/Required-Check-Liste: [ci-fix-loop](references/ci-fix-loop.md).
+```bash
+PR_URL=$(gh pr view --json url -q '.url')
+```
+Danach CI-Watch (only-if-tickets: mit Ticket-ID, sonst manueller Watch unten).
 
 Only-if-tickets: CI-Watch (`bash scripts/devflow-ci-watch.sh "$TICKET_ID" "$PR_URL"` bzw. Repo-Äquivalent; rebased bei `DIRTY` selbst, Exit-Code `3` bei Rebase-Konflikt bzw. `4` bei echtem `CONFLICTING`-Mergestatus) — dann gibt der **Orchestrator den Konflikt per `SendMessage` an den bereits gespawnten Implementer zurück** (kein neuer Spawn) und ruft den Watch nach dessen Push erneut auf. Sonst manueller Watch:
 ```bash
