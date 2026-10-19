@@ -262,6 +262,15 @@
           "/home/patrick/mcp-servers/python-sandbox/server.py"
         ]
       }
+    },
+    "docstore": {
+      "doc": "Local document retrieval (TF-IDF over markdown/HTML/text under DOCSTORE_ROOT).",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/docstore/server.py"
+        ]
+      }
     }
   },
   "harnesses": {
@@ -298,7 +307,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -311,7 +321,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -323,7 +334,8 @@
       "bge-mcp",
       "mcp-task-runner",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -336,7 +348,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -349,7 +362,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -362,7 +376,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "docstore"
     ]
   }
 }
