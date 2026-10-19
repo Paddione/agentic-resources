@@ -24,13 +24,15 @@ AR="$(cd "$(dirname "$0")/.." && pwd)"
 run() { (( DRY )) && echo "[dry] $*" || "$@"; }
 
 # Layer auflösen: "all" oder Kommaliste aus core, lifecycle, domains/<pack>.
+# -L folgt verlinkten Skill-Dirs (z.B. domains/formats/docs -> synced/docs),
+# damit auch diese als Skills verlinkt werden.
 resolve_layers() {
   if [[ "$LAYERS" == "all" ]]; then
-    find "$AR" -name SKILL.md -not -path "*/staging/*" | xargs -n1 dirname
+    find -L "$AR" -name SKILL.md -not -path "*/staging/*" | xargs -n1 dirname
   else
     for l in ${LAYERS//,/ }; do
       if [[ "$l" == domains/* ]]; then echo "$AR/$l"
-      else find "$AR/$l" -maxdepth 2 -name SKILL.md 2>/dev/null | xargs -n1 dirname
+      else find -L "$AR/$l" -maxdepth 2 -name SKILL.md 2>/dev/null | xargs -n1 dirname
       fi
     done
   fi
@@ -47,7 +49,9 @@ PROJECT_DIRS=("$REPO/.agents/skills" "$REPO/.opencode/skills" "$REPO/.claude/ski
 link_skill() {
   local src="$1" destdir="$2" name
   name="$(basename "$src")"
-  [[ "$name" == "references" || "$name" == "synced" ]] && return 0
+  # "synced" ist kein Skill (Harness-Bundle-Dir); "references" (core/references)
+  # ist per registry.json ein Skill und wird wie jeder andere verlinkt.
+  [[ "$name" == "synced" ]] && return 0
   [[ -e "$destdir/$name" || -L "$destdir/$name" ]] && return 0
   run ln -s "$(realpath -s --relative-to="$destdir" "$src")" "$destdir/$name"
   echo "link $destdir/$name -> $src"

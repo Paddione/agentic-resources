@@ -2,9 +2,12 @@
 
 - vitest-`references/`: Home-Deltas gegen BP-Stand abgleichen (Upstream-Doku-Drift,
   Dateien identisch benannt, Inhalte teils neuer).
-- Consumer-Umschaltung: Bachelorprojekt (`.opencode/skills` → Link auf Repo +
-  `repo.yaml` aus `bachelorprojekt.yaml`) und Home-Harnesses
-  (`share-agent-resources.sh` auf Repo zeigen) stehen aus.
+- Consumer-Umschaltung (erledigt 2026-10-20): Bachelorprojekt via
+  `scripts/agent-skills/link-from-repo.py` (53 Skills), Home-Harnesses zeigen
+  direkt aufs Repo (`~/.agents/skills/*` → `agentic-resources/...`), `dotfiles/`
+  und `agent-resources/` via `runtimes/init.sh --layers all --profile dotfiles`
+  (je 74 Skills × 3 Dirs + `repo.yaml`). `init.sh` folgt seit 2026-10-20 auch
+  verlinkten Skill-Dirs (`find -L`) und verlinkt `references/` (Registry-Skill).
 - `docs/agent-guide` + `docs/sdlc` (Bachelorprojekt-Prozessdoku) als
   `domains/`-Pack oder Consumer-seitig bewerten.
 - Taskfile-Templates (`test:changed`, `freshness:*`, `workspace:validate`)
