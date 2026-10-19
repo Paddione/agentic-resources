@@ -60,6 +60,10 @@
    "path": "domains/formats/docs",
    "source": "home"
   },
+  "docx": {
+   "path": "domains/formats/docx",
+   "source": "home"
+  },
   "executing-plans": {
    "path": "core/executing-plans",
    "source": "home",
@@ -194,12 +198,20 @@
    "path": "core/operations-management",
    "source": "merged"
   },
+  "pdf": {
+   "path": "domains/formats/pdf",
+   "source": "home"
+  },
   "playwright-best-practices": {
    "path": "domains/website/playwright-best-practices",
    "source": "bachelorprojekt"
   },
   "postgres-audit": {
    "path": "domains/data/postgres-audit",
+   "source": "home"
+  },
+  "pptx": {
+   "path": "domains/formats/pptx",
    "source": "home"
   },
   "pytest-patterns": {
@@ -313,6 +325,10 @@
     "revision": "bb92a77741419a4ab5f06e711a283343f1ada0c3",
     "source": "https://github.com/obra/superpowers"
    }
+  },
+  "xlsx": {
+   "path": "domains/formats/xlsx",
+   "source": "home"
   }
  }
 }
