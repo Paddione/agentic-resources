@@ -192,7 +192,7 @@ Bei FAIL zuerst die fehlende Zeile nachholen (insb. `verify done` nach grünen T
 ## Schritte 6.4–7.5 — Merge-Wait, Abschluss, Cleanup
 
 Zuständig ist der Finalizer, den Schritt 3.9 als frischen Subagenten spawnt. `gh pr merge --auto` kehrt sofort zurück; erst den
-Merge abwarten ([ci-fix-loop](references/ci-fix-loop.md) §"PR-Merge-Wait-Loop"), dann abschließen ([plan-archive-steps](references/plan-archive-steps.md) bzw. only-if-tickets per Finalize-Skript, siehe 3.9).
+Merge abwarten ([ci-fix-loop](references/ci-fix-loop.md) §"PR-Merge-Wait-Loop", T001149-M1), dann abschließen ([plan-archive-steps](references/plan-archive-steps.md) bzw. only-if-tickets per Finalize-Skript, siehe 3.9).
 
 > **Merge = Abschluss** — `qa_review`/`awaiting_deploy` nicht als Zwischenstatus setzen. **Reihenfolge:** Archivierung VOR der Branch-Löschung. **Claims vor dem Worktree-Remove freigeben.**
 
