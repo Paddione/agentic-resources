@@ -1,6 +1,6 @@
 ---
 name: git-workflow
-description: Nutze diesen Skill bei Commit, Push, PR-Erstellung oder Branch-Abschluss auf beliebigem Branch. Deckt den kompletten Lifecycle ab: Pull-First, Commit-Konventionen, Scope-Preflight, Freshness-Guard, Commit-Verifikation, PR-Erstellung, CI-Fix-Loop, Squash-Merge und Worktree-Cleanup.
+description: 'Nutze diesen Skill bei Commit, Push, PR-Erstellung oder Branch-Abschluss auf beliebigem Branch. Deckt den kompletten Lifecycle ab: Pull-First, Commit-Konventionen, Scope-Preflight, Freshness-Guard, Commit-Verifikation, PR-Erstellung, CI-Fix-Loop, Squash-Merge und Worktree-Cleanup.'
 ---
 
 # Git Workflow — Commit → Push → PR → Merge → Cleanup
