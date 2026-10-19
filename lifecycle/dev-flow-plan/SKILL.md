@@ -274,5 +274,5 @@ Melde alle aufgetretenen Fehler oder Prozess-Frictionen am Ende des Skills über
 | Framework | Availability |
 |-----------|--------------|
 | **Claude Code** | Full — load via `load skill <name>` or matches on description triggers |
-| **opencode** | Full — geladen als `dev-flow-plan`. Sub-Delegation framework-spezifisch; alle CLI-/MCP-Aufrufe sind framework-agnostisch |
+| **opencode** | Full — geladen als `dev-flow-plan` (Directory-Symlink auf diese Shared Source). Sub-Delegation über `background-agents.ts` (`delegate` für read-only, native write-capable Delegation sonst); alle CLI-/MCP-Aufrufe sind framework-agnostisch |
 | **agy** | Full — treat the opencode path as authoritative. All CLI tools and MCP calls work identically |
