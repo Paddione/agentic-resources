@@ -1,0 +1,415 @@
+# docs/agent-guide/registry/mcp.yaml
+# SSOT MCP Server Registry — single source of truth for MCP server
+# definitions across all three agent harnesses (Claude Code, agy, opencode).
+#
+# Two top-level sections:
+#   clients:  MCP client/harness configuration (per-server)
+#   cluster:  In-cluster infrastructure — das dev-pod-Deployment (3 Container)
+---
+# LLAMA.CPP-HARNESS (T002398): der Block harness.llamacpp haengt einen Server als
+# stdio-Kindprozess an llama-server (--mcp-servers-config, Ziel scripts/llm/mcp-servers.json).
+# NUR fuer transport: stdio — llama.cpp hat mit server_mcp_stdio genau eine
+# Transport-Implementierung; ein llamacpp-Block an einem http-Server laesst mcp-sync
+# fail-closed abbrechen. Opt-in mit Absicht: jeder Eintrag ist ein zusaetzlicher
+# Kindprozess beim Modellstart.
+#
+# HARNESS-EINTRAG ERGAENZEN (T002690): Wer bei einem bestehenden Server einen
+# WEITEREN harness.*-Eintrag hinzufuegt, muss command UND args ueber ALLE
+# harness-Eintraege desselben Servers plus die Top-Level-args angleichen —
+# sonst tauscht man nur ein rotes Gate gegen ein anderes.
+# Beobachtet in T002678 (PR #3803): fuer playwright wurde harness.claude_code
+# mit args [-y, "@playwright/mcp@latest"] ergaenzt, waehrend harness.opencode
+# dieselbe Kombination OHNE -y fuehrte. Danach war G-AGENTIC12 gruen, aber
+# G-AGENTIC14 (Parity .mcp.json <-> .opencode/opencode.jsonc fuer gemeinsame
+# Server) rot mit Wert 1; erst -y auch im opencode-Eintrag UND in den
+# Top-Level-args brachte 0.
+# Warum das vorher nie auffiel: G-AGENTIC14 vergleicht ausschliesslich Server,
+# die in BEIDEN Configs vorkommen. Ein Server in nur einer Config wird gar nicht
+# geprueft — die Divergenz schlaegt deshalb erst in dem Moment zu, in dem ein
+# zweiter Harness hinzukommt.
+# User-Scope-Notiz:
+# User-Scope-Server installieren per Taskfile.llm.yml nach
+# ~/.config/muse/settings.json (User-Scope, nicht Registry-verwaltet);
+# mailbox-mcp ist vendored und unregistriert (Quellen zentral unter
+# ~/mcp-servers/mailbox, T901492).
+clients:
+  context7:
+    transport: stdio
+    command: npx
+    args: [-y, "@upstash/context7-mcp@4.1.1"]
+    note: >-
+      All harnesses use the official upstream tools over stdio, including
+      llama.cpp which does not support HTTP MCP. Disable the duplicate Claude
+      plugin: its client=claude-code-plugin endpoint requires authentication
+      even when anonymous access works on the standard endpoint.
+      Codex and Gemini CLI user configuration: docs/runbooks/context7-harnesses.md.
+    harness:
+      claude_code:
+        command: npx
+        args: [-y, "@upstash/context7-mcp@4.1.1"]
+      agy:
+        command: npx
+        args: [-y, "@upstash/context7-mcp@4.1.1"]
+      opencode:
+        type: local
+        command: [npx, -y, "@upstash/context7-mcp@4.1.1"]
+        enabled: true
+      qwen_code:
+        command: npx
+        args: [-y, "@upstash/context7-mcp@4.1.1"]
+      llamacpp:
+        command: npx
+        args: [-y, "@upstash/context7-mcp@4.1.1"]
+        timeout_ms: 60000
+
+  mcp-kubernetes:
+    transport: http
+    endpoint: http://localhost:18080/mcp
+    browser_endpoint: http://localhost:18082/mcp
+    browser_note: >-
+      Fuer Browser-Clients (llama-Web-UI, http://localhost:8098) steht mcp-kubernetes
+      hinter dem guarded CORS-Proxy scripts/mcp-cors-proxy unter :18082. Der Proxy
+      validiert Host/Origin/Token ueber den Shared Guard (mcp-http-security.mjs):
+      CLI-Clients (kein Origin-Header) brauchen MCP_KUBERNETES_TOKEN als Bearer,
+      Browser-Clients brauchen zusaetzlich eine erlaubte Origin in MCP_BROWSER_ORIGINS.
+      Der OTS-Image kubernetes_mcp_server wirft 403 auf jede Anfrage mit Origin-Header
+      (eigener CSRF-Schutz) — der Proxy entfernt Origin/Referer beim Weiterreichen
+      an :18080 und setzt die CORS-Header am Antwortweg. [T900052]
+    harness:
+      claude_code:
+        type: http
+        url: http://localhost:18080/mcp
+      agy:
+        serverUrl: http://localhost:18080/mcp
+      opencode:
+        type: remote
+        url: http://localhost:18080/mcp
+        enabled: true
+    windows_note: >-
+      Windows: Port-Forward manuell starten (kubectl fleet-Kontext):
+      kubectl --context fleet port-forward -n workspace-dev svc/dev-pod
+      18080:8080 13001:3001 13002:3002 18235:18235. Auf Windows uebernimmt das
+      scripts/mcp-gateway/start-windows.ps1. Der Port-Forward bleibt noetig:
+      das Service-Netz 10.43.0.0/16 wird NICHT ueber das wg-Mesh geroutet
+      (docs/agent-guide/maps/networks-map.md), nur das Pod-Netz 10.42.0.0/16.
+
+  mcp-postgres:
+    transport: http
+    endpoint: http://localhost:13001/mcp
+    headers:
+      Authorization: "Bearer ${MCP_POSTGRES_TOKEN}"
+    auth_note: >-
+      Bind auf 127.0.0.1 plus Bearer-Token (MCP_POSTGRES_TOKEN). Ohne gesetzten
+      Token startet der Server nicht (Shared Guard: mcp-http-security.mjs).
+      Token-Quelle: ~/.config/mcp-postgres/server.env (per EnvironmentFile
+      in der systemd-Unit oder start-windows.ps1 geladen).
+    brand: mentolder
+    database: shared-db.workspace.svc.cluster.local/website (devmesh-Cluster, NICHT fleet)
+    scope_warning: >-
+      Fest an die mentolder-DB gebunden (DATABASE_URL des mcp-node-Containers
+      in devmesh, dev-local/components/llm-services). external_id ist nur pro
+      Brand eindeutig — eine Abfrage nach einer korczewski-ID liefert still die
+      gleichnamige mentolder-Zeile statt einer leeren Menge. Ticket-Reads entfielen
+      mit dem Retirement (2026-10-14).
+      Seit T900191 ist die Quelle die **devmesh**-DB (Entwicklungsdaten, s.
+      ADR-008-Nachtrag 2026-09-11: "die devmesh-DB trägt Entwicklungsdaten,
+      Ticket-Tooling verweigert dort Schreibzugriffe") statt der fleet-DB — diese
+      Server ist KEINE Ticket-DB-of-record.
+    korczewski_path: >-
+      Nicht-Ticket-SQL gegen die korczewski-DB läuft über kubectl exec gegen den
+      shared-db-Pod in Namespace workspace-korczewski (Context fleet), nicht über
+      diesen Server.
+    harness:
+      claude_code:
+        type: http
+        url: http://localhost:13001/mcp
+      agy:
+        serverUrl: http://localhost:13001/mcp
+      qwen_code:
+        httpUrl: http://localhost:13001/mcp
+      opencode:
+        type: remote
+        url: http://127.0.0.1:13001/mcp
+        oauth: false
+        enabled: true
+    windows_note: >-
+      Windows: Port 13001 kommt seit T900191 aus dem devmesh-Cluster:
+      kubectl --context devmesh port-forward -n workspace svc/llm-services
+      13001:13001 (zusammen mit 18235 und 13005, uebernommen von
+      scripts/mcp-gateway/start-windows.ps1). Unter WSL bedient :13001 der
+      lokale mcp-postgres-local.service (127.0.0.1, fleet-DB) — der
+      13001:13001-Eintrag in scripts/mcp-gateway/devmesh-forward.service ist
+      entfallen. Der frühere Fallback
+      k3d-postgres-forward.service + mcp-postgres-local.mjs (T002767) ist mit
+      T900191 entfallen.
+
+  # T002426 — bge-MCP-Shim: Embedding und Reranking als MCP-Ressource.
+  # llama-server kann sich NICHT selbst als MCP-Server exponieren; --mcp-servers-config
+  # ist sein MCP-*Client*-Pfad. Deshalb dieser eigene Shim
+  # (scripts/bge-mcp/server.mjs). Transport ist HTTP und nicht stdio, weil die
+  # llama-Web-UI beim Hinzufuegen ausschliesslich eine URL entgegennimmt — ein
+  # stdio-Shim waere dort unerreichbar. Aus demselben Grund steht er NICHT in
+  # scripts/llm/mcp-servers.json: die Datei nimmt nur transport: stdio auf.
+  bge-mcp:
+    transport: http
+    endpoint: http://localhost:13005/mcp
+    headers:
+      Authorization: "Bearer ${BGE_MCP_TOKEN}"
+    auth_note: >-
+      Bind auf 127.0.0.1 plus Bearer-Token (BGE_MCP_TOKEN). Ohne gesetzten Token
+      startet der Shim nicht. Der Header wird seit T002487 aus dem headers-Feld
+      oben generiert — als unexpandierte ${VAR}-Referenz, damit kein Klartext in
+      eine getrackte Datei geraet. Claude Code expandiert ${VAR} beim Laden
+      selbst; OpenCode benoetigt die {env:VAR}-Notation (Uebersetzung in
+      mcp-sync.sh, T002488); agy (T002704) und Qwen Code (T004272) expandieren
+      ${VAR} ebenfalls nicht — dort loest mcp-sync.sh den Token zur Sync-Zeit
+      auf und schreibt den Klartext-Wert in die nicht-getrackte Config-Datei
+      (chmod 600). Quelle ist ~/.config/bge-mcp/server.env, dieselbe Datei, die
+      die systemd-user-Unit per EnvironmentFile= liest. Ist der Token weder in
+      der Umgebung noch in server.env vorhanden, bleibt der Platzhalter stehen
+      und der Server antwortet mit HTTP 401 (www-authenticate: Bearer). Der
+      UI-Dialog der llama-Web-UI ("Authorization / Bearer") bleibt davon
+      unberuehrt: llama.cpp bezieht den Server nicht aus dieser Registry.
+    failover_note: >-
+      Der Server haelt keine eigene Failover-Logik. Welches bge-Paar antwortet,
+      entscheidet components/website/src/lib/bge-router.ts — dieselbe Stelle, die auch die
+      HTTP-Endpunkte und die Bestandsclients benutzen. bge-mcp selbst laeuft seit
+      T900191 im devmesh-Pod llm-services, nicht mehr als lokaler Shim. Upstream sind seit T901560 die llm-proxy-Rollen-Ketten (:18235).
+    windows_note: >-
+      Windows: Port 13005 kommt seit T900191 aus dem devmesh-Cluster
+      (svc/llm-services) — zwei Gateway-Units statt einer: mcp-gateway.service
+      (fleet, unveraendert) UND devmesh-forward.service (neu, P3b). Beide
+      uebernimmt Windows-seitig scripts/mcp-gateway/start-windows.ps1; der
+      Taskfile-Einstieg bleibt task agents:mcp-gateway:start/agents:mcp-gateway:install.
+      Der lokale Shim (scripts/bge-mcp/server.mjs) wird nicht mehr gestartet.
+    harness:
+      claude_code:
+        type: http
+        url: http://localhost:13005/mcp
+      agy:
+        serverUrl: http://localhost:13005/mcp
+      opencode:
+        # T900039: Windows hat mit scripts/mcp-gateway/start-windows.ps1 einen
+        # eigenen Startmechanismus (Port-Forwards + Shim-Start). Der Server ist
+        # damit auch auf Windows (pk-desktop) erreichbar, solange das Skript laeuft.
+        type: remote
+        url: http://localhost:13005/mcp
+        enabled: true
+      qwen_code:
+        httpUrl: http://localhost:13005/mcp
+
+  # Node.js ports of the custom MCP servers — zero npm dependencies, stdlib only.
+  # ticket-mcp-node retiriert 2026-10-14 mit dem Ticket-System (Server + Go-Quellen
+  # aus ~/mcp-servers/ticket entfernt).
+  # Zentral (T901492): die Server liegen ausserhalb des Repos unter ~/mcp-servers.
+  # claude_code und opencode starten sie ueber scripts/mcp-central/launch.mjs, der
+  # $MCP_SERVERS_HOME (Default ~/mcp-servers) aufloest — ein fester
+  # /home/patrick/-Pfad scheitert auf jedem anderen Host und in Cloud-Sessions
+  # nur als "Connection closed". Beide Harnesses starten aus dem Repo-Root
+  # (Praezedenz: warden). agy und llamacpp behalten den absoluten Pfad, weil ihr
+  # Arbeitsverzeichnis nicht das Repo ist. G-AGENTIC14-Paritaet
+  # (claude_code <-> opencode) bleibt gewahrt, beide fahren denselben Aufruf.
+
+  # devflow-mcp (T900985): Kontext, Werkzeug-Empfehlung und Plan-Staging fuer Subagenten.
+  # Reines Node.js, oeffnet bge-mcp (:13005), mcp-postgres (:13001) und den lokalen
+  # Graph-Cache (~/.cache/devflow-mcp) lazy — ohne diese Backends laufen die Wrapper-Tools
+  # (lock, plan_lint, plan_stage, ci_status) trotzdem. Zentral wie ticket-mcp-node (T901492).
+  devflow-mcp:
+    transport: stdio
+    command: node
+    args: [/home/patrick/mcp-servers/devflow/server.mjs]
+    harness:
+      claude_code:
+        command: node
+        args: [scripts/mcp-central/launch.mjs, devflow/server.mjs]
+      agy:
+        command: node
+        args: [/home/patrick/mcp-servers/devflow/server.mjs]
+      opencode:
+        type: local
+        command: [node, scripts/mcp-central/launch.mjs, devflow/server.mjs]
+        enabled: true
+      llamacpp:
+        command: node
+        args: [/home/patrick/mcp-servers/devflow/server.mjs]
+        cwd: /home/patrick/Bachelorprojekt
+        timeout_ms: 60000
+
+  mcp-task-runner:
+    transport: stdio
+    command: mcp-task-runner
+    args:
+      - --otel-endpoint
+      - localhost:4317
+      - --taskfile
+      - /home/patrick/Bachelorprojekt/Taskfile.yml
+    # Absoluter taskfile-Pfad: nicht portabel, wird durch MCPB-Bundle ersetzt (T002301)
+    # Der Browser-Bridge-Pfad wurde entfernt: llm-proxy laeuft im Container,
+    # der Task-Runner braucht dagegen den lokalen Checkout. Harnesses starten
+    # ihn weiterhin als lokalen stdio-Prozess.
+    harness:
+      claude_code:
+        # T900039: /usr/local/bin/mcp-task-runner ist nur ein Bash-Wrapper um
+        # `node ~/mcp-servers/task-runner/server.mjs` (install.sh daneben, T901492) — der
+        # Server selbst ist reines Node.js, ohne Plattformbindung. Start ueber den
+        # zentralen Launcher (G-AGENTIC14 vergleicht genau diese beiden).
+        command: node
+        args: [scripts/mcp-central/launch.mjs, task-runner/server.mjs, --otel-endpoint, localhost:4317, --taskfile, Taskfile.yml]
+      agy:
+        command: mcp-task-runner
+        args: [--otel-endpoint, localhost:4317, --taskfile, /home/patrick/Bachelorprojekt/Taskfile.yml]
+      opencode:
+        # T900039: kein mcp-task-runner-Binary auf dem Windows-PATH noetig —
+        # der Server ist reines Node.js. Selbe Begruendung wie harness.claude_code.
+        type: local
+        command: [node, scripts/mcp-central/launch.mjs, task-runner/server.mjs, --otel-endpoint, localhost:4317, --taskfile, Taskfile.yml]
+        enabled: true
+
+  # codebase-memory-mcp: natives Binary (T900921: npx -y braucht ~39s +
+  # CBM-Daemon-Single-Flight 30s -> `Request timed out`; nativ ~1s, v0.10.8).
+  # Version via npm-global/~/.local/bin gepinnt (0.10.8). T002690: command UND
+  # args ueber alle Harness-Eintraege + Top-Level identisch — alle nativ.
+  # Betrieb (Vorfall 2026-10-08): Der bare command wird von JEDEM Harness per
+  # PATH aufgeloest — WSL: ~/.local/bin (+ ~/.npm-global/bin), Windows:
+  # %LOCALAPPDATA%/Programs/codebase-memory-mcp. KEIN absoluter Linux-Pfad:
+  # der braeche Windows und die G-AGENTIC14-Paritaet (.mcp.json <->
+  # .opencode/opencode.jsonc). Sessions aus dem Repo-Checkout starten, NICHT
+  # aus $HOME oder /tmp (ausserhalb der erlaubten Roots -> watch skipped;
+  # $HOME-Index riesig). Host-Pin Stand 2026-10-08: 0.11.0 (manuell via
+  # npm i -g codebase-memory-mcp@0.11.0); Container-Pin: ARG in
+  # docker/mcp-node/Dockerfile. Stale-Status (`failed: ... exited with code 1`
+  # ohne frischen Spawn): kein Binary-Defekt — `opencode reload` (frischer
+  # Reconnect), Fallback `opencode service restart`. Belegt 2026-10-08: nach
+  # reload alle drei Verzeichnisse connected (tools=17), Binaer-Handshake
+  # solo exit 0.
+  codebase-memory-mcp:
+    transport: stdio
+    command: codebase-memory-mcp
+    args: []
+    # Der Browser-Bridge-Pfad wurde entfernt: die Container-Konfiguration
+    # referenzierte ein Host-Binary, das dort nicht existiert. Die lokalen
+    # stdio-Harnesses bleiben erhalten.
+    harness:
+      claude_code:
+        command: codebase-memory-mcp
+        args: []
+      agy:
+        command: codebase-memory-mcp
+        args: []
+      opencode:
+        type: local
+        command: [codebase-memory-mcp]
+        enabled: true
+      llamacpp:
+        command: codebase-memory-mcp
+        cwd: /home/patrick/Bachelorprojekt
+        timeout_ms: 30000
+
+  # ── Disabled in opencode, absent in claude_code + agy ──────
+  # Diese Server existieren nur in opencode als Disabled-Overrides.
+  # Sie haben kein Gegenstück in claude_code oder agy und werden hier
+  # nur für die Registry-Vollständigkeit dokumentiert.
+  # Entfernt 2026-08-30 (stale): github-mcp (gh-axi mandatiert), docfork,
+  # sequential-thinking, webresearch — reine Disabled-Overrides ohne Nutzer.
+
+  playwright:
+    transport: stdio
+    command: npx
+    args:
+      - -y
+      - "@playwright/mcp@latest"
+    harness:
+      claude_code:
+        command: npx
+        args: [-y, "@playwright/mcp@latest"]
+      opencode:
+        type: local
+        command: [npx, -y, "@playwright/mcp@latest"]
+        enabled: false
+    note: "In Claude Code aktiv (T002678) — Browser-Automatisierung fuer dev-flow-e2e und web-audit. In opencode weiterhin disabled. Das offizielle Paket ist @playwright/mcp; das unscoped playwright-mcp ist ein anderes Projekt und darf hier nicht eingetragen werden."
+
+  warden:
+    transport: stdio
+    command: node
+    args: [scripts/warden-mcp/launch.mjs]
+    note: >-
+      Vaultwarden-Tresor des Nutzers via @icoretech/warden-mcp (Version im Launcher
+      gepinnt). Credentials ausschliesslich aus ~/.config/warden-mcp/server.env, nie
+      im Repo. Harnesses claude_code und opencode; agy, qwen_code und llamacpp
+      bleiben bewusst aus, jeder weitere Harness waere ein weiterer Pfad zum
+      persoenlichen Tresor. Mutierende Tools stehen in .claude/settings.json
+      (permissions.ask, IDs mcp__warden__keychain_*) und in .opencode/opencode.jsonc
+      (permission, IDs warden_keychain_*); bei Versions-Bump beide Listen neu ziehen.
+      Windows und WSL brauchen bw <= 2026.6.x, neuere bw-CLIs koennen Vaultwarden
+      1.36.0 nicht entschluesseln; der Launcher sucht PATH, ~/.local/bin/bw und
+      winget. [T900404]
+    harness:
+      claude_code:
+        command: node
+        args: [scripts/warden-mcp/launch.mjs]
+      opencode:
+        type: local
+        command: [node, scripts/warden-mcp/launch.mjs]
+        enabled: true
+
+cluster:
+  # In-Cluster-Bundle: k3d/dev-pod/{deployment,service,pvc,rbac}.yaml [T900107]
+  # Namespace: workspace-dev, Context: fleet
+  # Zustellung: prod-fleet/dev-pod -> flux/clusters/fleet/ks-dev-pod.yaml
+  #   (Flux-GitOps-Pipeline, KEIN manuelles kubectl apply)
+  # Port-forward-Bruecke (systemd user unit / start-windows.ps1):
+  #   scripts/mcp-gateway/mcp-gateway.service (fleet)
+  #   scripts/mcp-gateway/devmesh-forward.service (devmesh: 18235, 13005;
+  #     :13001 bedient lokal mcp-postgres-local.service)
+  #   Taskfile.agents.yml -> mcp-gateway:start
+  #   kubectl --context fleet port-forward -n workspace-dev svc/dev-pod 18080:8080 13002:3002
+  #
+  # Der Vorgaenger claude-code-mcp-monolith (Namespace default) ist abgeloest;
+  # sein Manifest liegt nicht mehr im Repo. Damit erledigt sind auch T002311
+  # (defekter keycloak-Container — nicht mitportiert) und T002312.
+  #
+  # KEIN Ingress/IngressRoute/LoadBalancer: oauth2-proxy-dev traegt fuer diese
+  # Pfade ein --skip-auth-route, ein oeffentlicher Endpunkt exponierte
+  # mcp-kubernetes und mcp-postgres also unauthentifiziert.
+  #
+  # playwright ist bewusst NICHT im Bundle: 4-GiB-Limit gegen <512Mi bei allen
+  # anderen; er bleibt lokaler stdio-Server (siehe clients.playwright).
+  note: >-
+    Drei Container. mcp-node fuehrt sieben Node-Server unter einem Supervisor
+    (docker/mcp-node/supervisor.sh); Requests sind am gemessenen Verbrauch
+    orientiert (Monolith: 341Mi real gegen 960Mi deklariert).
+  containers:
+    - name: mcp-node
+      image: ghcr.io/paddione/mcp-node:latest
+      servers:
+        - { name: github, port: 3002, forwarded_port: 13002 }
+        - { name: ticket-mcp, port: 3003 }
+        - { name: task-runner, port: 3005 }
+        - { name: codebase-memory, port: 3006 }
+    - name: mcp-kubernetes
+      image: quay.io/containers/kubernetes_mcp_server@sha256:ef1ede0fd73ce975de1850b7f19090d0850c4ce3e7d21d795f21de3ee8d1452c
+      port: 8080
+      forwarded_port: 18080
+    - name: repo-sync
+      image: ghcr.io/paddione/repo-sync:latest
+      note: >-
+        Sidecar, einziger Schreiber des dev-pod-repo-PVC. Alle konsumierenden
+        Container mounten den Checkout read-only.
+
+  # devmesh-llm-services: dev-local/components/llm-services [T900191]
+  # Namespace: workspace, Context: devmesh
+  # Zustellung: task devmesh:deploy (kein Flux fuer devmesh, s. proposal.md Non-Goals)
+  # Port-forward-Bruecke: kubectl --context devmesh port-forward -n workspace \
+  #   svc/llm-services 18235:18235 13001:3001 13005:3007
+  llm-services:
+    note: >-
+      Ein Deployment, mcp-node-Image mit MCP_NODE_SERVICES-Schalter: nur llm-proxy,
+      mcp-postgres und bge-mcp starten (design.md D4). GPU-Backends bleiben auf der
+      Windows-Seite, erreicht ueber llm-gateway-host (Tailnet).
+    containers:
+      - name: mcp-node
+        image: ghcr.io/paddione/mcp-node:latest
+        servers:
+          - { name: llm-proxy, port: 18235, forwarded_port: 18235 }
+          - { name: postgres, port: 3001, forwarded_port: 13001 }
+          - { name: bge-mcp, port: 3007, forwarded_port: 13005 }

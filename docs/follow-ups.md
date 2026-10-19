@@ -10,3 +10,8 @@
 - Taskfile-Templates (`test:changed`, `freshness:*`, `workspace:validate`)
   als `runtimes/`-Muster extrahieren.
 - Externe Upstream-Revisionen (`registry.json → upstream`) periodisch prüfen.
+  Stand 2026-10-19: `obra/superpowers` aktuell (bb92a7774141).
+  Neuere Heads bei `wshobson/agents` (0874a27b vs. 46891e7e) und
+  `jablonkai/skills` (ced445b8 vs. 399d40ae) — Update nur per Review-Chore,
+  beide Vendor-Kopien tragen lokale Kuratierung (LICENSE, agents/, evals/,
+  examples.md), die erhalten bleiben muss.

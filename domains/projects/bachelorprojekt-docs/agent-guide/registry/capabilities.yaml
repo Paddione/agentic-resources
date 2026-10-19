@@ -1,0 +1,1011 @@
+# docs/agent-guide/registry/capabilities.yaml
+# SSOT Toolset Capability Registry
+#
+# Führt Fähigkeiten auf, ordnet ihnen die Instanzen zu, die sie liefern können, und hält fest,
+# WANN eine Instanz benutzt werden soll. Zwei Zuständigkeiten, bewusst in einer Datei:
+#   - Auswahl:  welche Instanz ein Harness benutzen darf   (state, reason)
+#   - Nutzung:  wann sie einzusetzen ist und wann nicht    (use_when, avoid_when, fallback, …)
+#
+# Abgrenzung: `mcp.yaml` bleibt SSOT für die *Erreichbarkeit* eines Servers (Transport,
+# Endpunkt, Credentials). Diese Datei ist SSOT für *Auswahl und Nutzung*.
+#
+# Schema je Instanz — vollständig in
+# .agents/plans/toolset-usage-injection/CONTRACT.md §1:
+#
+#   <kind>:<id>:            # kind ∈ mcp | plugin | skill | cli | agent
+#     state:      canonical | suppressed | unreviewed
+#     reason:     PFLICHT wenn state != canonical
+#     use_when:   PFLICHT wenn state == canonical. Eine Zeile, ≤ 120 Zeichen.
+#     avoid_when: optional. Eine Zeile.
+#     fallback:   optional. Konkreter Befehl/Pfad.
+#     roles:      PFLICHT wenn state == canonical. Volle Rollennamen oder `all`.
+#     tier:       optional. safe | caution | assisted | dangerous
+#     deep_ref:   optional. Repo-relativer Pfad auf die Tiefenreferenz.
+#
+# `node scripts/toolset/check.mjs` erzwingt das fail-closed. Unkuratierte Funde meldet es als
+# `unreviewed`, ohne CI rot zu machen — auflösen mit dem Skill `toolset-curate`.
+# Den rollengefilterten Prompt-Block rendert `bash scripts/toolset-context.sh <rolle>`.
+# harnesses: Aufgabe/Anbieter/Rollen je Harness (T900791), Messprotokoll: docs/agent-guide/registry/harness-config-targets.md
+#
+# Gültige Rollen:
+#   bp-build | bp-run | bp-ship | orchestrator | big-pickle | omp | openclaw-ops | all   (SSOT: scripts/toolset/lib/roles.mjs, T900980)
+---
+capabilities:
+
+  # ─── Versionsverwaltung & GitHub ────────────────────────────────────────────────────
+  github:
+    cli:gh-axi:
+      state: canonical
+      use_when: "GitHub-Read/View-Flows zur Anzeige: PRs, Issues, Runs, Releases, Labels."
+      avoid_when: "Antwort wird maschinell geparst (--json/-q/--jq, jq-Pipelines), Polling-Loops oder Mutationen — gh-axi liefert TOON-Text und ignoriert --json still mit Exit 0 (T004612); dort gh direkt."
+      fallback: "gh (maschinelles Parsen, Polling, Mutationen, nicht abgedeckte Kommandos)"
+      roles: [all]
+      tier: caution
+      deep_ref: ".claude/skills/references/gh-axi.md"
+    plugin:github@claude-plugins-official:
+      state: suppressed
+      reason: "Doppelt gh-axi und zieht rund 40 Tool-Schemata in den Kontext."
+
+  git-lebenszyklus:
+    skill:git-workflow:
+      state: canonical
+      use_when: "Commit, Push, PR, CI-Fix-Schleife, Auto-Merge, Worktree-Cleanup."
+      avoid_when: "Reine Leseoperationen auf der Historie."
+      roles: [all]
+      tier: caution
+      deep_ref: ".claude/skills/git-workflow/SKILL.md"
+    plugin:commit-commands@claude-plugins-official:
+      state: suppressed
+      reason: "git-workflow ist der repo-spezifische Pfad und kennt Scope-Allowlist und Guards."
+
+  # ─── Cluster & Datenbank ────────────────────────────────────────────────────────────
+  kubernetes-inspektion:
+    mcp:mcp-kubernetes:
+      state: canonical
+      use_when: "Pods, Logs, Events, Nodes und Ressourcen lesen — Status statt Mutation."
+      avoid_when: "Jede Mutation: apply, rollout restart, scale, delete."
+      fallback: "kubectl --context fleet get/logs (bei Portforward-Ausfall)"
+      roles: [bp-build, bp-run, openclaw-ops, orchestrator]
+      tier: safe
+      # T900983: Mutationen einzeln hochgestuft (destructiveHint laut Probe + pods_run).
+      tool_tiers:
+        pods_exec: dangerous
+        pods_delete: dangerous
+        resources_delete: dangerous
+        resources_create_or_update: caution
+        resources_scale: caution
+        pods_run: caution
+      deep_ref: ".claude/skills/references/mcp-tool-guide.md"
+
+  kubernetes-mutation:
+    cli:kubectl:
+      state: canonical
+      use_when: "Cluster-Mutationen: apply, rollout restart, scale, delete, RBAC, Sealed Secrets."
+      avoid_when: "Reine Status-Abfragen — dafür mcp-kubernetes."
+      fallback: "task workspace:deploy ENV=<brand> (break-glass; primär ist Flux)"
+      roles: [bp-build, bp-run]
+      tier: dangerous
+      deep_ref: ".claude/skills/references/mcp-tool-guide.md"
+
+  postgres-lesen:
+    mcp:mcp-postgres:
+      state: canonical
+      use_when: "Read-only SQL gegen die mentolder-DB, Nicht-Ticket-Tabellen."
+      avoid_when: "INSERT/UPDATE/DELETE/DDL — jede Query läuft READ ONLY und scheitert."
+      fallback: "kubectl exec -i … psql (ohne -i läuft psql mit leerem stdin durch)"
+      roles: [bp-run, orchestrator, big-pickle]
+      tier: safe
+      deep_ref: ".claude/skills/references/mcp-tool-guide.md"
+
+  postgres-schreiben:
+    cli:psql-via-kubectl:
+      state: canonical
+      use_when: "Schreibende SQL, DDL und Superuser-Operationen als postgres."
+      avoid_when: "Prod-Namespaces ohne prod-write-guard.sh — für Subagenten verboten."
+      fallback: "scripts/prod-write-guard.sh check <namespace> <sql>"
+      roles: [bp-run]
+      tier: dangerous
+      deep_ref: ".claude/skills/references/mcp-tool-guide.md"
+
+  datenbank-betrieb:
+    skill:database-specialist:
+      state: canonical
+      use_when: "Migrationen, Index-Optimierung, EXPLAIN ANALYZE, Backup und Restore."
+      roles: [bp-run]
+      tier: assisted
+      deep_ref: ".claude/skills/database-specialist/SKILL.md"
+
+  devflow-kontext:
+    mcp:devflow-mcp:
+      state: canonical
+      use_when: "Vor jedem Auftrag context_for_task (Code, Pläne, Werkzeuge per Rerank); Pläne mit plan_stage stagen."
+      avoid_when: "Exakte Textsuche — dafür grep/search_code von codebase-memory."
+      fallback: "bash scripts/toolset-context.sh <rolle> + bash scripts/plan-context.sh <rolle>"
+      roles: [bp-build, bp-run, bp-ship, orchestrator]
+      tier: caution
+      # T900985: Lesetools safe, plan_stage pusht (assisted), lock erbt caution.
+      tool_tiers:
+        context_for_task: safe
+        recommend_tools: safe
+        search_code: safe
+        graph_status: safe
+        plan_lint: safe
+        collision_check: safe
+        ci_status: safe
+        task_oracle: safe
+        plan_stage: assisted
+      deep_ref: ".claude/skills/references/mcp-tool-guide.md"
+
+  repo-task-ausfuehrung:
+    mcp:mcp-task-runner:
+      state: canonical
+      use_when: "Taskfile-Ziele auflösen und ausführen, Task-Graph inspizieren."
+      fallback: "bash scripts/vda.sh oracle '<ziel in klarem Deutsch>'"
+      roles: [orchestrator, openclaw-ops]
+      tier: caution
+      # T900983: Inspektion safe; Ausführen (run_task*, execute_plan, cancel_task) erbt caution.
+      tool_tiers:
+        get_task_graph: safe
+        get_task_result: safe
+        plan_tasks: safe
+
+  externes-task-management:
+    mcp:task-master-ai:
+      state: suppressed
+      reason: "Kein erreichbarer Server: task-master-ai existiert weder in docs/agent-guide/registry/mcp.yaml noch in .opencode/opencode.jsonc. PRD-getriebene Task-Zerlegung laeuft ueber die dev-flow-Skills."
+
+  mishap-erfassung:
+    skill:mishap-tracker:
+      state: canonical
+      use_when: "Am Ende jedes dev-flow-Skills die gesammelten Frictionen lokal melden (stderr + .mishaps.log)."
+      fallback: "bash scripts/hooks/mishap-tracker.sh --friction '<text>'"
+      roles: [all]
+      tier: safe
+      deep_ref: ".claude/skills/mishap-tracker/SKILL.md"
+
+  # ─── Entwicklungs-Workflow ──────────────────────────────────────────────────────────
+  entwicklungs-planung:
+    skill:dev-flow-plan:
+      state: canonical
+      use_when: "Startpunkt jeder Änderung: Pfadwahl, Brainstorming, Spec und Plan."
+      avoid_when: "Wartung ohne Verhaltensänderung — das ist dev-flow-chore."
+      roles: [orchestrator]
+      tier: caution
+      deep_ref: ".claude/skills/dev-flow-plan/SKILL.md"
+    plugin:feature-dev@claude-plugins-official:
+      state: suppressed
+      reason: "dev-flow-plan ist der repo-eigene Pfad inklusive plan- und Ticket-Anbindung."
+
+  plan-umsetzung:
+    skill:dev-flow-execute:
+      state: canonical
+      use_when: "Einen gestageten Plan implementieren, verifizieren und den PR mergen."
+      avoid_when: "Ohne gestageten Plan — dann zuerst dev-flow-plan."
+      roles: [orchestrator]
+      tier: caution
+      deep_ref: ".claude/skills/dev-flow-execute/SKILL.md"
+
+  wartung:
+    skill:dev-flow-chore:
+      state: canonical
+      use_when: "Doku, Dependency-Bumps, Config, Umbenennungen, Cleanup — ohne Verhaltensänderung."
+      avoid_when: "Sobald sich das Verhalten der Software ändert — dann dev-flow-plan."
+      roles: [orchestrator]
+      tier: caution
+      deep_ref: ".claude/skills/dev-flow-chore/SKILL.md"
+
+  e2e-tests:
+    skill:dev-flow-e2e:
+      state: canonical
+      use_when: "Playwright-Tests gegen die Live-Marken NACH Merge und Deploy."
+      avoid_when: "Unit- und pytest-Tests während der Implementierung."
+      roles: [bp-ship]
+      tier: caution
+      deep_ref: ".claude/skills/dev-flow-e2e/SKILL.md"
+
+  playwright-best-practices:
+    skill:playwright-best-practices:
+      state: canonical
+      use_when: "Best Practices beim Schreiben robuster Playwright-Tests: Locators, Auto-Waiting, Page Objects, Fixtures, Anti-Flakiness."
+      avoid_when: "Lifecycle, Deployment-Gates und Test-Inventory-Aktualisierung im Bachelorprojekt — dafür dev-flow-e2e."
+      roles: [bp-ship]
+      tier: safe
+      deep_ref: ".claude/skills/playwright-best-practices/SKILL.md"
+
+  unit-tests:
+    skill:vitest:
+      state: canonical
+      use_when: "Vitest-Tests schreiben, Mocking, Coverage und Test-Filter im website-Paket."
+      roles: [bp-ship]
+      tier: safe
+      deep_ref: ".claude/skills/vitest/SKILL.md"
+
+  pytest-patterns:
+    skill:pytest-patterns:
+      state: canonical
+      use_when: "Pytest-Tests, Fixtures, Parametrisierung und CLI/Subprocess-Testmuster fuer Python und DevOps."
+      roles: [bp-ship]
+      tier: safe
+      deep_ref: ".claude/skills/pytest-patterns/SKILL.md"
+
+  abhaengigkeits-pflege:
+    skill:update-dependencies:
+      state: suppressed
+      reason: "Archivierte Routine mit ueberholten Pfaden; nur explizit als historische Referenz nutzen."
+
+  test-environment-audit:
+    skill:sota-testing:
+      state: canonical
+      use_when: "Alle Testumgebungen gemeinsam auditieren: Vitest, pytest, Playwright, BATS, Integration und CI; Testqualitaet, Isolation, Coverage und Flakiness bewerten."
+      avoid_when: "Nur Runner-API nachschlagen oder ohne Auftrag Tests und CI-Gates veraendern."
+      roles: [orchestrator, bp-ship, bp-build, bp-run]
+      tier: safe
+      deep_ref: ".claude/skills/sota-testing/SKILL.md"
+
+  vitest-runner-review:
+    skill:vitest-testing:
+      state: canonical
+      use_when: "Vitest-Konfiguration, Testumgebungen, Worker, Cleanup, Coverage und CI-Aufrufe pruefen; aktuelle stabile Version vor versionsabhaengigen Empfehlungen verifizieren."
+      avoid_when: "Frameworkuebergreifender Qualitaetsaudit — sota-testing; reine API-Beispiele — vitest."
+      roles: [orchestrator, bp-ship]
+      tier: safe
+      deep_ref: ".claude/skills/vitest-testing/SKILL.md"
+
+  github-actions-check-diagnosis:
+    skill:gh-fix-ci:
+      state: canonical
+      use_when: "Fehlgeschlagene GitHub-Actions-PR-Checks und Logs diagnostizieren."
+      avoid_when: "Vollstaendiger Testumgebungs-Audit oder externe CI-Provider; Fixes folgen dem autorisierten dev-flow."
+      roles: [orchestrator, bp-build, bp-ship]
+      tier: safe
+      deep_ref: ".claude/skills/gh-fix-ci/SKILL.md"
+
+  # ─── Betrieb & Infrastruktur ────────────────────────────────────────────────────────
+  vorfall-behandlung:
+    skill:incident-response:
+      state: canonical
+      use_when: "Ein Kerndienst ist ausgefallen oder degradiert — zeitkritische Triage."
+      avoid_when: "Nicht-dringende Repo-Pflege."
+      roles: [bp-run]
+      tier: assisted
+      deep_ref: ".claude/skills/incident-response/SKILL.md"
+
+  infrastruktur-runbook:
+    skill:infra-ops:
+      state: canonical
+      use_when: "Nur auf ausdrückliche Anfrage: Cluster-Setup, Deploy, Netz, SSO, Secrets, Migration."
+      avoid_when: "Automatisch auslösen — der Skill ist ausdrücklich invoke-only."
+      roles: [bp-build]
+      tier: dangerous
+      deep_ref: ".claude/skills/infra-ops/SKILL.md"
+
+  repo-hygiene:
+    skill:repo-hygiene:
+      state: canonical
+      use_when: "Stale Branches und Worktrees, offene PRs, Issue-Intake."
+      avoid_when: "Ticket-Inhalt — Triage und Vollständigkeit gehören zu ticket-ops."
+      roles: [orchestrator]
+      tier: caution
+      deep_ref: ".claude/skills/repo-hygiene/SKILL.md"
+
+  betriebs-routing:
+    skill:operations-management:
+      state: canonical
+      use_when: "Wenn unklar ist, ob incident-response, ticket-ops oder repo-hygiene zuständig ist."
+      avoid_when: "Wenn die Zuständigkeit feststeht — dann direkt den passenden Skill."
+      roles: [orchestrator]
+      tier: safe
+      deep_ref: ".claude/skills/operations-management/SKILL.md"
+
+  ops-broker:
+    cli:openclaw-ask:
+      state: canonical
+      use_when: "Vage Ops-Aufgabe synchron an OpenClaw task-runner geben: bash scripts/openclaw-ask.sh '<aufgabe>'."
+      avoid_when: "mutierende Aktionen — OpenClaw empfiehlt nur"
+      roles: [orchestrator, openclaw-ops]
+      tier: safe
+      deep_ref: "docs/runbooks/openclaw-ops-bot.md"
+
+  gitops-wissen:
+    skill:gitops-knowledge:
+      state: canonical
+      use_when: "Flux-Konzepte erklären und schema-validiertes YAML für Flux-CRDs erzeugen."
+      roles: [bp-build]
+      tier: safe
+      deep_ref: ".claude/skills/gitops-knowledge/SKILL.md"
+
+  gitops-cluster-debug:
+    skill:gitops-cluster-debug:
+      state: canonical
+      use_when: "Flux auf dem Live-Cluster diagnostizieren: stuck, not-ready, Artefakt-Pull."
+      avoid_when: "Repo-Dateien prüfen — dafür gitops-repo-audit."
+      roles: [bp-build, bp-run]
+      tier: caution
+      deep_ref: ".claude/skills/gitops-cluster-debug/SKILL.md"
+
+  gitops-repo-audit:
+    skill:gitops-repo-audit:
+      state: canonical
+      use_when: "GitOps-Repo-Dateien prüfen: Schema, veraltete APIs, RBAC, Secrets."
+      avoid_when: "Live-Cluster-Zustand — dafür gitops-cluster-debug."
+      roles: [bp-build]
+      tier: safe
+      deep_ref: ".claude/skills/gitops-repo-audit/SKILL.md"
+
+  system-audit:
+    skill:system-audit:
+      state: canonical
+      use_when: "Audit über alle Systeme anfragen (GitOps-Repo, Live-Cluster, Website, Repo, Toolset, Security, DB, LLM-Pipeline, Authored-Docs) — endet je Befund in Ticket + plan-Proposal."
+      avoid_when: "Akute Störung — dafür incident-response; Tiefe eines Einzel-Audits bleibt beim Spezial-Skill."
+      roles: [orchestrator]
+      tier: safe
+      deep_ref: ".claude/skills/system-audit/SKILL.md"
+
+  # ─── Sicherheit ─────────────────────────────────────────────────────────────────────
+  security-analyse:
+    skill:security-specialist:
+      state: canonical
+      use_when: "SealedSecrets, Pocket-ID-OIDC-Clients, DSGVO-Prüfung, Secret-Rotation."
+      avoid_when: "Allgemeine Code-Sicherheit — dafür secure-coding-guidance."
+      roles: [bp-build]
+      tier: dangerous
+      deep_ref: ".claude/skills/security-specialist/SKILL.md"
+
+  secure-coding-guidance:
+    plugin:security-guidance@claude-plugins-official:
+      state: canonical
+      use_when: "Warnt beim Schreiben von Code vor unsicheren Mustern (Injection, unsicheres Parsen)."
+      avoid_when: "Repo-Secrets und OIDC — dafür security-specialist."
+      roles: [all]
+      tier: safe
+    plugin:semgrep@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; CI deckt den Secret-Scan über gitleaks 8.18.2 ab."
+
+  tresor-zugriff:
+    mcp:warden:
+      state: canonical
+      use_when: "Persönliche Tresor-Credentials lesen; Schreiben nur nach Rückfrage."
+      roles: [bp-build, orchestrator]
+      tier: caution
+      # T900983: Löschen dangerous (destructiveHint laut Probe); Metadaten ohne Geheimnis safe;
+      # Lesen von Passwörtern/TOTP/Notizen und alle Schreibpfade erben caution.
+      tool_tiers:
+        "keychain_delete_*": dangerous
+        keychain_send_delete: dangerous
+        keychain_send_remove_password: dangerous
+        "keychain_list_*": safe
+        keychain_status: safe
+        keychain_sdk_version: safe
+        keychain_search_items: safe
+
+  # ─── Wissen & Recherche ─────────────────────────────────────────────────────────────
+  code-graph:
+    mcp:codebase-memory-mcp:
+      state: canonical
+      use_when: "Bekanntes Symbol oder Call-Chain gesucht: K3-Präzisionsschicht zuerst (Details: docs/brain/recall-routing.md)."
+      avoid_when: "Semantische Was-Fragen (dafür K1-Embeddings) und Doktrin/Prozess (dafür docs/ direkt)."
+      fallback: "Grep/Glob; bei nicht indiziertem Projekt zuerst index_repository"
+      roles: [all]
+      tier: safe
+
+  code-graph-interpretation:
+    skill:code-graph-interpretation:
+      state: canonical
+      use_when: "K3-Codegraph lesen oder erklären, Call-Chain und Change-Impact aus Graphkanten prüfen, Graphbefund gegen Quellcode verifizieren."
+      roles: [all]
+      tier: safe
+
+  embedding-rerank:
+    mcp:bge-mcp:
+      state: canonical
+      use_when: "Semantische Was-Fragen über Code, Specs und Docs: K1-Roh-Recall zuerst (docs/brain/recall-routing.md)."
+      avoid_when: "Wenn bge-embed im Cluster nicht Ready ist; bei bekanntem Symbol zuerst K3-Graph."
+      roles: [orchestrator]
+      tier: safe
+
+  dokumentations-lookup:
+    mcp:context7:
+      state: canonical
+      use_when: "Aktuelle Doku zu Bibliotheken, Frameworks, SDKs und CLIs statt aus dem Gedächtnis."
+      avoid_when: "Refactoring, Business-Logik, allgemeine Programmierkonzepte."
+      roles: [all]
+      tier: safe
+    plugin:context7@claude-plugins-official:
+      state: suppressed
+      reason: "Doppelt mcp:context7; der Plugin-Endpoint verlangt Auth, der MCP-Server funktioniert anonym."
+
+  websuche:
+    plugin:brightdata-plugin@claude-plugins-official:
+      state: suppressed
+      reason: "21 Skills im Prompt jeder Runde, laut /skill-doctor (2026-09-11) nie aufgerufen; Websuche läuft über die eingebauten WebSearch/WebFetch-Tools."
+
+  # ─── Frontend ───────────────────────────────────────────────────────────────────────
+  website-entwicklung:
+    skill:website-specialist:
+      state: canonical
+      use_when: "Astro- und Svelte-Komponenten, Seiten-Routing, Content und UI im website-Paket."
+      roles: [bp-ship]
+      tier: caution
+      deep_ref: ".claude/skills/website-specialist/SKILL.md"
+
+  ui-design:
+    plugin:frontend-design@claude-plugins-official:
+      state: suppressed
+      reason: "Generisch; das Kore-Designsystem ist in WEBSITE-STANDARDS.md verbindlich."
+
+  interaktives-artefakt:
+    skill:lavish:
+      state: canonical
+      use_when: "Plan, Vergleich, Diagramm oder Report als annotierbares HTML zum Review geben."
+      avoid_when: "Ohne vorherige Zustimmung — der Skill hat ein Consent-Gate."
+      roles: [orchestrator]
+      tier: safe
+      deep_ref: ".claude/skills/lavish/SKILL.md"
+
+  web-audit:
+    skill:web-audit:
+      state: canonical
+      use_when: "Brand-Seiten semantisch prüfen: axe, Lighthouse und LLM-Triage manuell gegen die Live-Marken."
+      avoid_when: "PR-Entscheidungen — der Skill ist bewusst kein Merge-Gate."
+      fallback: "task web:audit ENV=<brand> [WEB_AUDIT_ROUTES=...]"
+      roles: [bp-ship]
+      tier: assisted
+      deep_ref: ".claude/skills/web-audit/SKILL.md"
+
+  # ─── Browser & Debugging ────────────────────────────────────────────────────────────
+  browser-automation:
+    plugin:chrome-devtools-mcp@claude-plugins-official:
+      state: canonical
+      use_when: "Seiten debuggen: DOM, Konsole, Netzwerk, Performance, Screenshots."
+      avoid_when: "E2E-Testsuiten — die laufen über die Playwright-CLI in dev-flow-e2e."
+      roles: [bp-ship]
+      tier: caution
+    mcp:playwright:
+      state: suppressed
+      reason: "Nicht project-relevant; E2E läuft über die Playwright-CLI in dev-flow-e2e."
+    plugin:playwright@claude-plugins-official:
+      state: suppressed
+      reason: "Doppelt den chrome-devtools-Pfad und die Playwright-CLI."
+    plugin:superpowers-chrome@superpowers-marketplace:
+      state: suppressed
+      reason: "Read-only-Browser-Agent; chrome-devtools-mcp deckt den Bedarf vollständig ab."
+
+  # ─── Sprachwerkzeuge ────────────────────────────────────────────────────────────────
+  lsp-symbol-lookup:
+    plugin:typescript-lsp@claude-plugins-official:
+      state: canonical
+      use_when: "Typen, Signaturen und Referenzen in TypeScript und Svelte präzise auflösen."
+      avoid_when: "Python — dafür wäre pyright-lsp nötig, das hier nicht aktiviert ist."
+      roles: [bp-ship]
+      tier: safe
+    plugin:pyright-lsp@claude-plugins-official:
+      state: suppressed
+      reason: "Kein nennenswerter Python-Anteil im Repo."
+
+  # ─── Review & Codequalität ──────────────────────────────────────────────────────────
+  code-review:
+    plugin:pr-review-toolkit@claude-plugins-official:
+      state: canonical
+      use_when: "PR-Review vor dem Merge: Bugs, stille Fehler, Testabdeckung, Typdesign."
+      avoid_when: "Reine Vereinfachung ohne Fehlersuche — dafür der /simplify-Pfad."
+      roles: [bp-ship, orchestrator]
+      tier: safe
+    plugin:code-review@claude-plugins-official:
+      state: suppressed
+      reason: "pr-review-toolkit deckt dieselbe Fähigkeit mit spezialisierten Agenten ab."
+    plugin:code-simplifier@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; Vereinfachung läuft über den /simplify-Befehl."
+
+  # ─── Meta: Skills, Plugins, MCP bauen ───────────────────────────────────────────────
+  skill-erstellung:
+    plugin:skill-creator@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; superpowers:writing-skills ist der genutzte Pfad."
+
+  plugin-entwicklung:
+    plugin:plugin-dev@claude-plugins-official:
+      state: suppressed
+      reason: "Kein Plugin-Development in diesem Repo."
+
+  mcp-server-entwicklung:
+    plugin:mcp-server-dev@claude-plugins-official:
+      state: canonical
+      use_when: "Einen MCP-Server oder ein MCPB-Bundle bauen und verpacken."
+      roles: [orchestrator]
+      tier: safe
+    plugin:agent-sdk-dev@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; keine Agent-SDK-Arbeit in diesem Repo."
+
+  harness-konfiguration:
+    plugin:hookify@claude-plugins-official:
+      state: canonical
+      use_when: "Wiederkehrende Fehlgriffe als Hook-Regel festhalten statt sie zu wiederholen."
+      roles: [orchestrator]
+      tier: caution
+    plugin:claude-code-setup@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; settings.json wird über update-config und diese Registry gepflegt."
+    plugin:claude-md-management@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; CLAUDE.md wird bewusst von Hand gepflegt."
+
+  ausgabestil:
+    plugin:learning-output-style@claude-plugins-official:
+      state: suppressed
+      reason: "Vom Operator deaktiviert; kein aktiver Ausgabestil."
+
+  ausgabestil-erklarend:
+    plugin:explanatory-output-style@claude-plugins-official:
+      state: suppressed
+      reason: "Vom Operator deaktiviert; kein aktiver Ausgabestil."
+
+  # ─── ML & Training ──────────────────────────────────────────────────────────────────
+  # T900377: der vendorte Skill unsloth-buddy wurde aus dem Repo entfernt, damit
+  # modell-finetuning hat aktuell keine Instanz. Der generische Unsloth/TRL-Zugriff
+  # laeuft bis auf Weiteres ueber die Upstream-Referenz; eine erneute Besetzung dieser
+  # Faehigkeit ist eine Routing-Entscheidung und wird nicht mitgesettet.
+  modell-finetuning: {}
+
+  # Eigene Faehigkeit statt einer zweiten canonical-Instanz unter modell-finetuning: das
+  # Registry-Schema erlaubt maximal eine canonical-Instanz je Faehigkeit (siehe
+  # scripts/toolset/lib/registry.mjs). modell-finetuning deckt die generische
+  # Unsloth/TRL-API-Faehigkeit ab; diese hier ist die Repo-eigene
+  # Orchestrierung darueber (Vorbedingungs-Gates, Taskfile.finetune.yml) — dasselbe Muster
+  # wie die Trennung von huggingface-hub-operationen von modell-finetuning (T002596).
+  finetune-pipeline:
+    cli:scripts/finetune:
+      state: canonical
+      use_when: "Repo-Trainingslauf durchfuehren: Messschritt (measure_corpus.py) vor jeder Modellwahl, Template-Guard vor jedem Training, dann finetune:train/export ueber Taskfile.finetune.yml."
+      avoid_when: "Reine Unsloth/TRL-API-Fragen ohne Bezug zu diesem Repo-Subsystem — dafuer die Unsloth/TRL-Upstream-Referenz direkt."
+      fallback: "Upstream-Referenzcode manuell adaptieren, wenn Taskfile.finetune.yml nicht verfuegbar ist."
+      roles: [bp-run, orchestrator]
+      tier: assisted
+
+  # huggingface-skills lag bis T002596 unter `modell-finetuning` und war dort suppressed,
+  # weil der damalige Vendor-Trainings-Skill die kanonische Instanz war. Der Schnitt war
+  # falsch: das Paket liefert Hub-Operationen (hf-cli, Spaces, Datasets, Papers,
+  # SageMaker-Deployment), von denen Finetuning nur ein Teil ist. Als eigene Fähigkeit
+  # konkurriert es nicht mehr mit der Trainings-Instanz — beide dürfen nebeneinander
+  # kanonisch sein.
+  huggingface-hub-operationen:
+    plugin:huggingface-skills@claude-plugins-official:
+      state: canonical
+      use_when: "Hugging-Face-Hub bedienen: hf-CLI, Modelle/Datasets suchen, Spaces, GGUF-Auswahl."
+      avoid_when: "Reines lokales Finetuning — dafür finetune-pipeline/cli:scripts/finetune."
+      fallback: "hf CLI direkt (huggingface_hub), sofern installiert."
+      roles: [orchestrator]
+      tier: safe
+
+  # ─── Querschnitt ────────────────────────────────────────────────────────────────────
+  skill-bibliothek:
+    plugin:superpowers@claude-plugins-official:
+      state: canonical
+      use_when: "Basis-Disziplin: Brainstorming, TDD, systematisches Debugging, Pläne schreiben."
+      roles: [all]
+      tier: safe
+    plugin:superpowers-lab@superpowers-marketplace:
+      state: suppressed
+      reason: "Experimentell, nicht aktiviert."
+    plugin:superpowers-developing-for-claude-code@superpowers-marketplace:
+      state: suppressed
+      reason: "Nicht aktiviert; kein Claude-Code-Plugin-Development in diesem Repo."
+
+  geteilte-referenzen:
+    skill:references:
+      state: canonical
+      use_when: "Querschnitts-Referenz nachschlagen: MCP-Guide, Plan-Gates, Deploy-Routing, Locks."
+      roles: [all]
+      tier: safe
+      deep_ref: ".claude/skills/references/"
+
+  werkzeug-kuration:
+    skill:toolset-curate:
+      state: canonical
+      use_when: "Unkuratierte Werkzeug-Instanzen entscheiden und ihre Nutzungssemantik erfassen."
+      fallback: "node scripts/toolset/collect.mjs --unreviewed"
+      roles: [orchestrator]
+      tier: caution
+      deep_ref: ".claude/skills/toolset-curate/SKILL.md"
+
+  werkzeug-discovery:
+    skill:agentic-resource-lookup:
+      state: canonical
+      use_when: "Externe MCP-Server/Plugins suchen, Live-Schema inspizieren, Urteil festhalten — ohne Installation."
+      avoid_when: "Bereits vorhandene Instanzen kuratieren — dafür werkzeug-kuration/toolset-curate."
+      fallback: "node scripts/agentic-lookup.mjs find <query>"
+      roles: [orchestrator]
+      tier: safe
+      deep_ref: ".claude/skills/agentic-resource-lookup/SKILL.md"
+
+  gedaechtnis:
+    plugin:remember@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; das dateibasierte Auto-Memory unter ~/.claude/projects/ ist der Pfad."
+
+  wiederholte-ausfuehrung:
+    plugin:ralph-loop@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; /loop deckt wiederkehrende Läufe ab."
+
+  desktop-steuerung:
+    plugin:desktop-commander@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; der Windows-Host wird nativ über powershell.exe gesteuert."
+
+  api-client:
+    plugin:postman@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert; HTTP-Prüfungen laufen über curl."
+
+  experimentierfeld:
+    plugin:playground@claude-plugins-official:
+      state: suppressed
+      reason: "Nicht aktiviert."
+
+  llm-evaluation:
+    plugin:braintrust@braintrust-claude-plugin:
+      state: suppressed
+      reason: "Nicht aktiviert; keine externe LLM-Evaluation im Einsatz."
+
+  session-tracing:
+    plugin:trace-claude-code@braintrust-claude-plugin:
+      state: suppressed
+      reason: "Nicht aktiviert; Telemetrie läuft über tickets.factory_phase_events."
+
+  # ─── Lokal installierte, nicht versionierte Skills ──────────────────────────────────
+  # Beide liegen nur im Arbeitsplatz-Checkout unter .claude/skills/ und sind NICHT im Repo
+  # versioniert (`whisper` fängt zusätzlich das .gitignore-Muster in Zeile 125 ein). Ein
+  # `canonical` behauptete eine Verfügbarkeit, die in CI und in jedem frischen Klon nicht
+  # besteht — ein Subagent bekäme das Werkzeug injiziert und fände es nicht vor. Sie bleiben
+  # deshalb unterdrückt, bis sie versioniert werden; danach ist die Kuration neu zu führen.
+  ui-komponenten-katalog:
+    skill:react-bits:
+      state: suppressed
+      reason: "Nur lokal vorhanden, nicht im Repo versioniert; zudem React — das Frontend ist Astro/Svelte."
+
+  audio-transkription:
+    skill:whisper:
+      state: suppressed
+      reason: "Nur lokal vorhanden und von .gitignore erfasst; Talk-Transkription läuft über den talk-transcriber-Dienst."
+
+  # ─── Domänen-Agenten ────────────────────────────────────────────────────────────────
+  agent-website:
+    agent:agent-website:
+      state: canonical
+      use_when: "Website-Arbeit delegieren: Texte, Design, Komponenten, Svelte-Code."
+      roles: [orchestrator]
+      tier: caution
+  agent-ops:
+    agent:agent-ops:
+      state: canonical
+      use_when: "Nachsehen, warum etwas nicht läuft — Logs und Status, ohne zu verändern."
+      roles: [orchestrator]
+      tier: safe
+  agent-infra:
+    agent:agent-infra:
+      state: canonical
+      use_when: "Kubernetes-Manifeste, Overlays, Taskfile, Environments und Deploy delegieren."
+      roles: [orchestrator]
+      tier: assisted
+  agent-test:
+    agent:agent-test:
+      state: canonical
+      use_when: "Tests schreiben, reparieren oder ausführen (pytest, Playwright, vitest)."
+      roles: [orchestrator]
+      tier: caution
+  agent-db:
+    agent:agent-db:
+      state: canonical
+      use_when: "PostgreSQL-Schema, Migrationen, Queries und Backups delegieren."
+      roles: [orchestrator]
+      tier: assisted
+  agent-security:
+    agent:agent-security:
+      state: canonical
+      use_when: "Secrets rotieren, OIDC-Clients, SealedSecrets und DSGVO-Prüfungen delegieren."
+      roles: [orchestrator]
+      tier: assisted
+
+  # ─── opencode npm-Plugins: nur im opencode-Harness verfügbar ─────────────────────────
+  # Die vier npm-Plugins aus .opencode/package.json registrieren ihre Tools ausschließlich
+  # im opencode-Harness. Claude-Code-Domänenagenten (bachelorprojekt-*) finden sie nicht vor —
+  # deshalb sind die Rollen auf die opencode-Rollen (orchestrator, big-pickle) begrenzt, nie
+  # `all`. collect.mjs liest die opencode-Plugin-Liste nicht (nur .claude/settings.json
+  # enabledPlugins), die Einträge sind manuell kuratiert und erscheinen nie als unreviewed.
+
+  kontext-kompression:
+    plugin:opencode-dcp:compress@npm:
+      state: canonical
+      use_when: "Session-Kontext komprimieren, wenn das Budget knapp wird (lange Läufe, große Diffs)."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  env-schluessel-liste:
+    plugin:envsitter-guard:envsitter_keys@npm:
+      state: canonical
+      use_when: "Vor envsitter-Fingerprint: vorhandene Umgebungsvariablen-Schlüssel auflisten."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  env-fingerprint:
+    plugin:envsitter-guard:envsitter_fingerprint@npm:
+      state: canonical
+      use_when: "Fingerprint der Umgebung erstellen, um spätere Abweichungen zu erkennen."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  env-abgleich:
+    plugin:envsitter-guard:envsitter_match@npm:
+      state: canonical
+      use_when: "Aktuelle Umgebung gegen einen Fingerprint prüfen (Drift-/Leak-Erkennung)."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  agent-memory-lesen:
+    plugin:opencode-agent-memory:memory_list@npm:
+      state: canonical
+      use_when: "Gespeicherte Agent-Memory-Einträge auflisten (Session-übergreifender Kontext)."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  agent-memory-schreiben:
+    plugin:opencode-agent-memory:memory_set@npm:
+      state: canonical
+      use_when: "Fakten/Entscheidungen als Memory-Eintrag persistieren (Session-übergreifend)."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  agent-memory-ersetzen:
+    plugin:opencode-agent-memory:memory_replace@npm:
+      state: canonical
+      use_when: "Veralteten Memory-Eintrag durch aktualisierten Inhalt ersetzen."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  journal-lesen:
+    plugin:opencode-agent-memory:journal_read@npm:
+      state: canonical
+      use_when: "Journal-Einträge eines Tages lesen (Arbeitsprotokoll nachvollziehen)."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  journal-suchen:
+    plugin:opencode-agent-memory:journal_search@npm:
+      state: canonical
+      use_when: "Journal nach Stichworten durchsuchen (frühere Arbeit wiederfinden)."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  journal-schreiben:
+    plugin:opencode-agent-memory:journal_write@npm:
+      state: canonical
+      use_when: "Tagesjournal-Eintrag schreiben (was wurde getan, was ist offen)."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  hintergrund-task-abbrechen:
+    plugin:oh-my-opencode-slim:task_cancel@npm:
+      state: canonical
+      use_when: "Verfolgten Hintergrund-Spezialisten-Task abbrechen (nur als Orchestrator)."
+      roles: [orchestrator]
+      tier: caution
+
+  hintergrund-task-nachricht:
+    plugin:oh-my-opencode-slim:task_message@npm:
+      state: canonical
+      use_when: "Kurze Nachricht an einen laufenden Hintergrund-Task senden (nur Orchestrator)."
+      roles: [orchestrator]
+      tier: caution
+
+  hintergrund-task-ergebnis:
+    plugin:oh-my-opencode-slim:task_result@npm:
+      state: canonical
+      use_when: "Endergebnis eines abgeschlossenen Hintergrund-Tasks abrufen (nur Orchestrator)."
+      roles: [orchestrator]
+      tier: safe
+
+  hintergrund-task-revive:
+    plugin:oh-my-opencode-slim:task_revive@npm:
+      state: canonical
+      use_when: "Behaltenen Hintergrund-Task mit neuem Prompt wiederbeleben (nur Orchestrator)."
+      roles: [orchestrator]
+      tier: caution
+
+  hintergrund-task-status:
+    plugin:oh-my-opencode-slim:task_status@npm:
+      state: canonical
+      use_when: "Status eines verfolgten Hintergrund-Tasks lesen (nur Orchestrator)."
+      roles: [orchestrator]
+      tier: safe
+
+  nutzer-warten:
+    plugin:oh-my-opencode-slim:wait_for_user@npm:
+      state: canonical
+      use_when: "Automatische Fortsetzung pausieren, bis der Nutzer extern gehandelt hat."
+      avoid_when: "Für Antworten/Entscheidungen — dafür das question-Tool."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  webfetch-erweitert:
+    plugin:oh-my-opencode-slim:webfetch@npm:
+      state: canonical
+      use_when: "Webseiten abrufen und parsen (jsdom-basiert, ersetzt den Built-in-webfetch)."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  code-struktur-suche:
+    plugin:oh-my-opencode-slim:ast_grep_search@npm:
+      state: canonical
+      use_when: "Strukturierte Code-Suche nach Syntax-Mustern (AST-basiert)."
+      roles: [orchestrator, big-pickle]
+      tier: safe
+
+  code-struktur-ersetzen:
+    plugin:oh-my-opencode-slim:ast_grep_replace@npm:
+      state: canonical
+      use_when: "Strukturierte Code-Ersetzung nach Syntax-Mustern (AST-basiert)."
+      roles: [orchestrator, big-pickle]
+      tier: caution
+
+  acp-agent-ausfuehren:
+    plugin:oh-my-opencode-slim:acp_run@npm:
+      state: suppressed
+      reason: "Keine ACP-Agenten konfiguriert — das Tool wird nicht registriert (acpRunTools leer)."
+
+  opencode-git-workflow:
+    skill:opencode-git-workflow:
+      state: suppressed
+      reason: "Opencode-Harness-Skill, Fehlplatzierung im Claude-Skill-Verzeichnis."
+
+  skill-creator:
+    skill:skill-creator:
+      state: suppressed
+      reason: "Doppelt superpowers:writing-skills (wie das gleichnamige Plugin)."
+
+  skill-discovery:
+    skill:skill-craft:
+      state: canonical
+      use_when: "Repo-Skills finden, installieren, synchronisieren oder verbessern."
+      roles: [all]
+      tier: safe
+
+  lokales-modell-serving:
+    skill:freetoken-setup:
+      state: suppressed
+      reason: "FreeToken ist auf diesem Host retired; das Skill bleibt nur als historische Referenz."
+
+  hf-mem:
+    skill:hf-mem:
+      state: suppressed
+      reason: "FreeToken ist retired; kein aktiver Repo-Konsument fuer diese Speicherschaetzung."
+
+  huggingface-best:
+    skill:huggingface-best:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-community-evals:
+    skill:huggingface-community-evals:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-datasets:
+    skill:huggingface-datasets:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-llm-trainer:
+    skill:huggingface-llm-trainer:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-local-models:
+    skill:huggingface-local-models:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-lora-space-builder:
+    skill:huggingface-lora-space-builder:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-paper-publisher:
+    skill:huggingface-paper-publisher:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-papers:
+    skill:huggingface-papers:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-tool-builder:
+    skill:huggingface-tool-builder:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-trackio:
+    skill:huggingface-trackio:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-vision-trainer:
+    skill:huggingface-vision-trainer:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  huggingface-zerogpu:
+    skill:huggingface-zerogpu:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainings-/Eval-Bedarf (scripts/finetune/) einzeln kuratieren."
+
+  train-sentence-transformers:
+    skill:train-sentence-transformers:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainingsbedarf einzeln kuratieren."
+
+  transformers-js:
+    skill:transformers-js:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Frontend-Inferenzbedarf einzeln kuratieren."
+
+  trl-training:
+    skill:trl-training:
+      state: suppressed
+      reason: "Vendor-Drop ohne belegten Repo-Konsumenten; bei Trainingsbedarf einzeln kuratieren."
+
+  neovim-konfiguration:
+    skill:bachelorprojekt-vim:
+      state: canonical
+      use_when: "Neue oder bestehende Neovim-Konfiguration fuer dieses Repository planen, erstellen oder warten."
+      roles: [all]
+      tier: caution
+      deep_ref: ".agents/skills/bachelorprojekt-vim/SKILL.md"
+
+harnesses:
+  claude:
+    job: "Planung und Risikoarbeit: dev-flow-plan, Infra, Security, Cluster-Mutation"
+    provider: anthropic
+    default_model: opus
+    roles: [bp-build, bp-run]
+    config: .claude/settings.json
+  codex:
+    job: "Plaene umsetzen: dev-flow-execute, Tests, CI-Fix-Schleife"
+    provider: openai
+    default_model: gpt-6-sol
+    roles: [bp-ship]
+    config: null
+  omp:
+    job: "Interaktiver Editor-Agent: LSP-Refactor, Debugging, Review"
+    provider: opencode-zen
+    default_model: muse-spark-1.3-contributor-free
+    roles: [omp]
+    config: null
+  opencode:
+    job: "Orchestrator der lokalen Modellflotte: plan-runner, Eskalation"
+    provider: local
+    default_model: Qwen3.8-27B
+    roles: [orchestrator]
+    config: .opencode/opencode.jsonc
+  muse:
+    job: "Cloud-Ausfuehrung mit grossem Kontext: ganze Plaene, grosse Refactors"
+    provider: meta
+    default_model: muse-spark-1.3
+    roles: [bp-ship]
+    config: null
+  agy:
+    job: "Website und Frontend: Astro/Svelte, Browser, Screenshots"
+    provider: google
+    default_model: gemini
+    roles: [bp-ship]
+    config: null
+  openclaw:
+    job: "Always-on-Assistent auf dem GPU-Host: Modell- und GPU-Betrieb mit schmalem Satz (K8s lesen, Taskfile-Ziele, OpenClaw-Broker)"
+    provider: local
+    default_model: lmstudio
+    roles: [openclaw-ops]
+    config: ~/.openclaw/openclaw.json
+forbidden_providers: [deepseek]
