@@ -9,8 +9,12 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
   `references/` als Shared Hub).
 - `lifecycle/` — `dev-flow-*`: Planen, Ausführen, Chores, E2E.
 - `domains/<pack>/` — opt-in Domänen (`testing`, `gitops`, `ml-training`,
-  `website`, `data`, `devtools`, `formats`, `research`, `mcp`, `web`, `misc`,
-  `projects/` für projekt-spezifische Beispiele).
+  `brand-site`, `data`, `devtools`, `formats`, `research`, `mcp`, `web`, `misc`,
+  `projects/` für projekt-spezifische Beispiele). `brand-site` bündelt die
+  Bachelorprojekt-Markenauftritte; `web` generisches Artefakt-Tooling.
+- Symlink-Packs (`formats/`, `web/`, `mcp/`, `misc/morning`, `research/`)
+  zeigen auf den lokalen Home-Skill-Store und lösen nur auf dieser Maschine
+  auf; Klone andernorts sehen dort leere Einträge.
 - `runtimes/` — `init.sh`, `repo.yaml.schema`, Profile, Skripte, Prompts.
 - `registry.json` — alle Skills mit Herkunft (`merged`, `home`,
   `bachelorprojekt`) und ggf. Upstream-Revision.

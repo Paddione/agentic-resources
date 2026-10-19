@@ -203,7 +203,7 @@
    "source": "home"
   },
   "playwright-best-practices": {
-   "path": "domains/website/playwright-best-practices",
+   "path": "domains/brand-site/playwright-best-practices",
    "source": "bachelorprojekt"
   },
   "postgres-audit": {
@@ -213,10 +213,6 @@
   "pptx": {
    "path": "domains/formats/pptx",
    "source": "home"
-  },
-  "pytest-patterns": {
-   "path": "domains/devtools/pytest-patterns",
-   "source": "bachelorprojekt"
   },
   "python-testing-patterns": {
    "path": "domains/testing/python-testing-patterns",
@@ -309,11 +305,11 @@
    "source": "home"
   },
   "web-audit": {
-   "path": "domains/website/web-audit",
+   "path": "domains/brand-site/web-audit",
    "source": "bachelorprojekt"
   },
   "website-specialist": {
-   "path": "domains/website/website-specialist",
+   "path": "domains/brand-site/website-specialist",
    "source": "bachelorprojekt"
   },
   "writing-plans": {

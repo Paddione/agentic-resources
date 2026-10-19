@@ -12,7 +12,7 @@ Create a lane inventory with: framework and package/path, installed version, new
 | --- | --- |
 | Strategy, assertion value, risk coverage, deterministic tests, doubles and data | this skill's rules/01 through rules/04 |
 | Vitest runner, jsdom vs real browser, projects, coverage inclusion, cleanup, worker lifecycle | installed `vitest-testing` / `vitest` skills |
-| pytest fixtures, scope, parametrization, mocking, async review | installed pytest-patterns skill, especially its review-gates reference |
+| pytest fixtures, scope, parametrization, mocking, async review | installed `python-testing-patterns` skill, especially its `references/review-gates.md` |
 | Playwright fixtures, locators, auto-waiting, auth, traces, sharding | installed `playwright-best-practices` skill |
 | CI health, quarantine, population-specific coverage, timing and merge coverage | rules/07 plus discovered workflow definitions |
 | Failed CI PR check logs | installed CI-fix skill; use only when relevant |
