@@ -15,7 +15,7 @@ description: 'Use to choose the development path for a work request in this repo
 
 Der Plan ist der behavior-change-Einstieg des gemeinsamen [Lifecycle-Vertrags](.agents/skills/references/dev-flow-lifecycle.md): Ausgang ist ein Request, Ausgang ein gestagter, gepushter Plan ohne PR; danach übernimmt `dev-flow-execute`. Proposal, Plan-Lint, staged-plan und No-Early-PR-Gates bleiben hier normativ.
 
-Nur-wenn-Tickets (`repo.tickets != none`): „Gestagt" heißt Ticket-Status `plan_staged` (Claim ticket-scoped, `stage-plan --hold` nach dem Commit); `dev-flow-execute` liest den Plan aus der DB. Ohne Tickets (`repo.tickets == none`): kein `ticket.sh`, kein `ticket-mcp`, kein `stage-plan` — „gestagt" heißt Plan committiert und auf den Feature/Fix-Branch gepusht; `dev-flow-execute` liest ihn aus der Branch-Konvention `.agents/plans/<slug>/tasks.md`.
+Nur-wenn-Tickets (`repo.tickets != none`): „Gestagt" heißt Ticket-Status `plan_staged` (Claim ticket-scoped, Stagen nach dem Commit — Ablauf: [ticket-stage-procedure](references/ticket-stage-procedure.md)); `dev-flow-execute` liest den Plan aus der DB. Ohne Tickets (`repo.tickets == none`): „gestagt" heißt Plan committiert und auf den Feature/Fix-Branch gepusht; `dev-flow-execute` liest ihn aus der Branch-Konvention `.agents/plans/<slug>/tasks.md`.
 
 ## Wann diese Skill greift
 Bei jeder Anfrage in diesem Repo, die etwas verändern will.
@@ -104,7 +104,7 @@ Die Planphase startet auf `MAIN`; danach entsteht der Worktree.
 | Phase | Wo | Was |
 |---|---|---|
 | **A — Proposal** | `MAIN` | Assets sammeln, Codebase erkunden, Plan Intel Bundle (`intel.json`) füllen, Design-Bundle co-lokalisieren, Lavish-Board, **Brainstorming**, Plan in `.agents/plans/<slug>/` anlegen — Design-Spec-Frontmatter per Task-Runner/Helper des Repos (`scripts/vda.sh frontmatter` bzw. Repo-Äquivalent) |
-| **B — Branch live** | Worktree | Worktree anlegen, agent-lock claimen, Artefakte verschieben, Scaffold-Commit + Push |
+| **B — Branch live** | Worktree | Worktree anlegen (`scripts/worktree-create.sh <branch> <path>` bzw. Repo-Äquivalent), agent-lock claimen, Artefakte verschieben, Scaffold-Commit + Push |
 | **C — Partial-Pipeline** | Worktree | Decompose in Partials, pro Partial: Plan schreiben → committen (nur-wenn-Tickets: → stagen → enqueuen); danach plan-lint, Embedding, finaler Push |
 
 Vollständige Schrittfolge samt Befehlen, Decompose-/Fan-out-Mechanik und Kontext-Injektion für
@@ -114,7 +114,7 @@ Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-
 
 ### Guards des Feature-Pfads
 - **Preflight: Check merged** (T002279) — beide Pfade, vor der Worktree-Anlage: prüfen, ob der
-  Fix auf `MAIN` schon drin ist. Nur-wenn-Tickets: `bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"` (`rc=1` = schon gefixt → Ticket `done`, abbrechen). Ohne Tickets: `git log origin/MAIN --grep='<slug|symptom>'` — Treffer → abbrechen.
+  Fix auf `MAIN` schon drin ist. Nur-wenn-Tickets: Merge-Check übers Ticket-Backend (`rc=1` = schon gefixt → Ticket `done`, abbrechen; Ablauf: [ticket-stage-procedure](references/ticket-stage-procedure.md)). Ohne Tickets: `git log origin/MAIN --grep='<slug|symptom>'` — Treffer → abbrechen.
 - Alle weiteren Guards (Kollisions-Check T002444, Brainstorming-Pflicht, Ticket-vor-Branch nur-wenn-Tickets, disjunkte Partials, Plan-Mutation, Slot-Gating, Design-Asset-Qualität): [feature-path-guards](references/feature-path-guards.md).
 
 ### Schritt 3.7: Plan-Erstellung — Decompose, dann paralleler Fan-out (T002074)
@@ -161,7 +161,7 @@ Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-pr
 bash scripts/agent-lock.sh claim ticket "$TICKET_EXT_ID" \
   --branch "$(git -C "$WT" branch --show-current)" --worktree "$WT" --label dev-flow-plan
 ```
-`stage-plan` läuft erst **nach** dem Commit.
+Nur-wenn-Tickets: Stagen läuft erst **nach** dem Commit ([ticket-stage-procedure](references/ticket-stage-procedure.md)).
 Ohne Tickets — nur den Branch claimen:
 ```bash
 bash scripts/agent-lock.sh claim branch "$(git -C "$WT" branch --show-current)" \
@@ -173,9 +173,9 @@ Nur-wenn-Tickets — ein Aufruf statt der Sequenz unten (T900985): devflow-mcp `
 branch_type, plan_markdown | plan_file, design_markdown?, partials)` legt Worktree + Branch von
 `origin/MAIN` an, claimt, schreibt Plan und Design, lässt `plan-lint` laufen (rot = Abbruch mit
 strukturierten Befunden, Worktree bleibt), dann Preflight, Commit, Push und
-`stage-plan --hold`.
+Stagen mit `--hold`-Semantik ([ticket-stage-procedure](references/ticket-stage-procedure.md)).
 
-**Pre-Commit-Vertrag (PFLICHT):** Nur-wenn-Tickets via `plan-preflight.sh pre-commit --ticket "$TICKET_EXT_ID"`
+**Pre-Commit Guard (PFLICHT) [T001268]:** Nur-wenn-Tickets via `plan-preflight.sh pre-commit --ticket "$TICKET_EXT_ID"`
 (`rc=0` grün, `rc=1` Guard verletzt, `rc=2` Umgebungsfehler). Ohne Tickets gilt der manuelle
 Vertrag (kein `plan-preflight.sh` — verlangt eine Ticket-ID):
 
@@ -185,9 +185,10 @@ Vertrag (kein `plan-preflight.sh` — verlangt eine Ticket-ID):
    Pfade unter `tests/` und `.agents/plans/` (nur-wenn-generated-artifacts: plus exakt
    `components/website/src/data/test-inventory.json`). Andere gestagte Dateien brechen ab
    (Abhilfe: `git restore --staged <pfad>`). Unstaged/untracked wird nicht geprüft.
-3. **Claim vorhanden [T003102]:** nur-wenn-Tickets `agent-locks/ticket__${TICKET_EXT_ID}.json`
+3. **Claim vorhanden [T003102 — akzeptiert ticket- UND branch-scoped Claims]:** nur-wenn-Tickets `agent-locks/ticket__${TICKET_EXT_ID}.json`
    (Fallback `agent-locks/branch__${BRANCH_SLUG}.json`, beide Scopes akzeptiert); ohne Tickets
-   `agent-locks/branch__${BRANCH_SLUG}.json` — fehlt die Lock-Datei, vorher claimen (Schritt 4.5).
+   `agent-locks/branch__${BRANCH_SLUG}.json` — fehlt die Lock-Datei (`[ -f "$LOCK_FILE" ]` schlägt fehl),
+   vorher claimen (Schritt 4.5).
 
 ```bash
 git -C "$WT" add .agents/plans/<slug>/
@@ -225,7 +226,7 @@ English: verify the bug cause during triage — distinguish observed symptom fro
 and validate the cause with evidence before designing the solution.
 
 Schritte 1–5 im Detail (nur-wenn-Tickets: Ticket, Worktree, Claims, Lavish-Board, Brainstorming mit
-Root-Cause-Fokus, failing Test, Plan, `stage-plan`, Commit — ohne Tickets: ohne Ticket-Schritte):
+Root-Cause-Fokus, failing Test, Plan, Stagen, Commit — ohne Tickets: ohne Ticket-Schritte):
 [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md) §Fix-Pfad. Der abschließende Stage-Commit:
 
 ```bash

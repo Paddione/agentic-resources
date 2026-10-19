@@ -1,6 +1,6 @@
 ---
 name: vitest-testing
-description: Vitest-Runner konfigurieren, prüfen, laufen lassen und debuggen — Config, vi-API, Pools, Coverage, Browser Mode, hängefreier Agent-Betrieb. Trigger: vitest.config, vi.mock, vi.useFakeTimers, expect.poll, toMatchInlineSnapshot, test.extend, projects, pool, browser.instances, toMatchScreenshot, "*.test-d.ts", import.meta.vitest, veraltete Config-Keys. Testinhalt gehört zu vitest, strategieübergreifende Qualität zu sota-testing, Journeys und Server-Lebenszyklus zu e2e.
+description: 'Vitest-Runner konfigurieren, prüfen, laufen lassen und debuggen — Config, vi-API, Pools, Coverage, Browser Mode, hängefreier Agent-Betrieb. Trigger: vitest.config, vi.mock, vi.useFakeTimers, expect.poll, toMatchInlineSnapshot, test.extend, projects, pool, browser.instances, toMatchScreenshot, "*.test-d.ts", import.meta.vitest, veraltete Config-Keys. Testinhalt gehört zu vitest, strategieübergreifende Qualität zu sota-testing, Journeys und Server-Lebenszyklus zu e2e.'
 user-invocable: false
 ---
 

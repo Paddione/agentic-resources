@@ -22,6 +22,12 @@ und zurückspielen):
 git pull --rebase origin <main_branch>
 ```
 
+Beispiel ausgerollt (`repo.main_branch: main`):
+
+```bash
+git pull --rebase origin main
+```
+
 Stash-Fallen (Pop-Verifikation, Disziplin, Branch-Switch-Race, Probe-Commit):
 [stash-discipline](references/stash-discipline.md).
 
@@ -48,7 +54,16 @@ Betroffene Suiten laufen lassen (Befehle aus `repo.task_runner`; bei
 
 Nur-wenn-`generated_artifacts`: Vor der Artefakt-Regeneration erneut auf
 Divergenz zu `origin/<main_branch>` prüfen (seit Schritt 0 kann die Basis
-weitergerückt sein) und erst danach regenerieren.
+weitergerückt sein) und erst danach regenerieren. Divergenz zählen:
+
+```bash
+git fetch origin <main_branch>
+BEHIND=$(git rev-list --count HEAD..origin/<main_branch> 2>/dev/null || echo 0)
+# Beispiel ausgerollt (repo.main_branch: main):
+# BEHIND=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo 0)
+```
+
+Erst danach regenerieren (`task freshness:regenerate` bzw. Repo-Äquivalent).
 
 ### Rebase-Freshness-Regel (T003105)
 
@@ -56,7 +71,7 @@ Nach JEDEM Rebase VOR dem Push den Freshness-Check erneut laufen lassen
 (`task freshness:check`, bei `task_runner: none` das repo-eigene Äquivalent) —
 ein konfliktfreier Rebase kann committete Artefakte durch `merge=ours` still
 verlieren; ein grüner Rebase belegt die Artefakt-Vollständigkeit nicht. Rot?
-Regenerieren und Regen-Commit anhängen.
+`task freshness:regenerate` (bzw. Repo-Äquivalent) und Regen-Commit anhängen.
 
 ## Schritt 2 — Commit
 

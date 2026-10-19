@@ -63,6 +63,10 @@ Schritt ersatzlos.
 
 ## Schritt 2: Implementierung an frischen Implementer-Subagenten delegieren
 
+> **Arbeitsteilung (T002365):** Implementer bis PR-Erstellung → **ENDE**, Bericht zurück, OHNE
+> Auto-Merge-Anforderung. Orchestrator: Merge-Gate (3.8), CI-Watch (5.5); Exit 3/4 per
+> `SendMessage` an den Implementer zurück, nicht neu spawnen.
+
 > **Arbeitsteilung:** Implementer bis PR-Erstellung → **ENDE**, Bericht zurück, OHNE
 > Auto-Merge-Anforderung. Orchestrator: Merge-Gate (3.8), CI-Watch (5.5); Exit 3/4 per
 > `SendMessage` an den Implementer zurück, nicht neu spawnen.
@@ -172,7 +176,7 @@ Rufe `commit-commands:commit-push-pr` auf oder führe `gh pr create` manuell aus
 
 **Orchestrator-Schritt, nie als Hintergrund-Monitor.** Auto-Merge ist seit 3.8 angefordert und greift bei grünen Required Checks. Details/Required-Check-Liste: [ci-fix-loop](references/ci-fix-loop.md).
 
-Only-if-tickets: `bash scripts/devflow-ci-watch.sh "$TICKET_ID" "$PR_URL"` (rebased bei `DIRTY` selbst, Exit 3/4 = Rebase-Konflikt/echter `CONFLICTING`-Status). Sonst manueller Watch:
+Only-if-tickets: CI-Watch (`bash scripts/devflow-ci-watch.sh "$TICKET_ID" "$PR_URL"` bzw. Repo-Äquivalent; rebased bei `DIRTY` selbst, Exit-Code `3` bei Rebase-Konflikt bzw. `4` bei echtem `CONFLICTING`-Mergestatus) — dann gibt der **Orchestrator den Konflikt per `SendMessage` an den bereits gespawnten Implementer zurück** (kein neuer Spawn) und ruft den Watch nach dessen Push erneut auf. Sonst manueller Watch:
 ```bash
 # Checks + Merge-State pollen, bis MERGED oder Timeout:
 gh pr checks <num> && gh pr view <num> --json mergeStateStatus,mergedAt -q '[.mergeStateStatus, .mergedAt]'

@@ -249,7 +249,7 @@ E2E-spezifisch — zu stagende Pfade und Titelformat:
 git add tests/e2e/specs/<neu>.spec.ts tests/e2e/playwright.config.ts components/website/src/data/test-inventory.json
 # Titel (only-if-tickets): "test(test): add E2E tests for <feature> [$TICKET_ID]"
 # Titel (ohne Tickets): "test(test): add E2E tests for <feature>"
-# Scope 'test' verwenden — 'e2e' lehnt die Commit-Msg-Prüfung ab
+# Scope 'test' verwenden — 'e2e' lehnt validate-commit-msg ab
 # (konsolidiert; erlaubte Scopes: Scopes-Skript bzw. repo.scopes).
 ```
 
