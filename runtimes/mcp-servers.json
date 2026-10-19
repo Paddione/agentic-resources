@@ -1,0 +1,368 @@
+{
+  "_doc": "Central MCP backend registry and hub client SSOT. All configured harnesses route through fleet-workspace to the authenticated gateway and owner-scoped hub. secrets entries are private backend credential sources; no client-side token literals are rendered.",
+  "defaults": {
+    "opencode_timeout": {
+      "startup": 30000,
+      "catalog": 30000,
+      "execution": 43200000
+    }
+  },
+  "secrets": {
+    "BGE_MCP_TOKEN": {
+      "file": ".config/bge-mcp/server.env"
+    },
+    "MCP_POSTGRES_TOKEN": {
+      "file": ".config/mcp-postgres/server.env"
+    },
+    "HF_MCP_TOKEN": {
+      "file": ".config/hf-mcp/server.env"
+    }
+  },
+  "servers": {
+    "codebase-memory-mcp": {
+      "doc": "Codebase knowledge graph (index_repository, search_graph). Absolute binary path; gemini relies on PATH.",
+      "stdio": {
+        "command": [
+          "/home/patrick/.local/bin/codebase-memory-mcp"
+        ]
+      },
+      "codex": {
+        "cwd": "/home/patrick/Bachelorprojekt",
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      },
+      "gemini": {
+        "command": [
+          "codebase-memory-mcp"
+        ]
+      }
+    },
+    "context7": {
+      "doc": "Up-to-date library documentation.",
+      "stdio": {
+        "command": [
+          "npx",
+          "-y",
+          "@upstash/context7-mcp@4.1.1"
+        ]
+      }
+    },
+    "mailbox": {
+      "doc": "mailbox.org IMAP/SMTP. Credentials come from DOTENV_CONFIG_PATH, never from this manifest.",
+      "stdio": {
+        "command": [
+          "node",
+          "/home/patrick/mcp-servers/mailbox/dist/main.js"
+        ],
+        "env": {
+          "DOTENV_CONFIG_PATH": "/home/patrick/.config/mailbox-mcp/.env"
+        }
+      },
+      "claude": {
+        "env": {},
+        "cwd": "/home/patrick/mcp-servers/mailbox"
+      }
+    },
+    "devflow-mcp": {
+      "doc": "Dev-flow task oracle, plan staging, graph-backed code retrieval.",
+      "stdio": {
+        "command": [
+          "node",
+          "/home/patrick/mcp-servers/devflow/server.mjs"
+        ]
+      },
+      "codex": {
+        "cwd": "/home/patrick/Bachelorprojekt",
+        "extra": {
+          "enabled": true
+        },
+        "timeouts": {
+          "startup_timeout_sec": 60,
+          "tool_timeout_sec": 120
+        }
+      }
+    },
+    "warden": {
+      "doc": "Bitwarden/Vaultwarden via Bachelorprojekt launch wrapper. Mutating tools stay ask-gated per harness.",
+      "stdio": {
+        "command": [
+          "node",
+          "/home/patrick/Bachelorprojekt/scripts/warden-mcp/launch.mjs"
+        ]
+      }
+    },
+    "fleet-workspace": {
+      "doc": "Central authenticated MCP hub through existing gateway and owner-specific ToolHive views. Backend definitions are maintained here; harnesses register only this entry.",
+      "stdio": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/opencode-client.json"
+        ]
+      },
+      "codex": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/codex-client.json"
+        ],
+        "args_style": "single",
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 180.0
+        }
+      },
+      "opencode": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/opencode-client.json"
+        ]
+      },
+      "claude": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/claude-client.json"
+        ]
+      },
+      "gemini": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/gemini-client.json"
+        ]
+      },
+      "qwen": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/qwen-client.json"
+        ]
+      },
+      "muse": {
+        "command": [
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/node",
+          "/home/patrick/.local/share/remote-workspace/releases/572a2fe3151c8f73ad43eb6f48b49e85b49a3a19/mcp-servers/remote-workspace/client.mjs",
+          "--config",
+          "/home/patrick/.config/remote-workspace/muse-client.json"
+        ]
+      }
+    },
+    "mcp-postgres": {
+      "doc": "Shared PostgreSQL gateway on :13001 via local mcp-postgres-local.service (fleet-DB, all harnesses use HTTP). Bearer token SSOT is .config/mcp-postgres/server.env; the systemd unit reads the same file, so render then restart the unit after rotation. URL pins 127.0.0.1 because the local service binds IPv4 loopback only — 'localhost' may resolve to ::1 per client stack.",
+      "http": {
+        "url": "http://127.0.0.1:13001/mcp",
+        "auth": {
+          "header": "Authorization",
+          "scheme": "Bearer",
+          "env": "MCP_POSTGRES_TOKEN"
+        }
+      },
+      "codex": {
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      }
+    },
+    "bge-mcp": {
+      "doc": "BGE embeddings gateway on :13005. Bearer token SSOT is .config/bge-mcp/server.env.",
+      "http": {
+        "url": "http://localhost:13005/mcp",
+        "auth": {
+          "header": "Authorization",
+          "scheme": "Bearer",
+          "env": "BGE_MCP_TOKEN"
+        }
+      },
+      "codex": {
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      }
+    },
+    "mcp-task-runner": {
+      "doc": "Bachelorprojekt Taskfile runner. Codex runs node from the repo checkout, gemini relies on PATH with an absolute --taskfile.",
+      "stdio": {
+        "command": [
+          "node",
+          "/home/patrick/mcp-servers/task-runner/server.mjs",
+          "--otel-endpoint",
+          "localhost:4317",
+          "--taskfile",
+          "Taskfile.yml"
+        ]
+      },
+      "codex": {
+        "cwd": "/home/patrick/Bachelorprojekt",
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      },
+      "gemini": {
+        "command": [
+          "mcp-task-runner",
+          "--otel-endpoint",
+          "localhost:4317",
+          "--taskfile",
+          "/home/patrick/Bachelorprojekt/Taskfile.yml"
+        ]
+      }
+    },
+    "playwright": {
+      "doc": "Playwright browser MCP (codex only, Bachelorprojekt cwd for dev-flow-e2e).",
+      "stdio": {
+        "command": [
+          "npx",
+          "-y",
+          "@playwright/mcp@latest"
+        ]
+      },
+      "codex": {
+        "cwd": "/home/patrick/Bachelorprojekt",
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      }
+    },
+    "huggingface": {
+      "doc": "HuggingFace official MCP (https://huggingface.co/mcp): models/datasets/papers/spaces. Bearer secret SSOT is .config/hf-mcp/server.env with a token from https://huggingface.co/settings/tokens.",
+      "http": {
+        "url": "https://huggingface.co/mcp",
+        "auth": {
+          "header": "Authorization",
+          "scheme": "Bearer",
+          "env": "HF_MCP_TOKEN"
+        }
+      },
+      "codex": {
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 120.0
+        }
+      }
+    },
+    "python-sandbox": {
+      "doc": "Airgapped Bubblewrap Python sandbox cluster (3x x86_64, 2x arm64 RPi5) for ad-hoc code and pytest runs.",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/python-sandbox/server.py"
+        ]
+      }
+    }
+  },
+  "harnesses": {
+    "opencode": [
+      "fleet-workspace"
+    ],
+    "codex": [
+      "fleet-workspace"
+    ],
+    "claude": [
+      "fleet-workspace",
+      "bge-mcp",
+      "mcp-postgres"
+    ],
+    "gemini": [
+      "fleet-workspace"
+    ],
+    "qwen": [
+      "fleet-workspace"
+    ],
+    "muse": [
+      "fleet-workspace"
+    ]
+  },
+  "hub_backend_allowlists": {
+    "opencode": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "playwright",
+      "huggingface",
+      "python-sandbox"
+    ],
+    "codex": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "playwright",
+      "huggingface",
+      "python-sandbox"
+    ],
+    "claude": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "huggingface",
+      "python-sandbox"
+    ],
+    "gemini": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "playwright",
+      "huggingface",
+      "python-sandbox"
+    ],
+    "qwen": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "playwright",
+      "huggingface",
+      "python-sandbox"
+    ],
+    "muse": [
+      "codebase-memory-mcp",
+      "context7",
+      "mailbox",
+      "devflow-mcp",
+      "warden",
+      "mcp-postgres",
+      "bge-mcp",
+      "mcp-task-runner",
+      "playwright",
+      "huggingface",
+      "python-sandbox"
+    ]
+  }
+}
