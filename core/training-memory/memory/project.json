@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-08",
+  "updated_at": "2026-10-20",
   "repositories": [
     "/home/patrick/unsloth-boxes",
     "/home/patrick"
@@ -43,8 +43,11 @@
     "Qwen3.5-0.8B",
     "Qwen3.5-2B",
     "Qwen3.5-4B",
-    "LiquidAI/LFM2.5-1.2B-Instruct (optional coordinator)"
+    "LiquidAI/LFM2.5-1.2B-Instruct (optional coordinator)",
+    "LiquidAI/LFM2.5-1.2B-Thinking (optional coordinator / specialist)",
+    "LiquidAI/LFM2.5-2.6B (dense agentic specialist)",
+    "LiquidAI/LFM2.5-8B-A1B (sparse MoE ~1.5B active: coordinator / plan-executor)"
   ],
-  "history_status": "No run manifests or finished GGUF reports imported yet. Repository documents mention historical smoke tests; not independently verified.",
-  "next_action": "Inventory existing local manifests and GGUF evaluation reports; establish held-out task suites for both repositories before training."
+  "history_status": "Qwen3.5 0.8B/2B/4B SFT, DPO, GRPO, and GGUF evaluations recorded in events.jsonl. LFM2.5 family (incl. LFM2.5-8B-A1B) added to pipeline and role testsets.",
+  "next_action": "Measure LFM2.5-8B-A1B and LFM2.5-1.2B corpora with Hub tokenizers, run template guard, and benchmark against Qwen3.5 on all 4 role testsets."
 }
