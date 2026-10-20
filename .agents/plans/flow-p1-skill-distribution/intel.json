@@ -1,0 +1,22 @@
+{
+  "repo": "/home/patrick/agentic-resources",
+  "worktree": "/home/patrick/.worktrees/agentic-resources-00097124/fix/flow-p1-skill-distribution",
+  "base_commit": "9aa82c6bf1d615ee40f5e5520f63fdd1ba583ed4",
+  "source_report": "Dotfiles flow analysis 2026-10-21; F1 harness flag, F2 partial status, F3 executable mode, F4 rules restored locally",
+  "scope": "F1: --harness wird beim ersten Argument-Parse konsumiert, danach bleibt HARNESS=0. Repariere nur die Flag-Verarbeitung. Ohne --harness ausschlie\u00dflich Consumer-Verteilung, mit --harness zus\u00e4tzlich Home-Harnesses. Bestehende Dateien und Symlinks erhalten. Keine \u00c4nderungen an Layer-Aufl\u00f6sung oder anderen bekannten Problemen.",
+  "risks": [
+    "Remote branches intentionally start at origin default to avoid publishing unrelated local commits.",
+    "Host configurations and secrets are outside worker scope.",
+    "Live audit checks may remain unverified."
+  ],
+  "target_files": [
+    "runtimes/init.sh",
+    "tests/test_init_harness.py"
+  ],
+  "dependency_plan_ids": [],
+  "profile": {
+    "task_runner": "none",
+    "generated_artifacts": false,
+    "tickets": "none"
+  }
+}
