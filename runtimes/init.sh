@@ -6,13 +6,13 @@
 # Usage: init.sh --repo <pfad> [--layers core,lifecycle|all] [--profile <name>] [--dry-run]
 set -euo pipefail
 
-REPO=""; LAYERS="core,lifecycle"; PROFILE=""; DRY=0
+REPO=""; LAYERS="core,lifecycle"; PROFILE=""; DRY=0; HARNESS=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --repo) REPO="$2"; shift 2;;
     --layers) LAYERS="$2"; shift 2;;
     --profile) PROFILE="$2"; shift 2;;
-    --harness) shift;;
+    --harness) shift; HARNESS=1;;
     --dry-run) DRY=1; shift;;
     *) echo "unknown flag: $1" >&2; exit 2;;
   esac
@@ -40,10 +40,10 @@ resolve_layers() {
 
 # Skill-Verzeichnisse: Standard ist NUR das Consumer-Repo (Projektebene).
 # --harness verlinkt zusaetzlich auf Home-Ebene (Maschinen-Setup, kein Projekt-Default).
-HARNESS=0
-for a in "$@"; do [[ "$a" == "--harness" ]] && HARNESS=1; done
 HARNESS_DIRS=()
-(( HARNESS )) && HARNESS_DIRS=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.config/opencode/skills" "$HOME/.zcode/skills")
+if (( HARNESS )); then
+  HARNESS_DIRS=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.config/opencode/skills" "$HOME/.zcode/skills")
+fi
 PROJECT_DIRS=("$REPO/.agents/skills" "$REPO/.opencode/skills" "$REPO/.claude/skills")
 
 link_skill() {

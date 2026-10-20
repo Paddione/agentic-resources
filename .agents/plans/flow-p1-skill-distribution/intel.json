@@ -1,0 +1,86 @@
+{
+  "repo": "/home/patrick/agentic-resources",
+  "worktree": "/home/patrick/.worktrees/agentic-resources-00097124/fix/flow-p1-skill-distribution",
+  "base_commit": "9aa82c6bf1d615ee40f5e5520f63fdd1ba583ed4",
+  "source_report": "Dotfiles flow analysis 2026-10-21; F1 harness flag, F2 partial status, F3 executable mode, F4 rules restored locally",
+  "scope": "F1: --harness wird beim ersten Argument-Parse konsumiert, danach bleibt HARNESS=0. Repariere nur die Flag-Verarbeitung. Ohne --harness ausschlie\u00dflich Consumer-Verteilung, mit --harness zus\u00e4tzlich Home-Harnesses. Bestehende Dateien und Symlinks erhalten. Keine \u00c4nderungen an Layer-Aufl\u00f6sung oder anderen bekannten Problemen.",
+  "risks": [
+    "Remote branches intentionally start at origin default to avoid publishing unrelated local commits.",
+    "Host configurations and secrets are outside worker scope.",
+    "Live audit checks may remain unverified."
+  ],
+  "target_files": [
+    "runtimes/init.sh",
+    "tests/test_init_harness.py"
+  ],
+  "dependency_plan_ids": [],
+  "profile": {
+    "task_runner": "none",
+    "generated_artifacts": false,
+    "tickets": "none"
+  },
+  "current_host_skill_receipt": [
+    {
+      "name": "repo-flow-analysis",
+      "path": "core/repo-flow-analysis",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "codebase-memory",
+      "path": "core/codebase-memory",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "code-analyzer",
+      "path": "core/code-analyzer",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "breadboarding",
+      "path": "domains/devtools/breadboarding",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "mermaid-architecture-diagrams",
+      "path": "domains/devtools/mermaid-architecture-diagrams",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "explore",
+      "path": "core/explore",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "trace-proof",
+      "path": "core/trace-proof",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "sota-testing",
+      "path": "domains/testing/sota-testing",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    }
+  ],
+  "host_mcp_drift": {
+    "source": "existing pre-commit warn-hooks output",
+    "harnesses": [
+      "claude",
+      "claude-global"
+    ],
+    "content_reviewed": false
+  },
+  "host_trace_receipt": {
+    "mode": "0644",
+    "direct_exit": 126,
+    "interpreter_report_readable": true,
+    "scope": "historical aggregates; no per-flow correlation established"
+  }
+}

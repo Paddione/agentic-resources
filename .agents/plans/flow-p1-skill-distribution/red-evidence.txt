@@ -1,0 +1,28 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_harness_flag_adds_home_destinations ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0')
+
+    def test_harness_flag_adds_home_destinations(tmp_path):
+        resources = tmp_path / "resources"
+        (resources / "runtimes").mkdir(parents=True)
+        (resources / "core/example").mkdir(parents=True)
+        (resources / "core/example/SKILL.md").write_text("---\nname: example\ndescription: fixture\n---\n")
+        script = resources / "runtimes/init.sh"
+        shutil.copyfile(Path(__file__).resolve().parents[1] / "runtimes/init.sh", script)
+        consumer, home = tmp_path / "consumer", tmp_path / "home"
+        consumer.mkdir()
+        for directory in [".agents/skills", ".claude/skills", ".config/opencode/skills", ".zcode/skills"]:
+            (home / directory).mkdir(parents=True)
+        result = subprocess.run(["bash", str(script), "--repo", str(consumer), "--layers", "core", "--harness", "--dry-run"], env={**os.environ, "HOME": str(home)}, capture_output=True, text=True, check=True)
+        assert str(consumer / ".agents/skills/example") in result.stdout
+>       assert str(home / ".agents/skills/example") in result.stdout
+E       AssertionError: assert '/tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/home/.agents/skills/example' in '[dry] mkdir -p /tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/consumer/.agents/skills\n[dry] ln -s.../skills/example -> /tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/resources/core/example\nfertig.\n'
+E        +  where '/tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/home/.agents/skills/example' = str((PosixPath('/tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/home') / '.agents/skills/example'))
+E        +  and   '[dry] mkdir -p /tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/consumer/.agents/skills\n[dry] ln -s.../skills/example -> /tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/resources/core/example\nfertig.\n' = CompletedProcess(args=['bash', '/tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/resources/runtimes/i...ple -> /tmp/pytest-of-patrick/pytest-139/test_harness_flag_adds_home_de0/resources/core/example\nfertig.\n', stderr='').stdout
+
+tests/test_init_harness.py:21: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_init_harness.py::test_harness_flag_adds_home_destinations
+1 failed in 0.04s
