@@ -17,9 +17,13 @@ Nur diese Zielpfade schreiben. Niemals .git, Hook-Konfiguration, Secret-/git-cry
 1. Relevante Quellen und den gestagten Test lesen. RED-Test ausführen: expected: FAIL (Reproduktion ist bereits gestagt). Danach minimale Korrektur und aussagekräftige weitere Fälle ergänzen.
 2. Implementierung bzw. Report ausschließlich in FILES schreiben. Bei unklarer extern abhängiger Entscheidung nicht raten: im Report unverified markieren.
 3. Exakt ausführen: `python3 -m pytest tests/test_init_harness.py -q`. Erwartung nach Umsetzung: Exit 0, keine zusätzlichen Skips als Ersatz für Assertions. Bei Testfehler Ursachen anhand realer Ausgabe prüfen, Tests nicht abschwächen.
-4. `git diff --check` und `git diff --stat` ausführen. Worker darf dies mit run_command argv=['git','diff','--check'] bzw. --stat.
+4. Nur `git diff --stat -- <FILES>` ausführen. --check ist im bestehenden Worker-Tool nicht freigegeben und wird durch den Haupt-Orchestrator nachgeprüft. Git-Diffs immer explizit auf FILES begrenzen; Secret-Dateien sind in der Sandbox absichtlich ausgeblendet.
 5. Mit Erfolg/Fehler, tatsächlich geprüften Befehlen, Ergebnis, geänderten Dateien und offenen Host-/CI-Nachprüfungen abschließen.
 
 ## Grenzen der Ausführung
 
 Worker-Timeout 15 Minuten, höchstens zwei inhaltliche Wiederholungen durch den vorhandenen Runner. Evidence: .agents/plans/flow-p1-skill-distribution/.plan-runner/state.json plus Orchestrator-Log. Kein Netzwerk-/Live-Smoke aus Tests nachladen. Sandbox hält Git-Daten read-only; Commit/Push/Merge verbleiben beim Haupt-Orchestrator. Für Host-/Windows-/Remote-Checks ohne Zugriff ehrlich offen melden.
+
+## Tatsächliche Worker-Sandbox
+
+Host-HOME, git-crypt-Dateien und Git-Schlüssel sind ausgeblendet. Nur der Worktree ist schreibbar; Git-Daten sind read-only. Der bestehende Direct-Worker erlaubt Python-pytest sowie git diff/status, aber kein chmod/Commit/Push und kein git diff --check. Keine Umgehung bauen. Für Tests ausschließlich temporäre synthetische Fixtures verwenden. Live- oder Cluster-Servicechecks, Windows und echte Remote-Exports sind in diesem Worker nicht verfügbar. Ein Audit muss diese Grenzen im Ergebnis ausweisen. Der Haupt-Orchestrator führt Diff-Check und unabhängig dieselben Tests in der Sandbox aus.

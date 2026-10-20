@@ -18,5 +18,69 @@
     "task_runner": "none",
     "generated_artifacts": false,
     "tickets": "none"
+  },
+  "current_host_skill_receipt": [
+    {
+      "name": "repo-flow-analysis",
+      "path": "core/repo-flow-analysis",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "codebase-memory",
+      "path": "core/codebase-memory",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "code-analyzer",
+      "path": "core/code-analyzer",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "breadboarding",
+      "path": "domains/devtools/breadboarding",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "mermaid-architecture-diagrams",
+      "path": "domains/devtools/mermaid-architecture-diagrams",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "explore",
+      "path": "core/explore",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "trace-proof",
+      "path": "core/trace-proof",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    },
+    {
+      "name": "sota-testing",
+      "path": "domains/testing/sota-testing",
+      "entrypoint_exists": true,
+      "missing_local_entrypoint_references": []
+    }
+  ],
+  "host_mcp_drift": {
+    "source": "existing pre-commit warn-hooks output",
+    "harnesses": [
+      "claude",
+      "claude-global"
+    ],
+    "content_reviewed": false
+  },
+  "host_trace_receipt": {
+    "mode": "0644",
+    "direct_exit": 126,
+    "interpreter_report_readable": true,
+    "scope": "historical aggregates; no per-flow correlation established"
   }
 }
