@@ -16,6 +16,12 @@
     },
     "HF_MCP_TOKEN": {
       "file": ".config/hf-mcp/server.env"
+    },
+    "MCP_POSTGRES_KORCZEWSKI_TOKEN": {
+      "file": ".config/mcp-postgres-korczewski/server.env"
+    },
+    "GLIMMER_WORKER_MCP_TOKEN": {
+      "file": ".config/glimmer-worker-mcp/server.env"
     }
   },
   "servers": {
@@ -263,13 +269,26 @@
         ]
       }
     },
-    "docstore": {
-      "doc": "Local document retrieval (TF-IDF over markdown/HTML/text under DOCSTORE_ROOT).",
-      "stdio": {
-        "command": [
-          "/usr/bin/python3",
-          "/home/patrick/mcp-servers/docstore/server.py"
-        ]
+    "mcp-postgres-korczewski": {
+      "doc": "Korczewski Postgres gateway on :13009 via mcp-postgres-korczewski.service (same script as fleet postgres, separate DB and token). Non-ticket SQL only; ticket reads retired.",
+      "http": {
+        "url": "http://127.0.0.1:13009/mcp",
+        "auth": {
+          "header": "Authorization",
+          "scheme": "Bearer",
+          "env": "MCP_POSTGRES_KORCZEWSKI_TOKEN"
+        }
+      }
+    },
+    "glimmer-worker": {
+      "doc": "Glimmer worker-model bridge (Streamable HTTP :13007, glimmer-worker-mcp.service). Direct harness entry, not a hub backend.",
+      "http": {
+        "url": "http://127.0.0.1:13007/mcp",
+        "auth": {
+          "header": "Authorization",
+          "scheme": "Bearer",
+          "env": "GLIMMER_WORKER_MCP_TOKEN"
+        }
       }
     }
   },
@@ -292,7 +311,8 @@
       "fleet-workspace"
     ],
     "muse": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "glimmer-worker"
     ]
   },
   "hub_backend_allowlists": {
@@ -303,12 +323,12 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -317,12 +337,12 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -331,11 +351,11 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -344,12 +364,12 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -358,12 +378,12 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -372,12 +392,18 @@
       "devflow-mcp",
       "warden",
       "mcp-postgres",
+      "mcp-postgres-korczewski",
       "bge-mcp",
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox",
-      "docstore"
+      "python-sandbox"
     ]
+  },
+  "upstreams": {
+    "unsloth-studio": {
+      "doc": "Studio :8888 is a view-layer upstream, not a hub backend: owner yamls inject STUDIO_MCP_AUTH (raw sk-... API key in studio-mcp.token, source unsloth.env). Since Studio 2026.10.7 the server ignores UNSLOTH_STUDIO_MCP_TOKEN; agents need an sk-... key.",
+      "url": "http://127.0.0.1:8888/mcp/"
+    }
   }
 }
