@@ -325,6 +325,26 @@
   "xlsx": {
    "path": "domains/formats/xlsx",
    "source": "home"
+  },
+  "mermaid-architecture-diagrams": {
+   "path": "domains/devtools/mermaid-architecture-diagrams",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/bentsolheim/public-skills",
+    "revision": "e5dea31ac3d1d5090428e461787a2fe94d0c922f",
+    "path": "skills/mermaid-architecture-diagrams",
+    "mode": "vendored"
+   }
+  },
+  "breadboarding": {
+   "path": "domains/devtools/breadboarding",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/ajoslin/dot",
+    "revision": "8aa8e87ab2fed38a42acefb4a2d9a3a557f0b1ed",
+    "path": "config/opencode/skills/breadboarding",
+    "mode": "vendored; skill.md normalized to SKILL.md"
+   }
   }
  }
 }
