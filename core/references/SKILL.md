@@ -1,6 +1,6 @@
 ---
 name: references
-description: 'Use when a dev-flow skill or subagent needs a shared cross-cutting reference — subagent provisioning (model/effort/context), plan quality gates (S1–S4 CI ratchet + plan-lint hard rules), plan-review UI, dev-flow gotchas and known issues (T000xxx), deploy routing (path→task), the MCP tool guide (mcp-postgres/mcp-kubernetes vs kubectl fallback, psql helper), verification block (freshness/S1), session coordination (agent-lock lifecycle), repo hygiene ops (stale worktrees/branches, working tree & stashes), the CI fix loop or the gh-axi GitHub CLI wrapper.'
+description: 'Use when a dev-flow skill or subagent needs a shared cross-cutting reference — subagent provisioning (model/effort/context), plan quality gates (S1–S4 CI ratchet + plan-lint hard rules), plan-review UI, dev-flow gotchas and known issues (T000xxx), deploy routing (path→task), the MCP tool guide (mcp-postgres/mcp-kubernetes vs kubectl fallback, psql helper), verification block (freshness/S1), session coordination (agent-lock lifecycle), repo hygiene ops (stale worktrees/branches, working tree & stashes), the CI fix loop, the gh-axi GitHub CLI wrapper, or agent-optimized repo structuring (context budget, tiered guidance, size limits, ignore files).'
 ---
 
 # Skill References — Shared Hub
@@ -39,6 +39,7 @@ auf die passende Datei (nicht den ganzen Hub laden, nicht die Inhalte dupliziere
 | Plan-Staging (`repo.tickets == none`) | `devflow-mcp plan_stage` (Commit+Push) | Pläne stagen ohne Ticket-Backend (retiriert 2026-10-14) |
 | git-workflow Nachschlagewerk | [`git-workflow-procedures.md`](git-workflow-procedures.md) | Befehlsfolgen zu `git-workflow`: commit, PR-Scope-Preflight, CI-Fix-Loop |
 | Agent-Active-Plans | [`agent-active-plans.md`](agent-active-plans.md) | Kontrakt zur Plan-Kontext-Injektion für `.claude/agents/bachelorprojekt-*.md` |
+| Agentenoptimiertes Repo | [`agent-optimized-repo.md`](agent-optimized-repo.md) | Kontext-Budget, Stufen, Größenlimits, Ignores, deterministische Guardrails |
 
 
 ## Framework mapping

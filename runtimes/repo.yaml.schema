@@ -15,5 +15,15 @@ repo:
   generated_artifacts: false
   # Task-Runner für verifizierende Kommandos ("taskfile" oder "none").
   task_runner: none
+  # Optionale Startwerte für agentenoptimierte Repos (SSOT-Details in
+  # core/references/agent-optimized-repo.md). Jedes Repo misst selbst nach.
+  # Maximale Modullänge in LOC.
+  agent_max_module_loc: 500
+  # Maximale Funktionslänge in LOC.
+  agent_max_function_loc: 50
+  # Maximale Root-Zeilen für AGENTS.md.
+  agent_tier1_max_lines: 300
+  # true, wenn .aiderignore/.claudeignore im Root gepflegt werden.
+  agent_ignore_files: true
 
 # Beispielprofile liegen in runtimes/profiles/ (dotfiles.yaml, bachelorprojekt.yaml).

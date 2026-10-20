@@ -6,3 +6,7 @@ repo:
   tickets: none
   generated_artifacts: true
   task_runner: taskfile
+  agent_max_module_loc: 500
+  agent_max_function_loc: 50
+  agent_tier1_max_lines: 300
+  agent_ignore_files: true

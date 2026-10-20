@@ -40,3 +40,35 @@ workspace:validate:
 
 Manifest-Fehler vor Cluster-Kontakt finden. Für Nicht-K8s-Repos: analoger
 Render-/Dry-Run des Deploy-Artefakts.
+
+## 4. agent:guardrails — Größenlimits und kompakte Ausgabe
+
+Limits aus `repo.yaml` lesen (`agent_max_module_loc`, `agent_max_function_loc`,
+`agent_tier1_max_lines`), Details in
+`core/references/agent-optimized-repo.md`:
+
+```yaml
+agent:lint:
+  cmds:
+    - |
+      MAX_MOD=$(yq '.repo.agent_max_module_loc' repo.yaml 2>/dev/null || echo 500)
+      fail=0
+      for f in $(git diff --name-only --diff-filter=d origin/main 2>/dev/null \
+        || git diff --name-only --diff-filter=d HEAD 2>/dev/null); do
+        case "$f" in *.ts|*.py|*.md) ;;
+          *) continue;; esac
+        lines=$(wc -l < "$f" 2>/dev/null || echo 0)
+        if [ "$lines" -gt "$MAX_MOD" ]; then echo "TOO-LONG $f ($lines > $MAX_MOD)"; fail=1; fi
+      done
+      # Funktionslänge per Sprach-Linter prüfen (ESLint max-lines-per-function,
+      # Ruff C901/PLR0912), nicht per Shell-Heuristik.
+      exit $fail
+agent:test:
+  cmds:
+    # Nur betroffene Suiten (test:changed), einzeilige Reporter
+    # (vitest --reporter=basic, pytest -q --tb=line), Volllogs in Dateien.
+    - task test:changed TEST_ARGS="--reporter=basic"
+```
+
+Lokal nur 1–10 % der betroffenen Suiten laufen lassen, Vollmatrix in CI.
+Verbose-Ausgaben verdrängen Instruktionen und triggern Kompaktierungen.
