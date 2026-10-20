@@ -47,3 +47,7 @@ When the request asks what to improve in the underlying code, pair this skill wi
 Compare the same source-grounded cases before and after. Include duplicate names, methods, route-to-handler, callers, test impact, cross-service boundaries, deleted/renamed symbols, dirty checkout, unsupported syntax, deliberately absent symbols, and pagination overflow. Measure resolution accuracy, edge precision, coverage by language, Recall@k/MRR, latency, artifact size and tokens/tool calls. Report misses and unsupported cases instead of dropping them. Separate retrieval ablations to attribute gains correctly.
 
 Deliver artifact paths, indexed revision/receipt, exact scope, build and validator results, measured navigation quality, and unresolved gaps. A validated schema is not a perfect graph. Do not claim a full export from a truncated query or global shortest paths from bounded traversal.
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.

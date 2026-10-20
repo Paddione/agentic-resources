@@ -1652,3 +1652,7 @@ flowchart TB
     class U1,U2,U3,U4,U5,U6,U7,U8,U9,U10,U11,U12,LD,LP ui
     class N1,N2,N3,N4,N5,N6,N7,N8,N9,N10,N11,N12,N13,N14,N15,N16,N17,N18 nonui
 ```
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../../../core/repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.

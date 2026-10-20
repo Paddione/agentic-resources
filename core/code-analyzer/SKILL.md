@@ -51,3 +51,7 @@ For each actionable finding provide:
 - Acceptance: measurable before/after criterion tied to the impact, such as removal of a specified cycle edge while public import and behavior tests pass. Avoid arbitrary line-count targets.
 
 Deliver the top actionable findings, investigation candidates, relevant intentional structures and analysis limits. Deduplicate related symptoms under their root cause. Give repository planning/execution tools the scoped findings, evidence, dependencies and verification criteria. After an authorized implementation, rerun relevant checks and compare the same bounded source/graph cases at the new successful generation; report behavior results separately from structural improvements.
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.

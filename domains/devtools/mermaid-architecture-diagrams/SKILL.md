@@ -17,7 +17,7 @@ Produce diagrams that are **correct, legible in print, and consistent as a set**
 2. Render it: `scripts/render-mmd.sh diagram.mmd`
 3. **Look at the preview image** (the script writes a `*-preview.png` sized for inspection)
 4. Fix clipping, overlaps, label collisions, edge crossings — re-render
-5. Repeat until clean (minimum one fix round; diagrams are never right first try)
+5. Repeat only when inspection reveals a defect; no artificial edit is required
 
 A diagram you haven't looked at is a draft, not a deliverable.
 
@@ -25,7 +25,7 @@ A diagram you haven't looked at is a draft, not a deliverable.
 
 1. **Purpose first.** One diagram, one purpose, one audience. Write the 5-second story the reader must grasp (*what talks to what, through what, where the boundaries are*) before drawing. If a diagram needs two stories, make two diagrams.
 2. **Pick the flow direction.** Topology/containment reads top-down (`TB`); pipelines read left-to-right (`LR`) — **but for print/PDF destinations, tall-and-narrow TB beats wide LR**: an LR pipeline scaled to text width prints at ~4–5pt. Verified repeatedly.
-3. **Apply the design system.** Use the semantic tokens, edge grammar, and label rules in [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md). Color means something or it isn't used. **Default to the glass + elevation look (Look 2, judged 8/10); the flat look (5/10) is the exception** — reach for it only when colorblind-safety or compliance is explicitly required. "Unknown audience" or "just show me X" is a Look 2 case. See DESIGN-SYSTEM.md's decision rule; don't pick flat because it's listed first.
+3. **Apply the design system.** Use the semantic tokens, edge grammar, and label rules in [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md). Color means something or it isn't used. Prefer plain semantic styling for analytical diagrams; use glass/elevation only when the requested presentation benefits from it.
 4. **Author within the verified allowlist.** [TECHNIQUES.md](TECHNIQUES.md) contains only constructs verified through real render pipelines, each tagged with where it works. The headline trap: **never set `themeVariables.fontFamily` for Quarto-destined diagrams** — it clips every label.
 5. **Render with the destination's pipeline** (table below).
 6. **Self-review adversarially** against [REVIEW-CHECKLIST.md](REVIEW-CHECKLIST.md) — legibility, design consistency, comprehension/correctness. Fix and re-render.
@@ -56,3 +56,9 @@ When you meet a new pipeline (different SSG, different Mermaid version), spike i
 - [TECHNIQUES.md](TECHNIQUES.md) — verified syntax allowlist with pipeline tags, gotcha table, probe snippets
 - [REVIEW-CHECKLIST.md](REVIEW-CHECKLIST.md) — adversarial self-review lenses + the variant-competition pattern
 - [scripts/render-mmd.sh](scripts/render-mmd.sh) — adaptive render + preview loop (Quarto or mermaid-cli)
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../../../core/repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.
+
+The renderer checks CLI help: Mermaid CLI 12 uses --size, while older versions use --width. An available npx may download a CLI; record the actual version and inspect its help when flags differ. A successful parse is not a visual inspection.

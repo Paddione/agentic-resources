@@ -86,8 +86,11 @@ function main() {
     *)      echo "Error: unknown pipeline '$pipeline'" >&2; usage ;;
     esac
 
-    make_preview "$output"
-    echo -e "${GREEN}OK: ${output} (+ preview)${NC}"
+    if make_preview "$output"; then
+        echo -e "${GREEN}OK: ${output} (+ preview)${NC}"
+    else
+        echo -e "${GREEN}OK: ${output} (inspect full PNG; no preview)${NC}"
+    fi
 }
 
 function render_quarto() {
@@ -119,27 +122,41 @@ function render_quarto() {
 function render_mmdc() {
     local input="$1" output="$2" width="$3"
     local mmdc_cmd="mmdc"
-    command -v mmdc &>/dev/null || mmdc_cmd="npx -y @mermaid-js/mermaid-cli"
+    command -v mmdc &>/dev/null || mmdc_cmd="npx -y @mermaid-js/mermaid-cli@12.0.0"
+
+    # Mermaid CLI 12 replaced --width/-w with --size. Inspect the actual CLI.
+    local size_args=()
+    local cli_help
+    cli_help="$($mmdc_cmd --help 2>&1)" || return 1
+    if [[ "$cli_help" == *"--width"* ]]; then
+        size_args=(-w "$width")
+    elif [[ "$cli_help" == *"--size"* ]]; then
+        size_args=(--size "$width")
+    else
+        echo "Error: unsupported Mermaid CLI sizing options" >&2
+        return 1
+    fi
 
     local cfg_args=()
     local errlog
     errlog="$(mktemp)"
-    if ! $mmdc_cmd -i "$input" -o "$output" -w "$width" -s 2 -b white >"$errlog" 2>&1; then
-        if grep -q "Could not find Chrome" "$errlog"; then
+    if ! $mmdc_cmd -i "$input" -o "$output" "${size_args[@]}" -s 2 -b white >"$errlog" 2>&1; then
+        if grep -qi "could not find.*chrome" "$errlog"; then
             local chrome
             chrome="$(find_chrome)"
             if [ -n "$chrome" ]; then
                 echo -e "${YELLOW}puppeteer lacks its pinned Chrome — using system Chrome${NC}"
                 local cfg
-                cfg="$(mktemp -t puppeteer-config).json"
+                cfg="$(mktemp "${TMPDIR:-/tmp}/puppeteer-config.XXXXXX")"
                 printf '{ "executablePath": "%s" }\n' "$chrome" > "$cfg"
                 cfg_args=(-p "$cfg")
-                if ! $mmdc_cmd "${cfg_args[@]}" -i "$input" -o "$output" -w "$width" -s 2 -b white >"$errlog" 2>&1; then
+                if ! $mmdc_cmd "${cfg_args[@]}" -i "$input" -o "$output" "${size_args[@]}" -s 2 -b white >"$errlog" 2>&1; then
                     echo -e "${RED}mmdc failed even with system Chrome:${NC}" >&2
                     grep -v "^\s*at " "$errlog" | tail -8 >&2
-                    rm -f "$errlog"
+                    rm -f "$errlog" "$cfg"
                     return 1
                 fi
+                rm -f "$cfg"
             else
                 echo -e "${RED}mmdc cannot find Chrome. Install one:${NC}" >&2
                 echo "  npx puppeteer browsers install chrome-headless-shell" >&2
@@ -190,6 +207,7 @@ img.save(sys.argv[2])
 PYEOF
     fi
     echo "Warning: no downscale tool (sips/magick/PIL) — preview not created; inspect the full PNG" >&2
+    return 1
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

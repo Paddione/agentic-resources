@@ -1,22 +1,6 @@
 ---
 name: sota-testing
-description: >-
-  State-of-the-art software testing strategy and practice (2026) for designing
-  test strategy, writing unit/integration/e2e tests, or auditing test suites.
-  Covers suite shape (pyramid/trophy/honeycomb), test design quality
-  (behavior-first, AAA, determinism, smells), test doubles
-  (mocks/fakes/stubs), test data (builders over fixtures), real-dependency
-  integration (Testcontainers-style), contract testing (Pact/consumer-driven),
-  e2e/UI strategy (selectors, auto-waiting, flake economics), property-based
-  testing, fuzzing, mutation testing, approval testing, suite health/CI
-  (flaky-test policy, coverage philosophy, sharding), and one consolidated
-  audit across all test environments (repository-audit). Trigger keywords -
-  testing, test strategy, unit test, integration test, e2e, end-to-end,
-  coverage, flaky tests, TDD, contract testing, property-based, mocking,
-  fixtures, snapshot test, mutation testing, fuzzing, BDD, Gherkin,
-  given-when-then, acceptance criteria, security testing, WSTG, IDOR test,
-  authz test, abuse case, DAST. Use for BOTH building and auditing test
-  suites.
+description: Analysiert und entwirft Verhaltenstests, Teststrategie und Testumgebungen. Für Unit-, Integrations-, Vertrags-, E2E- und Security-Tests sowie Coverage-, Flake- und CI-Audits. Runner-Details an installierte Fachskills delegieren; Audit-Modus verändert keine Tests oder Gates.
 ---
 
 # SOTA Testing (2026)
@@ -163,3 +147,7 @@ Security-critical paths (authn/authz, crypto, input parsing, money/quota,
 tenancy, untrusted data) additionally require **negative security tests** at a
 higher coverage bar — see [`rules/09`](rules/09-security-testing.md). A green functional suite proves nothing
 about IDOR, injection, or broken authz.
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../../../core/repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.

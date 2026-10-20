@@ -9,11 +9,11 @@ Deliver evidence of where telemetry goes and what can actually be read back. Sup
 
 ## Installed WSL harness hooks
 
-This machine has automatic native telemetry integrations. No skill invocation is needed to record activity. For already running clients, restart the session if its hooks were loaded before installation. OpenCode's background service has been reloaded and is recording.
+Installed hooks must be verified on the current host; historical installation statements are not evidence. Check the entrypoint, execute permission, configured hook wiring and report readability before claiming automatic collection. Use the host's existing configuration without replacing hook groups or weakening permissions.
 
-Run `/home/patrick/.local/bin/trace-proof report` to read actual hook records from `/home/patrick/.local/state/trace-proof/telemetry.sqlite`. Use this report for harness telemetry; the standalone `scripts/telemetry.py report` below reads a separate spans table.
+On hosts with the WSL integration, discover `trace-proof` on PATH or inspect the configured local wrapper. Its `report` reads harness records, while `scripts/telemetry.py report` reads a separate spans table. A shell wrapper without execute permission may be inspected and invoked through its declared interpreter for read-only diagnostics; report the broken direct entrypoint separately. Do not silently chmod it during an audit.
 
-Configuration and verification details: `/home/patrick/.local/share/trace-proof/SETUP.md`. Collector: `/home/patrick/.local/share/trace-proof/harness.py`. Do not replace existing hook groups or weaken tool permissions. Antigravity begins recording at its first model invocation; other integrations use native session lifecycle events. Missing usage remains unknown. Local records do not establish remote ingestion.
+Record query window and filters. If a report only returns lifetime aggregates, label them as such and do not infer recent rates or unique-request counts. Missing usage remains unknown. Local records do not establish remote ingestion or ordinary application instrumentation.
 
 ## Verify remote tracing
 
@@ -44,3 +44,7 @@ The helper supports parent links but does not propagate context automatically. W
 Run `python3 <skill-dir>/scripts/telemetry.py self-test` before relying on this helper in a new environment. It verifies persistence, parent IDs, aggregation, missing metrics, and rejected invalid measurements using a temporary database.
 
 For application changes, exercise one successful request and one controlled failure; check correlated records and measured fields. Report evidence, counts, latest timestamp, error rate, latency distribution, usage coverage, and the first unresolved failure. Keep local and remote findings separate. Do not expose raw payloads or credentials. Never present an untested skill, empty query, or successful health response as proof that tracing works.
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.

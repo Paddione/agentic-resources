@@ -38,3 +38,7 @@ This skill requires no OpenSpec installation, contracts, proposals, specs, ticke
 While the user is exploring, investigate without changing project files or implementing the idea. Suggest experiments when they would resolve uncertainty; perform a mutating experiment only if the user requests it. If the user asks to save notes or a sketch, create the requested artifact within that scope without turning it into a formal change process.
 
 An explicit implementation request ends exploration. Carry the established decisions into the requested work and follow the applicable repository rules. Do not require a special command, contract, proposal, or repeated confirmation to make that transition. Conversely, choosing an option during discussion alone does not request implementation.
+
+## Zusammenspiel bei Flow-Analysen
+
+Bei einer zusammenhängenden Repo-/Agent-Flow-Analyse dem [gemeinsamen Ablauf](../repo-flow-analysis/SKILL.md) folgen. Dieser Skill liefert seinen Fachbeitrag; seine Einzelanwendung bleibt eigenständig.
