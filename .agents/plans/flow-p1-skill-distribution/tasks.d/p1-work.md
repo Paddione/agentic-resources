@@ -27,3 +27,7 @@ Worker-Timeout 15 Minuten, höchstens zwei inhaltliche Wiederholungen durch den 
 ## Tatsächliche Worker-Sandbox
 
 Host-HOME, git-crypt-Dateien und Git-Schlüssel sind ausgeblendet. Nur der Worktree ist schreibbar; Git-Daten sind read-only. Der bestehende Direct-Worker erlaubt Python-pytest sowie git diff/status, aber kein chmod/Commit/Push und kein git diff --check. Keine Umgehung bauen. Für Tests ausschließlich temporäre synthetische Fixtures verwenden. Live- oder Cluster-Servicechecks, Windows und echte Remote-Exports sind in diesem Worker nicht verfügbar. Ein Audit muss diese Grenzen im Ergebnis ausweisen. Der Haupt-Orchestrator führt Diff-Check und unabhängig dieselben Tests in der Sandbox aus.
+
+## Review-Nachbesserung
+
+Der erste Worker-Diff bricht ohne --harness ab: HARNESS ist durch set -u ungebunden. Der Review-Test parametrisiert jetzt beide Aufrufe. Beide müssen bestehen; Flag-Erkennung allein reicht nicht. Alle bereits genannten Nebenbedingungen und Schreibgrenzen bleiben gültig. Keine Tests entfernen oder abschwächen.
