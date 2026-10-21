@@ -1,72 +1,116 @@
 ---
 name: update-dependencies
-description: 'Archived dependency-update routine retained for reference; invoke explicitly only when the scheduled biweekly workflow must be run manually.'
+description: 'Dependency update routine for the multi-repo ecosystem; invoke explicitly with /update-dependencies when manual audit or bump is required.'
 archived: true
 disable-model-invocation: true
-# Manuell: Skill explizit mit /update-dependencies aufrufen, falls sofortige Ausführung nötig.
 ---
 
-# ARCHIVIERT → biweekly Scheduled Routine
+# ARCHIVIERT → Multi-Repo Dependency Routine
 
-Dieser Skill wird **nicht mehr auto-getriggert**.
-Er läuft alle 2 Wochen als geplante Cloud-Routine (CronCreate).
+Dieser Skill wird **nicht mehr auto-getriggert**, sondern läuft planmäßig als Cloud-Routine bzw. wird manuell mit `/update-dependencies` ausgeführt.
 
-Für sofortige manuelle Ausführung: Skill explizit aufrufen.
+## Multi-Repo Matrix
 
-## Ablauf (Referenz)
+| Repository / Pfad | Paketmanager | Typ | Primäre Verifikation |
+|-------------------|--------------|-----|----------------------|
+| `~/Bachelorprojekt` | `npm` | Node.js / Monorepo | `npm run typecheck`, `npm run test:unit`, `task test:changed` |
+| `~/tests` (Dotfiles) | `npm` + `pip` | Node.js & Python | `npm test --prefix ~/tests`, `pytest ~/tests/unit` |
+| `~/scripts` (Dotfiles) | `npm` | Node.js Tools | `python3 -m pytest ~/scripts/ -q` |
+| `~/news-agent` | `npm` | Node.js / Vite / Vue | `npm test` / Build-Check |
+| `~/unsloth-boxes/*` | `uv` / `pip` | Python (pyproject.toml) | `uv run pytest` / Einzelsuiten |
+| `~/mcp-servers/*` | `npm` | Node.js MCP Services | `python3 ~/scripts/mcp_health.py` |
 
-> **⚠ Historisch:** Die Pfade in den Phasen unten sind überholt (`website/` ist leer — der
-> Code liegt in `components/website/`, und pnpm wird im Repo nicht verwendet; `brett/` hat
-> kein package.json). Die Befehle dienen als Ablauf-Muster, nicht als ausführbare Anleitung;
-> bei manueller Ausführung Pfade gegen den aktuellen Stand prüfen.
+---
 
-### Phase 1: Audit
+## Ablauf
+
+### Phase 1: Audit & Status
 
 ```bash
-cd website && pnpm audit --json > /tmp/audit-website.json
-cd brett && npm audit --json > /tmp/audit-brett.json 2>/dev/null || true
+# Bachelorprojekt (primäres App-Repo)
+cd ~/Bachelorprojekt && npm outdated
+npm audit --json > /tmp/audit-bachelorprojekt.json
 
-cd website && pnpm outdated --format json > /tmp/outdated-website.json
-cd brett && npm outdated --format json > /tmp/outdated-brett.json 2>/dev/null || true
+# Dotfiles Tooling & Tests
+cd ~/tests && npm outdated
+cd ~/scripts && npm outdated
 
-cd website && pnpm install 2>&1 | grep -i "deprecat" > /tmp/deprecations-website.txt
+# News Agent
+cd ~/news-agent && npm outdated
+
+# Unsloth Boxes (Python)
+for dir in ~/unsloth-boxes/*/; do
+  if [ -f "$dir/pyproject.toml" ]; then
+    echo "=== $dir ==="
+    (cd "$dir" && uv pip list --outdated 2>/dev/null || true)
+  fi
+done
 ```
 
 ### Phase 2: Klassifizierung
 
-| Typ | Aktion | Risiko |
-|-----|--------|--------|
-| Patch (x.y.Z) | Auto-Update + Tests | Niedrig |
-| Minor (x.Y.z) | Auto-Update + Tests + Smoke-Test | Mittel |
-| Major (X.y.z) | Manuelles Update mit Migration-Runbook | Hoch |
-| Security Advisory | Sofort patchen | Kritisch |
+| Typ | Aktion | Risiko | Vorgehen |
+|-----|--------|--------|----------|
+| Patch (`x.y.Z`) | Auto-Update + Tests | Niedrig | Direkt aktualisieren (`npm update`) |
+| Minor (`x.Y.z`) | Auto-Update + Tests | Mittel | Direkt aktualisieren + Test-Suites |
+| Major (`X.y.z`) | Manuelles Upgrade / Renovate | Hoch | Eigener Feature-Branch/Worktree + Migrations-Runbook |
+| Security Advisory | Sofort patchen | Kritisch | Gezieltes `npm audit fix` oder version pinning |
+
+> **Hinweis zu Bachelorprojekt:** Renovate läuft wöchentlich via `.github/workflows/renovate.yml` ([renovate.json5](file:///home/patrick/Bachelorprojekt/renovate.json5)) und erstellt isolierte PRs für Major-Bumps. Major-Updates nicht ungestagt im Live-Tree erzwingen.
 
 ### Phase 3: Update
 
 ```bash
-cd website && pnpm update --latest --interactive
-cd brett && npm update 2>/dev/null || true
+# 1. Dotfiles (im Worktree oder Host-Checks)
+cd ~/tests && npm update
+cd ~/scripts && npm update
+
+# 2. News Agent
+cd ~/news-agent && npm update
+
+# 3. Bachelorprojekt (Minor/Patch im Range)
+cd ~/Bachelorprojekt && npm update
 ```
 
 ### Phase 4: Verifikation
 
 ```bash
-cd website && pnpm build
+# Dotfiles Suites
+npm test --prefix ~/tests
+npm run typecheck --prefix ~/tests
+python3 -m pytest ~/tests/unit -q
+python3 ~/scripts/agent-workspace.py check
+
+# Bachelorprojekt Suites
+cd ~/Bachelorprojekt
+npm run typecheck
+npm run test:unit
 task test:changed
 task workspace:validate
+
+# MCP Health
+python3 ~/scripts/mcp_health.py
 ```
 
 ### Phase 5: Rollback
 
 ```bash
-git checkout pnpm-lock.yaml package-lock.json 2>/dev/null || git checkout pnpm-lock.yaml
-cd website && pnpm install --frozen-lockfile
+# Bei Fehlschlag Lockfiles zurücksetzen:
+git -C ~/Bachelorprojekt checkout package-lock.json
+git -C ~/news-agent checkout package-lock.json
+git -C ~ checkout tests/package-lock.json scripts/package-lock.json 2>/dev/null || true
+
+# Abhängigkeiten wiederherstellen:
+cd ~/Bachelorprojekt && npm ci
+cd ~/news-agent && npm ci
+cd ~/tests && npm ci
 ```
 
 ## EOL-Check
 
 - **Node.js**: `node --version` → ≥22.x (aktive LTS)
-- **pnpm**: `pnpm --version` → ≥9.x
+- **npm**: `npm --version` → ≥10.x / 12.x
+- **Python**: `python3 --version` → ≥3.12
 - **PostgreSQL**: `SELECT version()` → ≥16.x
 - **k3s**: innerhalb Support-Window
 
@@ -75,13 +119,5 @@ cd website && pnpm install --frozen-lockfile
 | Skill | Beziehung |
 |-------|-----------|
 | `infra-ops §1` | Folge — Test-Deploy nach Major-Bump |
-| `mishap-tracker` | Abschluss |
-
-
-## Framework mapping
-
-| Framework | Availability |
-|-----------|-------------|
-| **Claude Code** | Full — load via `load skill <name>` or matches on description triggers |
-| **opencode** | Full — available as a listed skill. All tools (CLI, MCP) are framework-agnostic |
-| **agy** | Full — treat the opencode path as authoritative. All CLI tools and MCP calls work identically |
+| `mishap-tracker` | Abschluss / Friction-Log |
+| `git-workflow` | Commit, Push und PR-Erstellung |
