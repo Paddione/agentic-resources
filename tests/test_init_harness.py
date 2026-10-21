@@ -55,3 +55,44 @@ def test_home_only_dirs_have_no_project_counterpart(tmp_path):
     consumer, _home, result = run_init(tmp_path, False)
     for directory in HOME_ONLY_DIRS:
         assert str(consumer / directory / "example") not in result.stdout
+
+
+def _fixture_resources(tmp_path):
+    resources = tmp_path / "resources"
+    (resources / "runtimes").mkdir(parents=True)
+    (resources / "core/example").mkdir(parents=True)
+    (resources / "core/example/SKILL.md").write_text("---\nname: example\ndescription: fixture\n---\n")
+    script = resources / "runtimes/init.sh"
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "runtimes/init.sh", script)
+    return script
+
+
+def test_dangling_link_is_repaired(tmp_path):
+    script = _fixture_resources(tmp_path)
+    consumer = tmp_path / "consumer"
+    destdir = consumer / ".agents/skills"
+    destdir.mkdir(parents=True)
+    (destdir / "example").symlink_to("/nonexistent-dead-target")
+    assert not (destdir / "example").exists()
+    result = subprocess.run(
+        ["bash", str(script), "--repo", str(consumer), "--layers", "core"],
+        capture_output=True, text=True, check=True,
+    )
+    assert "fixed" in result.stdout
+    assert (destdir / "example").is_symlink()
+    assert (destdir / "example").exists()
+
+
+def test_real_file_never_overwritten(tmp_path):
+    script = _fixture_resources(tmp_path)
+    consumer = tmp_path / "consumer"
+    destdir = consumer / ".agents/skills"
+    destdir.mkdir(parents=True)
+    (destdir / "example").write_text("user content")
+    result = subprocess.run(
+        ["bash", str(script), "--repo", str(consumer), "--layers", "core"],
+        capture_output=True, text=True, check=True,
+    )
+    assert result.returncode == 0
+    assert not (destdir / "example").is_symlink()
+    assert (destdir / "example").read_text() == "user content"
