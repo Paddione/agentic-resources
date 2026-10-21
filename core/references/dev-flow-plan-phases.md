@@ -2,7 +2,7 @@
 
 Referenz zum Skill `dev-flow-plan`. Der Skill-Body führt Pfad-Wahl und Guards; hier stehen die Phasen des Feature-Pfads, die Decompose-/Fan-out-Mechanik und die Schritte des Fix-Pfads.
 
-Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. „Gestagt" heißt committiert + gepusht; Ticket-Blöcke (`TICKET_EXT_ID`, `stage-plan`, Ticket-Claims) gelten nur bei `repo.tickets: true`.
+Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. „Gestagt" heißt committiert + gepusht; Ticket-Blöcke (`TICKET_EXT_ID`, `stage-plan`, Ticket-Claims) gelten nur bei `repo.tickets: github`.
 
 > cwd-Regel (Pflicht): Bash-Aufrufe immer mit `git -C <worktree>` bzw. explizitem cd+Guard — nie auf implizites cwd vertrauen. `cd` wirkt nur auf den aktuellen Bash-Call; ein bare `git commit` landet sonst im Haupt-Checkout.
 >
@@ -57,7 +57,7 @@ Bei neuen E2E-Tests passendes Playwright-Projekt zuweisen (Zuordnungstabelle: de
 
 ### Phase B: Worktree anlegen + Branch pushen
 
-Branch und Worktree werden jetzt angelegt und gepusht, damit jeder Partial-Plan sofort committet und gesichert werden kann. Branch-Name: `feature/<slug>`; nur bei `repo.tickets: true` mit Ticket-Suffix `feature/<slug>-T<id>` (sonst schlägt der PR-Scope-Preflight fehl).
+Branch und Worktree werden jetzt angelegt und gepusht, damit jeder Partial-Plan sofort committet und gesichert werden kann. Branch-Name: `feature/<slug>`; nur bei `repo.tickets: github` mit Ticket-Suffix `feature/<slug>-T<id>` (sonst schlägt der PR-Scope-Preflight fehl).
 
 #### Schritt B.1: Worktree anlegen (git-crypt-safe)
 
@@ -129,7 +129,7 @@ Kein separater Stage-Befehl ohne Tickets — der gepushte Plan ist der gestagte 
 echo "plan done $(date -u +%FT%TZ) plan-gestagt" >> .agents/plans/<slug>/phase-events.log
 ```
 
-Nur bei `repo.tickets: true`: `stage-plan` mit Hold (MCP-first, Fallback Ticket-CLI) — erst nach Commit/Push, weil es den Plan aus dem Branch-Commit liest. Ausgeführt wird der Plan danach von `dev-flow-execute` (gibt den Hold frei) oder lokal per plan-runner.
+Nur bei `repo.tickets: github`: `stage-plan` mit Hold (MCP-first, Fallback Ticket-CLI) — erst nach Commit/Push, weil es den Plan aus dem Branch-Commit liest. Ausgeführt wird der Plan danach von `dev-flow-execute` (gibt den Hold frei) oder lokal per plan-runner.
 
 ---
 
@@ -148,7 +148,7 @@ Single-Plan-Ablauf (1-Partial-Fall und Prompt-Kern je Fan-out-Subagent): Spec co
 ## Fix-Pfad — Schritte im Detail
 
 ### Schritt 1: Symptom festhalten
-Ausgangspunkt ist das beobachtete Symptom (User-Meldung, Log, failing Check). Symptom + Reproducer gehören ins Proposal, dann direkt weiter. Nur bei `repo.tickets: true`: Ticket-ID vom User erfragen oder Bug-Ticket anlegen (MCP-first, Fallback Ticket-CLI) und als `TICKET_EXT_ID` führen.
+Ausgangspunkt ist das beobachtete Symptom (User-Meldung, Log, failing Check). Symptom + Reproducer gehören ins Proposal, dann direkt weiter. Nur bei `repo.tickets: github`: Ticket-ID vom User erfragen oder Bug-Ticket anlegen (MCP-first, Fallback Ticket-CLI) und als `TICKET_EXT_ID` führen.
 
 ### Schritt 2: Worktree anlegen
 ```bash
@@ -164,7 +164,7 @@ Das `cd` wirkt nur auf Bash: Datei-Tool-Pfade ab hier explizit unter `.worktrees
 ```bash
 bash scripts/agent-lock.sh claim branch "fix/<slug>" --worktree "$PWD" --label dev-flow-plan
 ```
-Exit 1 = lebende Session arbeitet schon daran → koordinieren. Nur bei `repo.tickets: true`: zusätzlich Ticket-Claim.
+Exit 1 = lebende Session arbeitet schon daran → koordinieren. Nur bei `repo.tickets: github`: zusätzlich Ticket-Claim.
 
 ### Schritt 2.7: Lavish-Board anbieten — vor Brainstorming
 `.lavish/<slug>-brainstorm.html` (Root-Cause, Fix-Ansatz, Subsysteme, Edge-Cases) anbieten, nicht erzwingen. Ohne Zustimmung über `AskUserQuestion`.
@@ -179,7 +179,7 @@ Automatisierter Test, der den Bug reproduziert und fehlschlägt (rot-grün, hart
 `superpowers:writing-plans` (oder inlined-Äquivalent) nach `.agents/plans/<slug>/tasks.md` gemäß plan-lint Hard Rules. Frontmatter setzen (mit Tickets: Ticket-ID eintragen). Erst committen und pushen — Ableitungen (`plan-touched-files.sh`, mit Tickets: `stage-plan`) lesen aus dem Branch-Commit, nicht aus dem Arbeitsbaum.
 
 ### Schritt 4.5: Stagen = Commit + Push
-Der gepushte Plan ist der gestagte Plan; `plan done` in `phase-events.log`. Nur bei `repo.tickets: true`: `stage-plan --hold` nach Commit/Push (MCP-first, Fallback Ticket-CLI) — damit ist das Ticket `plan_staged` und für dev-flow-execute bereit.
+Der gepushte Plan ist der gestagte Plan; `plan done` in `phase-events.log`. Nur bei `repo.tickets: github`: `stage-plan --hold` nach Commit/Push (MCP-first, Fallback Ticket-CLI) — damit ist das Ticket `plan_staged` und für dev-flow-execute bereit.
 
 ### Schritt 5: Commit und Push
 ```bash
@@ -202,4 +202,4 @@ Gilt in beiden Pfaden vor der Worktree-Anlage: verhindert Recherche in bereits e
 git log origin/<MAIN> --oneline --grep='<slug|symptom>' | head -5   # Treffer -> abbrechen
 ```
 
-Nur bei `repo.tickets: true`: zusätzlich Ticket-Check (bereits gemergte Ticket-ID → Ticket `done` + abbrechen; rc-Tabelle des Preflight-Skripts bzw. check-merged beachten). Der Check ersetzt nicht den Post-Merge-Scan, sondern verhindert Doppelarbeit vorab.
+Nur bei `repo.tickets: github`: zusätzlich Ticket-Check (bereits gemergte Ticket-ID → Ticket `done` + abbrechen; rc-Tabelle des Preflight-Skripts bzw. check-merged beachten). Der Check ersetzt nicht den Post-Merge-Scan, sondern verhindert Doppelarbeit vorab.
