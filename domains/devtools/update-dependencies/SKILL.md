@@ -98,7 +98,7 @@ python3 ~/scripts/mcp_health.py
 # Bei Fehlschlag Lockfiles zurücksetzen:
 git -C ~/Bachelorprojekt checkout package-lock.json
 git -C ~/news-agent checkout package-lock.json
-git -C ~ checkout tests/package-lock.json scripts/package-lock.json 2>/dev/null || true
+git -C ~ checkout ~/tests/package-lock.json ~/scripts/package-lock.json 2>/dev/null || true
 
 # Abhängigkeiten wiederherstellen:
 cd ~/Bachelorprojekt && npm ci
