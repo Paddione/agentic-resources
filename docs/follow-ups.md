@@ -15,6 +15,13 @@
   und `agent-resources/` via `runtimes/init.sh --layers all --profile dotfiles`
   (je 74 Skills × 3 Dirs + `repo.yaml`). `init.sh` folgt seit 2026-10-20 auch
   verlinkten Skill-Dirs (`find -L`) und verlinkt `references/` (Registry-Skill).
+- Ziel-Matrix F7 (2026-10-21): `init.sh` Projekt 5 Dirs (`.agents`, `.claude`,
+  `.codex`, `.opencode`, `.zcode` → je `skills`), `--harness` Home 9 Dirs
+  (Master `~/.agents/skills` + `share-agent-resources.sh`-Matrix); Stand
+  73 Skills (nachgezählt, `find -L`, ohne `staging/`). `.opencode`-Pfad
+  weicht bewusst ab (Projekt `.opencode/`, Home `.config/opencode/`);
+  `.gemini`/`.pi`/`.qwen`/`.openclaw` bleiben Home-only, Plugin-Caches
+  nie Link-Ziele.
 - `docs/agent-guide` + `docs/sdlc` (Bachelorprojekt-Prozessdoku) als
   `domains/`-Pack oder Consumer-seitig bewerten.
 - Taskfile-Templates (`test:changed`, `freshness:*`, `workspace:validate`)

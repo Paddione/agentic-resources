@@ -29,7 +29,11 @@ inherit via live symlink, never via fork.
 
 Layers link skills as symlinks — additive, never overwriting real files — and
 `repo.yaml` is created from the profile. `--layers all` for everything,
-`--dry-run` for preview. Re-run after clones, renames, or skill moves.
+`--dry-run` for preview. Project targets: `.agents/skills`,
+`.claude/skills`, `.codex/skills`, `.opencode/skills`, `.zcode/skills`;
+`--harness` additionally links Home (same matrix as
+`share-agent-resources.sh`; `.gemini`/`.pi`/`.qwen`/`.openclaw` Home-only).
+Re-run after clones, renames, or skill moves.
 
 ## Consumer contract (`repo.yaml`)
 
