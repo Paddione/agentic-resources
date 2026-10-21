@@ -5,8 +5,10 @@ description: 'Pointer to the git-workflow SSOT for opencode sessions. Use when c
 
 # opencode-git-workflow — Verweis auf die SSOT
 
-**Der Inhalt dieses Skills steht in [`.opencode/skills/git-workflow/SKILL.md`](.opencode/skills/git-workflow/SKILL.md).
-Lies dort weiter und folge dem Ablauf von dort.**
+**Der Inhalt dieses Skills steht in [`git-workflow`](../../core/git-workflow/SKILL.md)
+(SSOT; vom Repo-Root zusätzlich über `.agents/skills/git-workflow/` bzw.
+`.opencode/skills/git-workflow/` erreichbar). Lies dort weiter und folge dem
+Ablauf von dort.**
 
 ## Warum hier nur ein Verweis steht [T900024]
 
@@ -22,12 +24,12 @@ Die Zusammenfuehrung ist in die SSOT gelaufen. Uebernommen wurde daraus auch der
 Abschnitt **„Worktree-Erstellung"** (die git-crypt-Einschraenkung des
 opencode-Plugins `worktree_create`), der nur in dieser Fassung stand.
 
-**Kein Symlink:** T900077 hat die Symlinks unter `.opencode/skills/` bewusst
-durch echte Verzeichnisse ersetzt (SSOT-Flip). Ein Verweis-Dokument erreicht
-dasselbe Ziel — eine Quelle, kein zweiter Ablauf — ohne diese Entscheidung
-umzudrehen, und laesst alle bestehenden Referenzen auf den Skill-Namen
-`opencode-git-workflow` (OVERVIEW.md, `docs/agent-guide/registry/tools.yaml`,
-`docs/agent-guide/20-werkzeuge.md`) gueltig.
+**Kein zweiter Ablauf:** T900077 hatte die Symlinks unter `.opencode/skills/`
+einmalig durch echte Verzeichnisse ersetzt (SSOT-Flip); der Vendor-Sync stellt
+sie seither wieder als Symlinks auf diese Quelle her — gepflegt wird genau
+eine Datei. Dieses Verweis-Dokument hält alle bestehenden Referenzen auf den
+Skill-Namen `opencode-git-workflow` (OVERVIEW.md, `docs/agent-guide/registry/tools.yaml`,
+`docs/agent-guide/20-werkzeuge.md`) gueltig, ohne einen zweiten Ablauf zu definieren.
 
 ## Framework mapping
 

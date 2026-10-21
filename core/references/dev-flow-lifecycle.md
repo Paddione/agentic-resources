@@ -2,7 +2,7 @@
 
 Transition-SSOT für die vier Flow-Skills. Ausführbare Details bleiben in `git-workflow`, `verification-block`, `ci-fix-loop` und den Phasen-Referenzen.
 
-Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). Pläne leben als Dateien auf ihrem Branch; Dispatch läuft über Worker-Sandboxes; Abschluss heißt Merge + `completed`-Markierung. Ticket-Zeilen gelten nur bei `repo.tickets: true`.
+Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). Pläne leben als Dateien auf ihrem Branch; Dispatch läuft über Worker-Sandboxes; Abschluss heißt Merge + `completed`-Markierung. Ticket-Zeilen gelten nur bei `repo.tickets: github`.
 
 | Skill | Auslöser | Eintritt | Owner | Mutation | Austritt | Nächster Handoff |
 |---|---|---|---|---|---|---|

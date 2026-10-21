@@ -41,7 +41,7 @@ Bei komplexem oder unklarem Feature den User nach einer Grilling-Session fragen.
 [dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md). Q/A-Session über `lavish`
 (`.lavish/<slug>-grilling.html`, Input-Playbook). Antworten in
 `.agents/plans/<slug>/grill-answers.md` persistieren (nur-wenn-Tickets: zusätzlich
-Ticket-Anlage und Attachments, siehe [grilling-to-ticket](.agents/skills/references/grilling-to-ticket.md)).
+Ticket-Anlage und Attachments, siehe [ticket-stage-procedure](references/ticket-stage-procedure.md)).
 
 ## Schritt −2: Main-Branch sync (Pull-First)
 ```bash

@@ -2,7 +2,7 @@
 
 Referenz zu `dev-flow-execute` und dem [Lifecycle-Vertrag](dev-flow-lifecycle.md). Der Skill-Body führt Ablauf, Delegation und Gates; hier stehen die Befehlsfolgen der mechanischen Schritte.
 
-Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. Ticket-Blöcke gelten nur bei `repo.tickets: true`; sonst entfällt alles mit Ticket-ID, `ticket.sh`, DB-Reads — Fortschritt lebt in Commits und `phase-events.log`.
+Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. Ticket-Blöcke gelten nur bei `repo.tickets: github`; sonst entfällt alles mit Ticket-ID, `ticket.sh`, DB-Reads — Fortschritt lebt in Commits und `phase-events.log`.
 
 ---
 
@@ -19,7 +19,7 @@ git cat-file -e "HEAD:$PLAN_FILE" || { echo "Plan nicht im Git-Tree." >&2; exit 
 
 Bei mehreren Plan-Branches den User nach dem gewünschten Branch fragen.
 
-Nur bei `repo.tickets: true`: `TICKET_ID` ersatzweise aus DB holen (MCP-first `mcp-postgres`, Fallback `kubectl exec ... psql`), bei mehreren staged plans User fragen.
+Nur bei `repo.tickets: github`: `TICKET_ID` ersatzweise aus DB holen (MCP-first `mcp-postgres`, Fallback `kubectl exec ... psql`), bei mehreren staged plans User fragen.
 
 ---
 
@@ -47,7 +47,7 @@ Ankündigung broadcasten:
 bash scripts/agent-msg.sh post "dev-flow-execute startet Arbeit an Branch $CURRENT_BRANCH" --to all
 ```
 
-Nur bei `repo.tickets: true` zusätzlich: Ticket-Status prüfen (`plan_staged` = fortfahren, `done`/`archived` = abbrechen) und ggf. separaten Ticket-Claim setzen.
+Nur bei `repo.tickets: github` zusätzlich: Ticket-Status prüfen (`plan_staged` = fortfahren, `done`/`archived` = abbrechen) und ggf. separaten Ticket-Claim setzen.
 
 ## Schritt 0: Main-Branch im Haupt-Repo synchronisieren (Pull-First)
 
@@ -124,7 +124,7 @@ if [[ ! -d "$PLAN_DIR" ]]; then
 fi
 ```
 
-Nur bei `repo.tickets: true`: Pfad stattdessen aus DB (`FACTORY-PLAN-REF branch=<branch> plan=<plan_path>` via `vda.sh ticket get`), daraus `BRANCH`/`PLAN_FILE` parsen; zusätzlich `$PLAN_DIR/.ticket` prüfen.
+Nur bei `repo.tickets: github`: Pfad stattdessen aus DB (`FACTORY-PLAN-REF branch=<branch> plan=<plan_path>` via `vda.sh ticket get`), daraus `BRANCH`/`PLAN_FILE` parsen; zusätzlich `$PLAN_DIR/.ticket` prüfen.
 
 ---
 
@@ -139,7 +139,7 @@ bash scripts/agent-lock.sh check branch "$CURRENT_BRANCH" | head -1 | grep -q '^
 
 Registry-Overlap für geteilte Hochfrequenz-Dateien prüfen (SSOT session-coordination).
 
-Nur bei `repo.tickets: true`: zusätzlich Ticket-Claim verifizieren und Pipeline-Modus aus DB lesen (`slot_count` > 1 = Multi-Partial in Manifest-Reihenfolge, = 1 = Single-Shot). Sonst: Partials strikt in `tasks.md`-Manifest-Reihenfolge abarbeiten.
+Nur bei `repo.tickets: github`: zusätzlich Ticket-Claim verifizieren und Pipeline-Modus aus DB lesen (`slot_count` > 1 = Multi-Partial in Manifest-Reihenfolge, = 1 = Single-Shot). Sonst: Partials strikt in `tasks.md`-Manifest-Reihenfolge abarbeiten.
 
 ### Schritt 1.4.7: Auto-Merge-Zustand prüfen
 
@@ -156,13 +156,13 @@ bash scripts/check-pr-automerge.sh --branch "$BRANCH"
 
 Kollisionserkennung läuft über Dateien: der `## File Structure`-Block des Plans ist plan-lint Hard Rule STRUCT1 und existiert zwingend. Berührt die Umsetzung nicht geplante Dateien, vor dem Commit `agent-collision.sh check --branch` laufen lassen und bei Treffern koordinieren.
 
-Nur bei `repo.tickets: true`: Ticket auf `in_progress` setzen (MCP-first, Fallback `vda.sh ticket update-status` + `devflow-phase.sh plan entered`) und neue Pfade zu `touched_files` ergänzen (Liste ersetzen nur nach vorherigem Lesen, sonst gehen Stage-Pfade verloren). Phase-Events (`plan`/`implement`/`deploy`) entstehen aus Statuswechseln, Dedup macht Doppel-Emission harmlos; `verify:done` bleibt Pflicht.
+Nur bei `repo.tickets: github`: Ticket auf `in_progress` setzen (MCP-first, Fallback `vda.sh ticket update-status` + `devflow-phase.sh plan entered`) und neue Pfade zu `touched_files` ergänzen (Liste ersetzen nur nach vorherigem Lesen, sonst gehen Stage-Pfade verloren). Phase-Events (`plan`/`implement`/`deploy`) entstehen aus Statuswechseln, Dedup macht Doppel-Emission harmlos; `verify:done` bleibt Pflicht.
 
 ## Schritt 1.7: Visual und Textual Assets
 
 Design-Quellen sind Repo-Dateien (Mockups, Specs im Plan-Ordner `.agents/plans/<slug>/`). Pflicht für UI-Arbeiten: alle relevanten Bild- und Textdateien im Plan-Ordner einlesen, nicht auf Prose verlassen.
 
-Nur bei `repo.tickets: true`: zusätzlich Ticket-Anhänge laden (MCP-first `node_get_attachments`, Fallback Ticket-CLI) und ebenfalls alle einlesen.
+Nur bei `repo.tickets: github`: zusätzlich Ticket-Anhänge laden (MCP-first `node_get_attachments`, Fallback Ticket-CLI) und ebenfalls alle einlesen.
 
 ---
 
@@ -172,7 +172,7 @@ Diese Schritte laufen nicht im Orchestrator, sondern in einem frischen Finalizer
 
 Vor dem Abschluss: Merge-Wait-Loop aus `ci-fix-loop` §"PR-Merge-Wait-Loop" von dort ausführen, nicht rekonstruieren. Bei Timeout keinen Abschluss behaupten — strukturiert berichten, Schritte sind manuell nachholbar.
 
-Nur bei `repo.tickets: true`: Finalizer ruft `bash scripts/devflow-post-merge-finalize.sh "$TICKET_ID" --pr "$PR_NUM"` (idempotent, Exit 0 = erledigt/übersprungen). Sonst manuelle Einheit aus plan-archive-steps: Merge verifizieren → Plan `completed` → Claim freigeben → Worktree/Branch entfernen.
+Nur bei `repo.tickets: github`: Finalizer ruft `bash scripts/devflow-post-merge-finalize.sh "$TICKET_ID" --pr "$PR_NUM"` (idempotent, Exit 0 = erledigt/übersprungen). Sonst manuelle Einheit aus plan-archive-steps: Merge verifizieren → Plan `completed` → Claim freigeben → Worktree/Branch entfernen.
 
 ## Schritt 6.5: Abschluss
 
@@ -182,7 +182,7 @@ Nur bei `repo.tickets: true`: Finalizer ruft `bash scripts/devflow-post-merge-fi
 
 Merge = Abschluss: Schritt 6.4 hat den Merge bestätigt; Prod-Deploy (Schritt 8) ist entkoppelt und ändert den Status nicht. `verify:done`-Zeile in `phase-events.log` (Pflicht, Merge-Gate), Plan-Frontmatter `status: completed`, committen.
 
-Nur bei `repo.tickets: true`: zusätzlich PR-Link, Statuswechsel nach `done` (`shipped`/`fixed`), `verify:done`- und `deploy:done`-Events und Kommentar (MCP-first, Fallback `vda.sh` + `devflow-phase.sh`).
+Nur bei `repo.tickets: github`: zusätzlich PR-Link, Statuswechsel nach `done` (`shipped`/`fixed`), `verify:done`- und `deploy:done`-Events und Kommentar (MCP-first, Fallback `vda.sh` + `devflow-phase.sh`).
 
 ## Schritt 7: Plan archivieren
 
