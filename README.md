@@ -12,9 +12,9 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
   `brand-site`, `data`, `devtools`, `formats`, `research`, `mcp`, `web`, `misc`,
   `projects/` für projekt-spezifische Beispiele). `brand-site` bündelt die
   Bachelorprojekt-Markenauftritte; `web` generisches Artefakt-Tooling.
-- Symlink-Packs (`formats/`, `web/`, `mcp/`, `misc/morning`, `research/`)
-  zeigen auf den lokalen Home-Skill-Store und lösen nur auf dieser Maschine
-  auf; Klone andernorts sehen dort leere Einträge.
+- `domains/formats/`, `domains/web/`, `domains/mcp/`, `domains/misc/morning`,
+  `domains/research/` sind vendored (ehemals Symlink-Packs auf den lokalen
+  Home-Skill-Store); Klone sind vollständig.
 - `runtimes/` — `init.sh`, `repo.yaml.schema`, Profile, Skripte, Prompts.
 - `registry.json` — alle Skills mit Herkunft (`merged`, `home`,
   `bachelorprojekt`) und ggf. Upstream-Revision.

@@ -1,1 +1,3 @@
 staging/
+# Local repo-code-graph artifacts (same convention as Bachelorprojekt)
+.codebase-memory/
