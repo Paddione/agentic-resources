@@ -52,7 +52,11 @@ link_skill() {
   # "synced" ist kein Skill (Harness-Bundle-Dir); "references" (core/references)
   # ist per registry.json ein Skill und wird wie jeder andere verlinkt.
   [[ "$name" == "synced" ]] && return 0
-  [[ -e "$destdir/$name" || -L "$destdir/$name" ]] && return 0
+  if [[ -e "$destdir/$name" || -L "$destdir/$name" ]]; then
+    # replace dangling links only (e.g. stale paths)
+    [[ -L "$destdir/$name" && ! -e "$destdir/$name" ]] && run ln -sfn "$(realpath -s --relative-to="$destdir" "$src")" "$destdir/$name" && echo "fixed $destdir/$name -> $src"
+    return 0
+  fi
   run ln -s "$(realpath -s --relative-to="$destdir" "$src")" "$destdir/$name"
   echo "link $destdir/$name -> $src"
 }
