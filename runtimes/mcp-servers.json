@@ -19,9 +19,6 @@
     },
     "MCP_POSTGRES_KORCZEWSKI_TOKEN": {
       "file": ".config/mcp-postgres-korczewski/server.env"
-    },
-    "GLIMMER_WORKER_MCP_TOKEN": {
-      "file": ".config/glimmer-worker-mcp/server.env"
     }
   },
   "servers": {
@@ -279,17 +276,6 @@
           "env": "MCP_POSTGRES_KORCZEWSKI_TOKEN"
         }
       }
-    },
-    "glimmer-worker": {
-      "doc": "Glimmer worker-model bridge (Streamable HTTP :13007, glimmer-worker-mcp.service). Direct harness entry, not a hub backend.",
-      "http": {
-        "url": "http://127.0.0.1:13007/mcp",
-        "auth": {
-          "header": "Authorization",
-          "scheme": "Bearer",
-          "env": "GLIMMER_WORKER_MCP_TOKEN"
-        }
-      }
     }
   },
   "harnesses": {
@@ -311,8 +297,7 @@
       "fleet-workspace"
     ],
     "muse": [
-      "fleet-workspace",
-      "glimmer-worker"
+      "fleet-workspace"
     ]
   },
   "hub_backend_allowlists": {
