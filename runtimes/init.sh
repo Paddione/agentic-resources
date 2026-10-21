@@ -40,11 +40,18 @@ resolve_layers() {
 
 # Skill-Verzeichnisse: Standard ist NUR das Consumer-Repo (Projektebene).
 # --harness verlinkt zusaetzlich auf Home-Ebene (Maschinen-Setup, kein Projekt-Default).
+# Matrix: Home-Ziele == share-agent-resources.sh SKILL_DIRS + ~/.agents/skills (Master).
+# Projekt-Ziele sind deren Gegenstuecke mit gleichem <root>/skills-Layout.
+# .opencode weicht bewusst ab: Projekt .opencode/skills (Plugin-Konvention),
+# Home .config/opencode/skills — Scope-Unterschied, kein Widerspruch.
+# .gemini/.pi/.qwen/.openclaw bleiben Home-only (eigene Projekt-Layouts,
+# unverifiziert); Plugin-Caches (.codex/plugins, .claude/plugins) sind
+# provider-verwaltet und nie Link-Ziele.
 HARNESS_DIRS=()
 if (( HARNESS )); then
-  HARNESS_DIRS=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.config/opencode/skills" "$HOME/.zcode/skills")
+  HARNESS_DIRS=("$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.config/opencode/skills" "$HOME/.zcode/skills" "$HOME/.gemini/config/skills" "$HOME/.pi/agent/skills" "$HOME/.qwen/skills" "$HOME/.openclaw/skills")
 fi
-PROJECT_DIRS=("$REPO/.agents/skills" "$REPO/.opencode/skills" "$REPO/.claude/skills")
+PROJECT_DIRS=("$REPO/.agents/skills" "$REPO/.claude/skills" "$REPO/.codex/skills" "$REPO/.opencode/skills" "$REPO/.zcode/skills")
 
 link_skill() {
   local src="$1" destdir="$2" name

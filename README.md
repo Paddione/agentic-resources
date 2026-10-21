@@ -30,7 +30,15 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
 
 Verlinkt die Layer als Symlinks (additiv, überschreibt nie echte Dateien) und
 legt `repo.yaml` aus dem Profil an. `--layers all` für alles, `--dry-run` für
-Vorschau. Anleitungsdateien vererben nach demselben Muster: Repos ohne eigene
+Vorschau. Projekt-Ziele: `.agents/skills`, `.claude/skills`,
+`.codex/skills`, `.opencode/skills`, `.zcode/skills`; `--harness`
+verlinkt zusätzlich Home (`~/.agents/skills`, `~/.claude/skills`,
+`~/.codex/skills`, `~/.config/opencode/skills`, `~/.zcode/skills`,
+`~/.gemini/config/skills`, `~/.pi/agent/skills`, `~/.qwen/skills`,
+`~/.openclaw/skills` — wie `share-agent-resources.sh`). OpenCode-Pfad
+weicht bewusst ab (Projekt `.opencode/`, Home `.config/opencode/`);
+`.gemini`/`.pi`/`.qwen`/`.openclaw` bleiben Home-only.
+Anleitungsdateien vererben nach demselben Muster: Repos ohne eigene
 `AGENTS.md`/`CLAUDE.md` symlinken beide Namen hierher; Repos mit eigenen
 Dateien (Bachelorprojekt) verweisen per Abschnitt auf diese Dateien. Geteilte Skills lesen Repo-Spezifika (Branch, Scopes, Tickets,
 generierte Artefakte, Task-Runner) aus `repo.yaml` im Consumer-Root; siehe
