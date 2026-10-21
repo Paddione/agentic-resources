@@ -276,6 +276,12 @@
           "env": "MCP_POSTGRES_KORCZEWSKI_TOKEN"
         }
       }
+    },
+    "mcp-kubernetes": {
+      "doc": "k8s-Status/Read via containers/kubernetes-mcp-server im Dev-Pod (devmesh, ns workspace); Least-Privilege-SA claude-code-agent (get/list/watch). Transport: kubectl port-forward svc/dev-pod 18080:8080 (mcp-gateway.service). Mutationen bleiben kubectl.",
+      "http": {
+        "url": "http://127.0.0.1:18080/mcp"
+      }
     }
   },
   "harnesses": {
@@ -313,7 +319,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -327,7 +334,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -340,7 +348,8 @@
       "bge-mcp",
       "mcp-task-runner",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -354,7 +363,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -368,7 +378,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -382,7 +393,8 @@
       "mcp-task-runner",
       "playwright",
       "huggingface",
-      "python-sandbox"
+      "python-sandbox",
+      "mcp-kubernetes"
     ]
   },
   "upstreams": {
