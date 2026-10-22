@@ -155,6 +155,18 @@ Verkleinerungs-/Split-Schritt statt kosmetischem Zusammenziehen? Finaler Verifik
 Brand-Domain-Literale in den Code-Snippets? Bei Lücken erneut delegieren (Schritt 3.7) mit
 konkreten Korrektur-Hinweisen.
 
+### Schritt 4.2: Need-Gate für Pipeline-Issues (optional)
+
+Kommt das Issue aus einer Investigation-Pipeline (Labels wie `investigated` plus
+Ziel-Repo), misst ein vorgeschaltetes Need-Gate den Umsetzungs-Need (Score mit
+Begründung, Graph-evidenzbasiert) statt nur die Severity. Ein hoher
+Investigation-Aufwand belegt noch keinen Umsetzungsbedarf — ohne Gate wird
+jedes untersuchte Issue zum Plan, auch bei Score nahe 0. Deshalb: nur stagen,
+wenn das Pass-Label (z. B. `ready-to-plan`) am Issue steht. Fehlt es, bleibt
+das Issue in der Triage. Einzige Ausnahme: ein menschlicher Override-Kommentar
+am Issue, der einen Grund nennt. Unbekannte Evidenz (stale Graph, Judge down)
+wird nie als niedriger Score gewertet, sondern erneut versucht.
+
 ### Schritt 4.5: Claim (PFLICHT vor Commit)
 Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-procedure](.agents/skills/references/ticket-stage-procedure.md)), dann ticket-scoped claimen, bevor der Pre-Commit-Guard die Lock-Datei liest:
 ```bash
