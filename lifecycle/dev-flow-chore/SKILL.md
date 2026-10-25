@@ -61,10 +61,23 @@ lokale `MAIN`-Sync übersprungen — `mc_foreign_activity_detected` aus
 lokale `MAIN`-Sync ist Hygiene, keine Korrektheitsvoraussetzung für den nachfolgenden
 Worktree-Aufruf, der ohnehin von `origin/MAIN` aus anlegt.
 
-## Schritt 0.5: Wiederkehrend oder einmalig?
+## Schritt 0.5: Wiederkehrend oder einmalig? (Kollisionsschutz)
 
-Frage den User, ob die Chore regelmäßig laufen soll. Falls ja, rufe `/schedule` auf und richte
-einen Cron-Job ein. **STOPP hier.**
+Frage den User, ob die Chore regelmäßig laufen soll. Falls ja:
+1. Prüfe bestehende Host-Timer und Cron-Jobs:
+   ```bash
+   systemctl --user list-timers --no-pager
+   ```
+2. **Kollisionsschutz gegen feste Host-Routinen:** Niemals in reservierte Zeitfenster einplanen:
+   - `03:00–03:30` (nightly-update: System, Tools, globale Skills)
+   - `04:00` So (system-cache-hygiene: Journal/Cache/Worktree prune)
+   - `07:00` Mo (secrets-integrity-check)
+   - `08:00–08:15` (repo-hygiene: daily sweep)
+   - `08:30–08:45` (multi-repo-morning: daily brief)
+   - Stündlich `:00` (cbm-refresh: K3 codebase-memory)
+3. **Kollisionsfreie Slots wählen:** Immer auf ungerade Minuten mit Versatz (z. B. `:15`, `:20`, `:45`) oder in ruhige Tagesfenster (z. B. `09:15`, `14:00`).
+4. Richte den Job bevorzugt als systemd user timer (`~/.config/systemd/user/`) oder via `/schedule` (mit Jitter/`ExactTiming: false`) ein, niemals blind über `crontab -e`.
+**STOPP hier.**
 
 ## Schritt 1: Worktree anlegen & claimen
 

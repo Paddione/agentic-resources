@@ -26,7 +26,11 @@ Stashes ansehen — sie sind die Quelle von Arbeit, die nirgendwo sonst auftauch
 
 ```bash
 bash scripts/repo-hygiene-precheck.sh          # 0 = frei, 1 = Befund, 2 = nicht prüfbar
+# Zusätzlich Timer-Status prüfen (Daily Sweep läuft automatisch um 08:00 via systemd):
+systemctl --user is-active repo-hygiene.service 2>/dev/null || true
 ```
+
+> **Automatisierungsfenster (08:00–08:15 CET):** Um 08:00 startet automatisch `repo-hygiene.timer` (`repo-hygiene-cron.sh standard`). Während dieses Fensters keine manuellen oder ad-hoc Sweeps starten, um Lock-Kollisionen auf `/tmp/repo-hygiene-tick.lock` zu vermeiden.
 
 **`2` heißt „unbekannt", nicht „blockiert" [T900061].** Unter Git Bash auf Windows ist der
 Lock-Test nicht durchführbar — `flock` scheitert am fd-Redirect, und `/tmp` zeigt dort nicht
@@ -741,25 +745,40 @@ Nicht jeder Lauf muss alle 8 Abschnitte abdecken:
 | **Standard** | §0–§3 (Arbeitsbaum, Worktrees, Branches, PRs) | 2–5 min | Daily Sweep, Pre-Batch-Dispatch |
 | **Full** | §0–§7 (alles + Aging-Report + Empfehlungen) | 5–10 min | Weekly Deep Clean |
 
-### 7.3 Automatisierung (Cron)
+### 7.3 Automatisierung (systemd User Timers & Kollisionsschutz)
 
-Für den Daily Sweep kann ein Cron-Job eingerichtet werden:
+Der Daily Sweep ist über **systemd user timers** automatisiert (`repo-hygiene.timer` feuert täglich um 08:00 CET).
 
-```bash
-# In crontab -e (läuft als User patrick):
-0 8 * * * bash <repo-root>/scripts/repo-hygiene-cron.sh standard >> /tmp/repo-hygiene-cron.log 2>&1
-```
+> ⚠️ **Keine doppelten Crontab-Einträge:** Frühere Setups nutzten `crontab -e`. Alle periodischen Jobs sind auf `systemd --user` migriert. Ein paralleler Eintrag in `crontab -e` um 08:00 führt zu Lock-Konflikten auf `/tmp/repo-hygiene-tick.lock` und Race Conditions mit dem Timer.
 
-Das Cron-Skript (`scripts/repo-hygiene-cron.sh`, seit T003486) ist ein schlanker Wrapper, der:
+Das Skript (`scripts/repo-hygiene-cron.sh`, seit T003486) wird von `repo-hygiene.service` aufgerufen:
 1. `git fetch origin "$MAIN" --prune` ausführt
 2. `bash scripts/agent-lock.sh reap` (stale Locks)
 3. Die Hygiene-Metriken (Worktree/Branch/PR-Counts) als JSON nach stdout schreibt
-4. Oberhalb von `STALE_THRESHOLD` stale Artifacts eine Warnung nach stdout schreibt
-   (der Ticket-Kommentar-Pfad entfiel mit dem Retirement; Cron-Skript-Port ist Follow-up)
+4. Oberhalb von `STALE_THRESHOLD` stale Artifacts eine Warnung ausgibt
 
 > **Es kennt zwei Modi — `standard` (default) und `deep`**, nicht die drei Tiefen aus §7.2.
 > `deep` ergänzt `branch-reaper.sh --dry-run` und zählt dessen Kandidaten mit. Die Zuordnung
 > lautet also: §7.2 *Quick*/*Standard* → `standard`, §7.2 *Full* → `deep`.
+
+#### Reservierte Host-Automatisierungsfenster (Kollisionsmatrix)
+
+Neue Jobs oder Agenten-Sweeps dürfen NIEMALS mit diesen festen Host-Routinen kollidieren:
+
+| Zeitfenster | Timer / Service | Zweck | Gesperrte Aktionen |
+|-------------|-----------------|-------|--------------------|
+| **`03:00–03:30`** | `nightly-update.timer` | APT dist-upgrade, Tool/CLI/Skill-Updates, devflow-Graph | Keine Paket-/Skill-Installationen, Lock: `/tmp/wsl-nightly-update.lock` |
+| **`04:00` (So)** | `system-cache-hygiene.timer` | Journal vacuum, uv/npm cache prune, stale `/tmp/*.lock` cleanup | Keine Worktree-Operationen während Cache-Prune |
+| **`07:00` (Mo)** | `secrets-integrity-check.timer` | Prüfung von git-crypt und Secret-Attributen | Keine gleichzeitige Secret-Rotation |
+| **`08:00–08:15`** | `repo-hygiene.timer` | Daily Sweep (`repo-hygiene-cron.sh standard`) | **Gesperrt für manuelle Sweeps** (Lock `/tmp/repo-hygiene-tick.lock`) |
+| **`08:30–08:45`** | `multi-repo-morning.timer` | Multi-Repo Health Brief (`morning-health-brief.py`) | Keine Git-Operationen im Haupt-Checkout (schreibt `~/.cache/morning-brief.md`) |
+| **Stündlich `:00`** | `cbm-refresh.timer` | K3 codebase-memory Refresh & Embed Sync | Keine Reindexierung zur vollen Stunde (`cbm-single-flight.sh`) |
+| **Alle 10 Min (`*:0/10`)** | `mcp-service-watchdog.timer` | MCP-Server & Model-Watchdog | Watchdog überwacht Ports und Prozesse |
+
+**Kollisionsfreie Zeitplanung:**
+- Plane eigene Chores oder wiederkehrende Tasks immer auf **Minute :15, :20 oder :45**.
+- Niemals zur vollen Stunde (`:00`) oder um `08:00`/`08:30`.
+- Bevorzuge Tageszeiten außerhalb der Nacht- und Morgenfenster (z. B. `09:15` oder `14:00`).
 
 ### 7.4 Hygiene-Gesundheitsampel
 

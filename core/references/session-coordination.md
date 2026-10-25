@@ -116,3 +116,22 @@ cd "$MAIN_REPO"
 bash scripts/agent-lock.sh release branch "<branch>"
 # Nur mit Ticket-Backend: bash scripts/agent-lock.sh release ticket "<T00XXXX>"
 ```
+
+## Host-Automatisierung & Timer-Kollisionsschutz
+
+Auf dem Host laufen periodische systemd user timers (`systemctl --user list-timers`), die Repository-Zustände, Caches und Services verwalten. Parallele Sessions und Hintergrund-Tasks müssen Kollisionen mit diesen Routinen verhindern:
+
+| Slot | Timer | Aktion / Sperre | Koordination für Agenten |
+|------|-------|-----------------|--------------------------|
+| `03:00` | `nightly-update.timer` | System-, npm-, pip- & Skill-Updates (`/tmp/wsl-nightly-update.lock`) | Keine Paket-/Skill-Installationen oder Branch-Operationen währenddessen. |
+| `04:00` (So) | `system-cache-hygiene.timer` | Worktree prune, Cache prune, /tmp-Cleanup | Stale Worktrees werden bereinigt; aktive Worktrees müssen valide refs halten. |
+| `07:00` (Mo) | `secrets-integrity-check.timer` | git-crypt & Secret-Status | Scannt Secret-Attribute; keine Secret-Edits zur Laufzeit. |
+| `08:00` | `repo-hygiene.timer` | Daily Sweep (`/tmp/repo-hygiene-tick.lock`) | Bereinigt [gone]-Branches/Worktrees. Vor manuellen Sweeps Lock prüfen (`is-active`). |
+| `08:30` | `multi-repo-morning.timer` | Multi-Repo Status-Scan (`~/.cache/morning-brief.md`) | Liest Git-Status und Worktrees aller Repositories. |
+| `:00` (stündl.) | `cbm-refresh.timer` | K3 codebase-memory Refresh (`cbm-single-flight.sh`) | Bei Reindexierung Lock prüfen (`cbm-single-flight.sh`). |
+| `*:0/10` | `mcp-service-watchdog.timer` | Liveness-Watchdog für lokale MCP-Server | Überwacht Ports und Prozesse. |
+
+**Regeln für Agenten:**
+- **Vor Arbeitsbeginn / destruktiven Sweeps um 08:00:** Prüfen, ob `repo-hygiene.service` läuft (`systemctl --user is-active repo-hygiene.service` oder `/tmp/repo-hygiene-tick.lock`).
+- **Neue periodische Jobs:** Immer mit Zeitversatz (z. B. `:15`, `:20`, `:45`) und außerhalb der Sperrzeiten (`03:00`, `08:00`, `08:30`) einplanen.
+

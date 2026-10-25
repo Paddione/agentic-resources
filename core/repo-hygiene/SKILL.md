@@ -20,6 +20,10 @@ DB-Zugriff hält: MCP-first vor direktem DB-Zugriff.
 
 ## Ablauf
 
+> **Kollisionsschutz:** Der Daily Sweep läuft automatisch täglich um 08:00 CET via `repo-hygiene.timer`.
+> Vor jedem manuellen Lauf prüfen, ob der Timer/Service aktiv ist (`systemctl --user is-active repo-hygiene.service`
+> oder `/tmp/repo-hygiene-tick.lock`). Zwischen 08:00 und 08:15 CET keine parallelen Sweeps starten.
+
 Die gesamte Housekeeping-Mechanik ist **SSOT** in
 [`repo-hygiene-ops`](.agents/skills/references/repo-hygiene-ops.md) —
 die acht Abschnitte der Reihe nach ausführen:

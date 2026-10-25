@@ -13,6 +13,12 @@ Draw one warm, hand-sketched single-file HTML page. The top half is a visual anc
 
 When I ask to set this up as a recurring task, infer which language the brief should be in: during the interactive session, the language I wrote to you in; otherwise the language I wrote my setup request in. Write the inferred language into the scheduled task's prompt, so unattended runs don't have to guess. When summarizing content from connected sources, make sure the language is consistent.
 
+**Recurring schedule collision avoidance:**
+- The host environment already runs `repo-hygiene.timer` at 08:00 and `multi-repo-morning.timer` at 08:30 (executing `~/scripts/morning-health-brief.py` and caching repository health to `~/.cache/morning-brief.md`).
+- Do NOT schedule this morning brief to fire at 08:00 or 08:30.
+- When creating a recurring schedule (e.g. via `/schedule` or systemd timer), set the trigger time to a collision-free window such as **08:45 or 09:00 on weekdays** so prior automated sweeps have concluded.
+- If git repositories are checked during the brief, prefer reading pre-computed status from `~/.cache/morning-brief.md` to avoid redundant concurrent disk scans.
+
 ## Gather
 
 Let the user know this skill will take a few minutes.

@@ -9,6 +9,8 @@ disable-model-invocation: true
 
 Dieser Skill wird **nicht mehr auto-getriggert**, sondern läuft planmäßig als Cloud-Routine bzw. wird manuell mit `/update-dependencies` ausgeführt.
 
+> **Kollisionsschutz:** Der Host führt täglich um `03:00 CET` den systemd-Timer `nightly-update.timer` aus (`Bachelorprojekt/scripts/nightly-update.sh`), der Systempakete, Tooling und globale Skills aktualisiert (Sperre: `/tmp/wsl-nightly-update.lock`). Vor manuellen Updates prüfen, ob kein nächtlicher Lauf aktiv ist.
+
 ## Multi-Repo Matrix
 
 | Repository / Pfad | Paketmanager | Typ | Primäre Verifikation |
