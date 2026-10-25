@@ -224,12 +224,12 @@
       }
     },
     "playwright": {
-      "doc": "Playwright browser MCP (codex only, Bachelorprojekt cwd for dev-flow-e2e).",
+      "doc": "Playwright browser MCP (codex only, Bachelorprojekt cwd for dev-flow-e2e). Pinned past GHSA-6fg3-hvw7-2fwq (fixed in 0.0.40, DNS rebinding); stdio transport, no listening socket.",
       "stdio": {
         "command": [
           "npx",
           "-y",
-          "@playwright/mcp@latest"
+          "@playwright/mcp@0.0.83"
         ]
       },
       "codex": {
