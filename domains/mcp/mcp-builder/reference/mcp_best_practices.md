@@ -202,6 +202,26 @@ Provide annotations to help clients understand tool behavior:
 
 ---
 
+## Server-Side Undo for Write Operations
+
+The MCP specification provides no transactions or rollback for tool calls.
+Per-call confirmations are insufficient (confirmation fatigue). Undo must
+live in the server itself (pattern: Privatrak, dotfiles#223).
+
+- **Undo unit**: a task-level "setup run" started explicitly (e.g.
+  `start_setup_run`). Callers join writes to the run via a header
+  (e.g. `X-Setup-Run-ID`).
+- **Record before/after**: store state before/after in the same transaction
+  as the write, so undo never diverges from what was applied.
+- **Undo newest-first, in one transaction**. On conflict, skip-and-report
+  (report skipped items) instead of aborting the whole undo.
+- **Preview as rolled-back undo**: implement dry-run/preview by executing
+  inside a transaction and rolling it back.
+- **Annotate**: mark state-changing tools (`destructiveHint`, `idempotentHint`)
+  so clients can warn before, and offer undo after, the call.
+
+---
+
 ## Error Handling
 
 - Use standard JSON-RPC error codes
