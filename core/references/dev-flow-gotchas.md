@@ -2,7 +2,7 @@
 
 Sammlung bekannter Probleme und Workarounds der dev-flow-Pipeline. Der [Lifecycle-Vertrag](dev-flow-lifecycle.md) besitzt Transitionen und Rollen; ausführbare Git-, Verifikations- und Merge-Mechanik bleibt in den referenzierten SSOTs.
 
-Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). Main-Branch, Scope-Allowlist, Ticket-Regeln, generierte Artefakte und Task-Runner-Namen unten kommen aus diesen Keys. Ticket-Einträge gelten nur bei `repo.tickets: true` — sonst sind sie retiriert.
+Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). Main-Branch, Scope-Allowlist, Ticket-Regeln, generierte Artefakte und Task-Runner-Namen unten kommen aus diesen Keys. Ticket-Einträge gelten nur bei `repo.tickets: github` — sonst sind sie retiriert.
 
 ### [T000321] Main Branch Guard
 Nie direkt auf den Main-Branch (`repo.main_branch`) committen oder pushen. Immer Feature-, Fix- oder Chore-Worktree/Branch anlegen. `dev-flow-plan` und `dev-flow-execute` verifizieren vor Commit/Push, dass der aktive Branch nicht der Main-Branch ist.
@@ -44,10 +44,10 @@ Scope-Allowlist aus `repo.scopes` (SSOT: `namedScopes` in `commitlint.config.cjs
 Commits an Goals-Dateien, Baselines/Measurements oder `G-<ID>`-Gates gehören zu Scope `goals` (oder zur konkreten Goal-ID als Scope, z. B. `fix(G-SIZE02): ...`). Keinen generischen `health`-Scope einführen.
 
 ### [T000344] [RETIRIERT] Database row check before file deletion
-Gilt nur bei `repo.tickets: true` (Plan-Zeile in Ticket-Plan-Tabelle prüfen, dann erst `rm`). Sonst: Plan-Commit im Git-Tree verifizieren (`git cat-file -e HEAD:<planfile>`), dann erst `rm`.
+Gilt nur bei `repo.tickets: github` (Plan-Zeile in Ticket-Plan-Tabelle prüfen, dann erst `rm`). Sonst: Plan-Commit im Git-Tree verifizieren (`git cat-file -e HEAD:<planfile>`), dann erst `rm`.
 
 ### [T000388] [RETIRIERT] tickets.ticket_plans Query Timeout
-Gilt nur bei `repo.tickets: true`: nie `SELECT *`/Content-Spalte über die ganze Plan-Tabelle (Timeouts über den DB-Tunnel); nur Metadaten-Spalten oder gefiltert nach Ticket-ID/Slug. Sonst gegenstandslos (Tabelle gedroppt).
+Gilt nur bei `repo.tickets: github`: nie `SELECT *`/Content-Spalte über die ganze Plan-Tabelle (Timeouts über den DB-Tunnel); nur Metadaten-Spalten oder gefiltert nach Ticket-ID/Slug. Sonst gegenstandslos (Tabelle gedroppt).
 
 ### [T000418] Playwright Project Assignment
 Projektname in `playwright.config.ts` nach Service/Marke wählen:
@@ -68,7 +68,7 @@ Projektname in `playwright.config.ts` nach Service/Marke wählen:
 Bei Massenverschiebung vor dem ersten Commit alle Referenzen auf alte Pfade per `git grep` über den ganzen Baum (inkl. tests/) erheben, nicht CI-Runde für CI-Runde abarbeiten.
 
 ### [T002673] [RETIRIERT] stage-plan läuft NACH dem Commit, nicht davor
-Gilt nur bei `repo.tickets: true`: erst committen/pushen, dann stagen — der Stage liest den Plan aus dem Branch-Commit, sonst bleibt `touched_files` leer. Ohne Tickets entfällt der Eintrag (Ableitung per `plan-touched-files.sh` gegen die reale Datei, Commit zuerst).
+Gilt nur bei `repo.tickets: github`: erst committen/pushen, dann stagen — der Stage liest den Plan aus dem Branch-Commit, sonst bleibt `touched_files` leer. Ohne Tickets entfällt der Eintrag (Ableitung per `plan-touched-files.sh` gegen die reale Datei, Commit zuerst).
 
 ### [T002820] Externe Abhängigkeiten schon in der Rotphase absichern
 Verfügbarkeits-Guard in die Rotphase: `command -v <binary> >/dev/null 2>&1 || skip "<binary> binary not installed"`. Vorher prüfen, ob CI die Abhängigkeit einrichtet (`grep -rn '<binary>' .github/workflows/`; 0 Treffer = in CI nicht vorhanden). Beide Richtungen verifizieren (mit Binary läuft, mit Minimal-PATH skippt sauber).

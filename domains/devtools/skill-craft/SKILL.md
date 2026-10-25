@@ -48,27 +48,32 @@ An explicit request to install an identified skill authorizes that
 installation; a request to search or compare alone does not. Do not run a bulk
 update as part of a single-skill install.
 
-The `npx skills add` CLI targets Claude-style global paths. In this repo,
-opencode skills are plain directories:
+The `npx skills add` CLI targets Claude-style global paths. Skill files in
+this ecosystem live in their source repo; consumer checkouts only carry links.
+Probe first, never assume paths — create nothing by hand:
 
-1. Shallow-clone the source repo to `/tmp/opencode/`.
-2. `cp -r <repo>/skills/<name> .opencode/skills/`
-3. Normalize line endings — upstream files sometimes ship CRLF, which breaks
-   YAML frontmatter parsing:
-   `grep -rlI $'\r' .opencode/skills/<name> | xargs sed -i 's/\r$//'`
-4. Validate: `name:` in frontmatter equals the directory name; description is
+1. Determine the source repo and its skill directory (here: this repo,
+   `core/`, `lifecycle/`, `domains/`); shallow-clone external sources to
+   `/tmp/` only for evaluation.
+2. Normalize line endings on vendored files — upstream files sometimes ship
+   CRLF, which breaks YAML frontmatter parsing:
+   `grep -rlI $'\r' <skill-dir> | xargs sed -i 's/\r$//'`
+3. Validate: `name:` in frontmatter equals the directory name; description is
    third-person with concrete trigger phrases.
-5. Register the skill in `docs/agent-guide/registry/skills.yaml`, curate it in
-   `docs/agent-guide/registry/capabilities.yaml` (`toolset-curate`), and record
-   upstream origin in `docs/agent-guide/registry/vendor-lock.json` for vendor skills.
+4. Consumer links (`.agents/skills/*`, `.opencode/skills/*`, `.claude/skills/*`,
+   harness-specific views) are created exclusively by the consumer repo's
+   tooling (e.g. `bootstrap.sh`, `agent-resources.py restore`) — never `cp` or
+   symlink them by hand.
+5. Registry entries (`docs/agent-guide/registry/skills.yaml`,
+   `capabilities.yaml` via `toolset-curate`, `vendor-lock.json`) only where the
+   consumer repo actually keeps them — verify the paths exist before writing.
 
-Locations in this repo:
+Locations in a consumer checkout of this ecosystem:
 
 | Path | Purpose |
 |---|---|
-| `.opencode/skills/<name>/SKILL.md` | SSOT — all skills live here canonically (auto-discovered by opencode) |
-| `.claude/skills/<name>` | per-skill symlinks into the SSOT (Claude Code view) |
-| `.agents/skills` | symlink to the SSOT directory (codex/agy/muse view) |
+| `agentic-resources/<area>/<name>/SKILL.md` | SSOT — skills live canonically in the source repo |
+| `.agents/skills/<name>`, `.opencode/skills/<name>` | symlinks into the SSOT (tooling-owned, never hand-made) |
 
 ## 3. Build (route to `skill-creator`)
 
