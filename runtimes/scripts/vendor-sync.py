@@ -18,6 +18,7 @@ Kommandos
 Optionen
   --root DIR      Repo-Wurzel (Default: zwei Ebenen über diesem Skript; Env VENDOR_SYNC_ROOT)
   --only ID       nur diesen Eintrag (mehrfach erlaubt)
+  --group G       trusted = Upstream-Besitzer in lock["trusted_owners"], external = alle übrigen
   --report FILE   Maschinenlesbarer JSON-Report (update/status)
 
 Exit-Codes: 0 sauber, 1 Befund/Konflikt, 2 Nutzungs- oder Umgebungsfehler.
@@ -271,6 +272,22 @@ def save_lock(root, lock):
         f.write("\n")
 
 
+def owner_of(entry):
+    """Upstream-Besitzer: explizites `owner` oder GitHub-Owner aus `repo` (klein geschrieben)."""
+    if entry.get("owner"):
+        return entry["owner"].lower()
+    m = re.match(r"^(?:https://github\.com/)?([\w.-]+)/[\w.-]+?(?:\.git)?/?$", entry["repo"])
+    return m.group(1).lower() if m else ""
+
+
+def in_group(lock, entry, group):
+    """trusted = Besitzer steht in lock["trusted_owners"], external = alle übrigen."""
+    if not group:
+        return True
+    trusted = owner_of(entry) in {o.lower() for o in lock.get("trusted_owners", [])}
+    return trusted == (group == "trusted")
+
+
 def inside(root, path):
     r = os.path.realpath(root)
     return os.path.commonpath([os.path.realpath(path), r]) == r
@@ -280,9 +297,9 @@ def cmd_update(root, args, dry):
     lock = load_lock(root)
     report = {"skills": []}
     for sid in sorted(lock.get("skills", {})):
-        if args.only and sid not in args.only:
-            continue
         entry = lock["skills"][sid]
+        if (args.only and sid not in args.only) or not in_group(lock, entry, args.group):
+            continue
         sha, version = resolve_latest(entry)
         if sha == entry.get("ref"):
             report["skills"].append({"id": sid, "status": "current", "version": version or sha[:12]})
@@ -353,6 +370,7 @@ def main():
     ap.add_argument("--root", default=os.environ.get("VENDOR_SYNC_ROOT") or
                     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     ap.add_argument("--only", action="append")
+    ap.add_argument("--group", choices=["trusted", "external"])
     ap.add_argument("--report")
     args = ap.parse_args()
     root = os.path.abspath(args.root)

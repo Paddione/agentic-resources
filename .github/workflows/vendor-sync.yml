@@ -1,8 +1,12 @@
 name: Vendor-Sync
 
-# Hebt die Vendor-Skills aus vendor-lock.json nächtlich an und reicht das Ergebnis als PR ein.
-# Konfliktfrei + Tests grün -> Squash-Merge im selben Lauf (PRs des GITHUB_TOKEN lösen keine
-# weiteren Workflows aus, daher laufen die Checks hier). Konflikt -> Draft-PR mit Markern.
+# Hebt die Vendor-Skills aus vendor-lock.json nächtlich an, getrennt nach Upstream-Besitzer:
+#   trusted  (lock.trusted_owners, eigene Repos): konfliktfrei + Tests grün -> Squash-Merge im
+#            selben Lauf. PRs des GITHUB_TOKEN lösen keine weiteren Workflows aus, daher laufen
+#            die Checks hier.
+#   external (alle übrigen): PR zur Prüfung, kein Merge — fremder Upstream-Inhalt landet als
+#            Agenten-Anweisung in allen Harnesses und braucht ein Review.
+# Konflikt oder rote Tests -> Draft-PR mit Markern (beide Gruppen).
 
 on:
   schedule:
@@ -20,19 +24,28 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        group: [trusted, external]
     env:
       GH_TOKEN: ${{ github.token }}
+      GROUP: ${{ matrix.group }}
     steps:
+      # ref: main statt Trigger-SHA, damit die external-Gruppe auf dem gerade gemergten
+      # trusted-Stand aufsetzt und sich der Lock nicht überschneidet.
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install pytest
 
-      - name: Offenen Vendor-Sync-PR abwarten
+      - name: Offenen PR dieser Gruppe abwarten
         id: guard
         run: |
-          open=$(gh pr list --state open --search "head:chore/vendor-sync-" --json number --jq 'length')
+          open=$(gh pr list --state open --search "head:chore/vendor-sync-$GROUP-" --json number --jq 'length')
           echo "open=$open" >> "$GITHUB_OUTPUT"
 
       - name: Update
@@ -40,7 +53,7 @@ jobs:
         if: steps.guard.outputs.open == '0'
         run: |
           set +e
-          python runtimes/scripts/vendor-sync.py update --report "$RUNNER_TEMP/report.json" | tee "$RUNNER_TEMP/summary.txt"
+          python runtimes/scripts/vendor-sync.py update --group "$GROUP" | tee "$RUNNER_TEMP/summary.txt"
           echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
           if [ -n "$(git status --porcelain)" ]; then echo "changed=1" >> "$GITHUB_OUTPUT"; fi
 
@@ -58,8 +71,8 @@ jobs:
           UPDATE_RC: ${{ steps.update.outputs.rc }}
           TESTS_RC: ${{ steps.tests.outputs.rc }}
         run: |
-          branch="chore/vendor-sync-$(date -u +%Y%m%d)"
-          title="chore(vendor): sync vendor skills $(date -u +%Y-%m-%d)"
+          branch="chore/vendor-sync-$GROUP-$(date -u +%Y%m%d)"
+          title="chore(vendor): sync $GROUP vendor skills $(date -u +%Y-%m-%d)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
@@ -67,17 +80,21 @@ jobs:
           git commit -qm "$title"
           git push -q origin "$branch"
           {
-            echo "Automatischer Lauf von \`.github/workflows/vendor-sync.yml\`."
+            echo "Automatischer Lauf von \`.github/workflows/vendor-sync.yml\` (Gruppe \`$GROUP\`)."
             echo
             echo '```'
             grep -v ' current ' "$RUNNER_TEMP/summary.txt"
             echo '```'
           } > "$RUNNER_TEMP/body.md"
-          if [ "$UPDATE_RC" = "0" ] && [ "$TESTS_RC" = "0" ]; then
+          if [ "$UPDATE_RC" != "0" ] || [ "$TESTS_RC" != "0" ]; then
+            echo >> "$RUNNER_TEMP/body.md"
+            echo "Konflikt oder rote Tests: Marker auflösen, danach \`python runtimes/scripts/vendor-sync.py update --only <id>\` für die Lock-Anhebung." >> "$RUNNER_TEMP/body.md"
+            gh pr create --draft --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+          elif [ "$GROUP" = "trusted" ]; then
             gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
             gh pr merge "$branch" --squash --delete-branch
           else
             echo >> "$RUNNER_TEMP/body.md"
-            echo "Konflikt oder rote Tests: Marker auflösen, danach \`python runtimes/scripts/vendor-sync.py update --only <id>\` für die Lock-Anhebung." >> "$RUNNER_TEMP/body.md"
-            gh pr create --draft --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            echo "Externer Upstream: Diff auf eingeschleuste Anweisungen, Skripte und Netzwerkzugriffe prüfen, dann mergen." >> "$RUNNER_TEMP/body.md"
+            gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
           fi

@@ -1,5 +1,8 @@
 {
   "schema_version": 1,
+  "trusted_owners": [
+    "Paddione"
+  ],
   "skills": {
     "gh-fix-ci": {
       "repo": "openai/skills",
