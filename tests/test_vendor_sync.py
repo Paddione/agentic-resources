@@ -157,3 +157,13 @@ def test_besitzer_kommt_aus_github_kurzform():
     assert vs.owner_of({"repo": "Paddione/skills"}) == "paddione"
     assert vs.owner_of({"repo": "https://github.com/Paddione/skills.git"}) == "paddione"
     assert vs.owner_of({"repo": "/tmp/up", "owner": "Zq"}) == "zq"
+
+
+def test_explizites_owner_ueberstimmt_keinen_github_besitzer():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("vs", SCRIPT)
+    vs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vs)
+    lock = {"trusted_owners": ["Paddione"]}
+    assert not vs.in_group(lock, {"repo": "evil/skills", "owner": "Paddione"}, "trusted")
+    assert vs.in_group(lock, {"repo": "https://github.com/Paddione/skills"}, "trusted")
