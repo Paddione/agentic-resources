@@ -73,8 +73,8 @@ def upstream(spec):
         return _fetched[url]
     d = os.path.join(cache_dir(), hashlib.sha1(url.encode()).hexdigest()[:16])
     if not os.path.isdir(d):
-        run(["git", "clone", "-q", "--bare", url, d])
-    run(["git", "-C", d, "fetch", "-q", "--prune", "--tags", "--force", url,
+        run(["git", "-c", "transfer.fsckObjects=true", "clone", "-q", "--bare", url, d])
+    run(["git", "-C", d, "-c", "transfer.fsckObjects=true", "fetch", "-q", "--prune", "--tags", "--force", url,
          "+refs/heads/*:refs/heads/*"])
     _fetched[url] = d
     return d
@@ -117,7 +117,13 @@ def tree_files(d, sha, path):
         meta, p = rec.split("\t", 1)
         mode, typ, blob = meta.split()
         if typ == "blob":
-            files[os.path.relpath(p, path)] = (mode, blob)
+            rel = os.path.relpath(p, path)
+            # Upstream-Bäume sind fremder Input: keine Symlinks, keine Pfade aus dem
+            # Skill-Verzeichnis heraus.
+            parts = rel.split("/")
+            if mode == "120000" or os.path.isabs(rel) or ".." in parts or ".git" in parts:
+                continue
+            files[rel] = (mode, blob)
     return files
 
 
@@ -175,6 +181,9 @@ def merge_skill(root, sid, entry, new_sha):
            "conflicts": [], "kept_local": []}
     for rel in sorted(set(base_files) | set(new_files) | local):
         target = os.path.join(dest, rel)
+        if not inside(dest, target):
+            res["conflicts"].append({"file": rel, "reason": "Pfad liegt außerhalb des Skill-Verzeichnisses"})
+            continue
         b_raw = blob(d, base_files[rel][1]) if rel in base_files else None
         t_raw = blob(d, new_files[rel][1]) if rel in new_files else None
         o_raw = read_local(target)
@@ -302,7 +311,7 @@ def cmd_update(root, args, dry):
         if s.get("to") and s["status"] != "current":
             line += " %s -> %s" % (s.get("from"), s["to"])
         if s.get("conflicts"):
-            line += "  KONFLIKTE: " + ", ".join(c["file"] for c in s["conflicts"])
+            line += "  KONFLIKTE: " + ", ".join("%s (%s)" % (c["file"], c["reason"]) for c in s["conflicts"])
         if s.get("detail"):
             line += "  " + s["detail"]
         print(line)

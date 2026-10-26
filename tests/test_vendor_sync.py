@@ -105,3 +105,29 @@ def test_repo_lock_ist_konsistent_mit_registry_und_kopien():
         assert registry[sid]["path"] == entry["dest"], sid
     r = subprocess.run(["python3", str(SCRIPT), "check"], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_upstream_symlink_eintraege_werden_nicht_uebernommen(fx):
+    (fx.up / "skills/zq-demo/evil").symlink_to("../../../ausserhalb")
+    fx.release("zeile-a\n", "zeile-a UPSTREAM-NEU\n", "v1.1.0")
+    fx.git("add", "-A")
+    fx.git("commit", "-qm", "symlink")
+    fx.git("tag", "v1.2.0")
+    r = fx.sync("update")
+    dest = fx.root / "domains/demo/zq-demo"
+    assert not os.path.lexists(dest / "evil"), r.stdout
+    assert "zeile-a UPSTREAM-NEU" in fx.local()
+
+
+def test_lokaler_symlink_im_ziel_leitet_keine_schreibzugriffe_nach_aussen(fx):
+    outside = fx.t / "ausserhalb"
+    outside.mkdir()
+    (fx.root / "domains/demo/zq-demo/sub").symlink_to(outside)
+    (fx.up / "skills/zq-demo/sub").mkdir()
+    (fx.up / "skills/zq-demo/sub/x.md").write_text("upstream\n")
+    fx.git("add", "-A")
+    fx.git("commit", "-qm", "sub")
+    fx.git("tag", "v1.1.0")
+    r = fx.sync("update")
+    assert not (outside / "x.md").exists(), r.stdout
+    assert r.returncode == 1 and "außerhalb" in r.stdout
