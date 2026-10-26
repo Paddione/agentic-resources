@@ -96,3 +96,46 @@ def test_real_file_never_overwritten(tmp_path):
     assert result.returncode == 0
     assert not (destdir / "example").is_symlink()
     assert (destdir / "example").read_text() == "user content"
+
+
+SKILL_FIXTURE = "---\nname: example\ndescription: fixture\n---\n"
+
+
+def _home_with_synced_copy(tmp_path, content):
+    home = tmp_path / "home"
+    for directory in HOME_DIRS:
+        (home / directory).mkdir(parents=True)
+    bundled = home / ".claude/skills/synced/bucket-1/example"
+    bundled.mkdir(parents=True)
+    (bundled / "SKILL.md").write_text(content)
+    return home
+
+
+@pytest.mark.parametrize("content, linked", [(SKILL_FIXTURE, False),
+                                             (SKILL_FIXTURE + "local addition\n", True)])
+def test_init_skips_claude_link_when_synced_bundle_is_identical(tmp_path, content, linked):
+    script = _fixture_resources(tmp_path)
+    home = _home_with_synced_copy(tmp_path, content)
+    consumer = tmp_path / "consumer"
+    consumer.mkdir()
+    result = subprocess.run(
+        ["bash", str(script), "--repo", str(consumer), "--layers", "core", "--harness"],
+        env={**os.environ, "HOME": str(home)}, capture_output=True, text=True, check=True,
+    )
+    assert (home / ".claude/skills/example").is_symlink() is linked
+    assert (home / ".codex/skills/example").is_symlink()
+    assert (consumer / ".claude/skills/example").is_symlink()
+
+
+@pytest.mark.parametrize("content, linked", [(SKILL_FIXTURE, False),
+                                             (SKILL_FIXTURE + "local addition\n", True)])
+def test_share_skips_claude_link_when_synced_bundle_is_identical(tmp_path, content, linked):
+    home = _home_with_synced_copy(tmp_path, content)
+    master = home / ".agents/skills/example"
+    master.mkdir(parents=True)
+    (master / "SKILL.md").write_text(SKILL_FIXTURE)
+    script = Path(__file__).resolve().parents[1] / "runtimes/scripts/share-agent-resources.sh"
+    subprocess.run(["bash", str(script)], env={**os.environ, "HOME": str(home)},
+                   capture_output=True, text=True, check=True)
+    assert (home / ".claude/skills/example").is_symlink() is linked
+    assert (home / ".codex/skills/example").is_symlink()
