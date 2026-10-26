@@ -53,6 +53,19 @@ if (( HARNESS )); then
 fi
 PROJECT_DIRS=("$REPO/.agents/skills" "$REPO/.claude/skills" "$REPO/.codex/skills" "$REPO/.opencode/skills" "$REPO/.zcode/skills")
 
+# Claude Code laedt ~/.claude/skills/synced/<bucket>/<name> selbst (als
+# anthropic-skills:<name>). Eine identische Kopie dort nicht zusaetzlich verlinken,
+# sonst sieht Claude denselben Skill doppelt. Abweichende Kopien (lokale
+# Ergaenzungen) werden weiter verlinkt.
+provided_by_synced() {
+  local destdir="$1" name="$2" src="$3" bundled
+  [[ "$destdir" == */.claude/skills ]] || return 1
+  for bundled in "$destdir"/synced/*/"$name"; do
+    [[ -d "$bundled" ]] && diff -rq "$bundled" "$src" >/dev/null 2>&1 && return 0
+  done
+  return 1
+}
+
 link_skill() {
   local src="$1" destdir="$2" name
   name="$(basename "$src")"
@@ -64,6 +77,7 @@ link_skill() {
     [[ -L "$destdir/$name" && ! -e "$destdir/$name" ]] && run ln -sfn "$(realpath -s --relative-to="$destdir" "$src")" "$destdir/$name" && echo "fixed $destdir/$name -> $src"
     return 0
   fi
+  provided_by_synced "$destdir" "$name" "$src" && { echo "skip $destdir/$name (identisch im synced-Bundle)"; return 0; }
   run ln -s "$(realpath -s --relative-to="$destdir" "$src")" "$destdir/$name"
   echo "link $destdir/$name -> $src"
 }
