@@ -131,3 +131,29 @@ def test_lokaler_symlink_im_ziel_leitet_keine_schreibzugriffe_nach_aussen(fx):
     r = fx.sync("update")
     assert not (outside / "x.md").exists(), r.stdout
     assert r.returncode == 1 and "außerhalb" in r.stdout
+
+
+@pytest.mark.parametrize("trusted, group, touched", [
+    ([], "external", True), ([], "trusted", False),
+    (["zq-owner"], "trusted", True), (["zq-owner"], "external", False),
+])
+def test_group_filtert_nach_vertrauenswuerdigem_upstream_besitzer(fx, trusted, group, touched):
+    lock_path = fx.root / "vendor-lock.json"
+    lock = json.loads(lock_path.read_text())
+    lock["trusted_owners"] = trusted
+    lock["skills"]["zq-demo"]["owner"] = "zq-owner"
+    lock_path.write_text(json.dumps(lock))
+    fx.release("zeile-a\n", "zeile-a UPSTREAM-NEU\n", "v1.1.0")
+    r = fx.sync("update", "--group", group)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert ("zeile-a UPSTREAM-NEU" in fx.local()) is touched
+
+
+def test_besitzer_kommt_aus_github_kurzform():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("vs", SCRIPT)
+    vs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vs)
+    assert vs.owner_of({"repo": "Paddione/skills"}) == "paddione"
+    assert vs.owner_of({"repo": "https://github.com/Paddione/skills.git"}) == "paddione"
+    assert vs.owner_of({"repo": "/tmp/up", "owner": "Zq"}) == "zq"

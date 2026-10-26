@@ -20,8 +20,10 @@ Runtimes und Prompts. Jedes Folgeprojekt erbt per Live-Symlink statt per Fork.
   `bachelorprojekt`) und ggf. Upstream-Revision.
 - `vendor-lock.json` — gelockte Upstream-Commits der Vendor-Skills.
   `runtimes/scripts/vendor-sync.py status|update|check` hebt sie per
-  3-Wege-Merge an; `.github/workflows/vendor-sync.yml` läuft nächtlich und
-  mergt konfliktfreie Updates nach grünen Tests, Konflikte kommen als Draft-PR.
+  3-Wege-Merge an; `.github/workflows/vendor-sync.yml` läuft nächtlich je
+  Gruppe: Upstreams aus `trusted_owners` (eigene Repos) mergen nach grünen
+  Tests automatisch, externe Upstreams kommen als PR zur Prüfung, Konflikte
+  als Draft-PR.
 - `staging/` — Arbeitsablage für Merges, kein Vererbungsinhalt.
 - `AGENTS.md` + `CLAUDE.md` — zentrale Anleitungsdateien (geteilte
   Doktrin: Layer-Modell, Skill-Konventionen, Consumer-Vertrag, Workflows).
