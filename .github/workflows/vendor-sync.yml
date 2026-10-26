@@ -1,0 +1,83 @@
+name: Vendor-Sync
+
+# Hebt die Vendor-Skills aus vendor-lock.json nächtlich an und reicht das Ergebnis als PR ein.
+# Konfliktfrei + Tests grün -> Squash-Merge im selben Lauf (PRs des GITHUB_TOKEN lösen keine
+# weiteren Workflows aus, daher laufen die Checks hier). Konflikt -> Draft-PR mit Markern.
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: vendor-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest
+
+      - name: Offenen Vendor-Sync-PR abwarten
+        id: guard
+        run: |
+          open=$(gh pr list --state open --search "head:chore/vendor-sync-" --json number --jq 'length')
+          echo "open=$open" >> "$GITHUB_OUTPUT"
+
+      - name: Update
+        id: update
+        if: steps.guard.outputs.open == '0'
+        run: |
+          set +e
+          python runtimes/scripts/vendor-sync.py update --report "$RUNNER_TEMP/report.json" | tee "$RUNNER_TEMP/summary.txt"
+          echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          if [ -n "$(git status --porcelain)" ]; then echo "changed=1" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Tests
+        id: tests
+        if: steps.update.outputs.changed == '1'
+        run: |
+          set +e
+          python -m pytest tests -q && python runtimes/scripts/vendor-sync.py check
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: PR einreichen
+        if: steps.update.outputs.changed == '1'
+        env:
+          UPDATE_RC: ${{ steps.update.outputs.rc }}
+          TESTS_RC: ${{ steps.tests.outputs.rc }}
+        run: |
+          branch="chore/vendor-sync-$(date -u +%Y%m%d)"
+          title="chore(vendor): sync vendor skills $(date -u +%Y-%m-%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -A
+          git commit -qm "$title"
+          git push -q origin "$branch"
+          {
+            echo "Automatischer Lauf von \`.github/workflows/vendor-sync.yml\`."
+            echo
+            echo '```'
+            grep -v ' current ' "$RUNNER_TEMP/summary.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/body.md"
+          if [ "$UPDATE_RC" = "0" ] && [ "$TESTS_RC" = "0" ]; then
+            gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            gh pr merge "$branch" --squash --delete-branch
+          else
+            echo >> "$RUNNER_TEMP/body.md"
+            echo "Konflikt oder rote Tests: Marker auflösen, danach \`python runtimes/scripts/vendor-sync.py update --only <id>\` für die Lock-Anhebung." >> "$RUNNER_TEMP/body.md"
+            gh pr create --draft --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+          fi
