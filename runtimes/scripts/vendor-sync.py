@@ -273,11 +273,13 @@ def save_lock(root, lock):
 
 
 def owner_of(entry):
-    """Upstream-Besitzer: explizites `owner` oder GitHub-Owner aus `repo` (klein geschrieben)."""
-    if entry.get("owner"):
-        return entry["owner"].lower()
+    """Upstream-Besitzer (klein geschrieben). Bei GitHub-förmigem `repo` zählt nur dessen
+    Owner — ein explizites `owner` darf die Vertrauensentscheidung nicht überstimmen; es
+    gilt nur für Nicht-GitHub-Quellen (lokale Pfade)."""
     m = re.match(r"^(?:https://github\.com/)?([\w.-]+)/[\w.-]+?(?:\.git)?/?$", entry["repo"])
-    return m.group(1).lower() if m else ""
+    if m:
+        return m.group(1).lower()
+    return (entry.get("owner") or "").lower()
 
 
 def in_group(lock, entry, group):
