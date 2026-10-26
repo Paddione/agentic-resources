@@ -3,13 +3,13 @@ name: vitest
 description: Tests mit Vitest schreiben, mocken, Coverage konfigurieren, filtern und Fixtures nutzen. Testinhalt und -struktur; Runner-Fragen (Config-Keys, vi-API, Pools, Coverage, Browser Mode) gehören zu vitest-testing.
 metadata:
   author: Anthony Fu
-  version: "2026.9.25"
+  version: "2026.10.23"
   source: Generated from https://github.com/vitest-dev/vitest, scripts located at https://github.com/antfu/skills
 ---
 
 Vitest ist ein Vite-natives Testframework mit Jest-kompatibler API, ESM-, TypeScript- und JSX-Support ohne Konfiguration. Nutzt Config, Transformer, Resolver und Plugins der Vite-App.
 
-Stand: Vitest 5.0.1, generiert 2026-09-25. Runner-Themen (verschobene Config-Keys, vi-API, Pools, Coverage-Provider, Browser Mode, hängefreie Runs) gehören zu `vitest-testing`; dieser Skill besitzt Testinhalt und -struktur.
+Stand: Vitest 5.1.0-beta.1, generiert 2026-10-23. Runner-Themen (verschobene Config-Keys, vi-API, Pools, Coverage-Provider, Browser Mode, hängefreie Runs) gehören zu `vitest-testing`; dieser Skill besitzt Testinhalt und -struktur.
 
 Repo-Anpassung per repo.yaml: Scopes (repo.scopes), Task-Runner (repo.task_runner), generierte Artefakte (repo.generated_artifacts). Falls ein Repo eigene Teststrategie- oder Setup-Skills definiert, gelten diese vorrangig; keine festen Skill-Pfade voraussetzen.
 
