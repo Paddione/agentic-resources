@@ -74,7 +74,10 @@
         "command": [
           "node",
           "/home/patrick/mcp-servers/devflow/server.mjs"
-        ]
+        ],
+        "env": {
+          "DEVFLOW_EMBED_DIRECT_URL": "http://127.0.0.1:18236"
+        }
       },
       "codex": {
         "cwd": "/home/patrick/Bachelorprojekt",
