@@ -211,16 +211,16 @@ sind entfernt. Ersatzwege (`repo.tickets == none`):
 Kurzwahl je Fragetyp (Tiefe: [recall-routing](../../../docs/brain/recall-routing.md)):
 
 - **K1 zuerst** bei semantischer Was-Frage: `bge-mcp` (`bge_embed`, `bge_rerank`) — Roh-Recall über Code, Specs, Docs.
-- **K3 zuerst** bei bekanntem Symbol/Call-Chain: `codebase-memory-mcp` (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`, `search_code`) — Präzisions-Check.
+- **K3 zuerst** bei bekanntem Symbol/Call-Chain: zentraler MCP-Hub (`fleet-workspace`) mit den Codebase-Memory-Tools (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`, `search_code`) — Präzisions-Check. Keine direkte Graph-/Embedding-Registrierung außerhalb des Hubs.
 - **K4 zuerst** bei Doktrin/Prozess: direkt `docs/` lesen (`docs/adr/`, `docs/runbooks/`, Gotchas, Karten) — kein MCP, Authoring-Stand.
 - **Fallback** ohne Typ-Treffer: K1→K3→K4 (Roh-Recall → Präzisions-Check → Doktrin).
 
 ## `codebase-memory-mcp` — Code-Wissensgraph
 
-- **Transport:** lokales Binary (`codebase-memory-mcp`), stdio.
+- **Transport:** zentraler MCP-Hub (`fleet-workspace`); keine direkte Graph-/Embedding-Registrierung außerhalb des Hubs (lokales Binary nur als Offline-Diagnoseweg, kein MCP-Ersatz).
 - **Tools:** `search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `search_code`, `get_architecture`, `index_repository`.
-- **Wann bevorzugen:** strukturelle Code-Suche und Abhängigkeitsanalyse — vor grep/glob.
-- **Fallback:** `grep` / `rg` / `glob` für einfache Textsuche.
+- **Wann bevorzugen:** strukturelle Code-Suche und Abhängigkeitsanalyse — vor grep/glob; Code-Volltext und Literalsuche laufen über `search_code`.
+- **Fallback:** gescopter `grep` / `rg` / `glob` nur für unindizierte Nicht-Code-Dateien mit Dokumentationspflicht, nie als stiller Standard.
 
 ## `bge-mcp` — BGE Embeddings & Reranking (Bearer-pflichtig)
 
