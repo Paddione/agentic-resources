@@ -295,9 +295,7 @@
       "fleet-workspace"
     ],
     "claude": [
-      "fleet-workspace",
-      "bge-mcp",
-      "mcp-postgres"
+      "fleet-workspace"
     ],
     "gemini": [
       "fleet-workspace"
