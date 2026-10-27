@@ -106,6 +106,10 @@
    "path": "domains/gitops/gitops-repo-audit",
    "source": "bachelorprojekt"
   },
+  "goal": {
+   "path": "core/goal",
+   "source": "home"
+  },
   "google-workspace": {
    "path": "domains/mcp/google-workspace",
    "source": "home"
@@ -243,6 +247,10 @@
   "security-specialist": {
    "path": "core/security-specialist",
    "source": "bachelorprojekt"
+  },
+  "setgoal": {
+   "path": "core/setgoal",
+   "source": "home"
   },
   "skill-craft": {
    "path": "domains/devtools/skill-craft",
