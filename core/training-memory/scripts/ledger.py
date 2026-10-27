@@ -10,7 +10,9 @@ import re
 import uuid
 
 KINDS = {"training", "artifact", "evaluation", "decision", "checkpoint"}
-STATUSES = {"planned", "running", "completed", "failed", "unknown", "selected", "rejected", "paused"}
+STATUSES = {"planned", "running", "completed", "failed", "unknown", "selected", "rejected", "paused", "deleted"}
+# A deleted artifact must say what it was; null marks a value as unknown.
+DELETED_KEYS = ("quantization", "source", "role", "metrics")
 
 def finite(value):
     if isinstance(value, float) and not math.isfinite(value):
@@ -39,6 +41,20 @@ def validate(event):
     if event["kind"] == "artifact" and event["status"] == "completed":
         if not digest(details.get("sha256")) or not details.get("quantization"):
             raise ValueError("completed artifact requires SHA-256 and quantization")
+    if event["status"] == "deleted":
+        if event["kind"] != "artifact": raise ValueError("deleted is only valid for artifacts")
+        refs = event.get("evidence")
+        if not isinstance(refs, list) or not refs or not all(isinstance(r, str) and r.strip() for r in refs):
+            raise ValueError("deleted artifact requires evidence references")
+        if not digest(details.get("sha256")): raise ValueError("deleted artifact requires SHA-256")
+        size = details.get("bytes")
+        if not isinstance(size, int) or isinstance(size, bool) or size < 0:
+            raise ValueError("deleted artifact requires bytes")
+        for key in ("path", "reason"):
+            if not isinstance(details.get(key), str) or not details[key].strip():
+                raise ValueError("deleted artifact requires " + key)
+        missing = [key for key in DELETED_KEYS if key not in details]
+        if missing: raise ValueError("deleted artifact requires " + ", ".join(missing) + " (null if unknown)")
     if event["kind"] == "evaluation" and event["status"] == "completed":
         if not all(digest(details.get(k)) for k in ("artifact_sha256", "testset_sha256")):
             raise ValueError("completed evaluation requires artifact and testset SHA-256")
