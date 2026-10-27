@@ -45,10 +45,11 @@ Compare Q4_K_M and Q5_K_M exports, optionally Q8_0 as a reference, initially 204
 
 ## Event JSON
 
-Required common fields: `kind`, `subject`, `status`, `details` (object). Helper adds `id`, UTC `recorded_at`, schema version. Kinds: `training`, `artifact`, `evaluation`, `decision`, `checkpoint`. Statuses: `planned`, `running`, `completed`, `failed`, `unknown`, `selected`, `rejected`, `paused`.
+Required common fields: `kind`, `subject`, `status`, `details` (object). Helper adds `id`, UTC `recorded_at`, schema version. Kinds: `training`, `artifact`, `evaluation`, `decision`, `checkpoint`. Statuses: `planned`, `running`, `completed`, `failed`, `unknown`, `selected`, `rejected`, `paused`, `deleted`.
 
 - training: subject is run ID; details include role, base/revision, corpus hash, config, repo commits, checkpoint, manifest, GPU and next action. `completed` requires an evidence reference.
 - artifact: subject identifies an export; details include `sha256`, `quantization`, path, bytes, training run ID, template fingerprint. `completed` requires evidence plus SHA-256 and quantization.
+- artifact/deleted: history of a removed file, appended before the file is deleted. details require `path`, `sha256`, integer `bytes`, `reason` and the keys `quantization`, `source` (HF repo@revision or run ID), `role`, `metrics` (eval references or values); null marks an unknown value. Requires evidence. Never delete a file whose event could not be appended.
 - evaluation: subject identifies one evaluation invocation; details include `artifact_sha256`, `testset_sha256`, `runtime`, `hardware`, `metrics`, role, baseline, context/sampler settings and report path. `completed` requires these identity/config fields and evidence. Use separate invocations for hardware/quant/context variants.
 - decision: subject is role/selection name; details include candidate hashes, evaluation IDs, criteria, limitations and next action. `selected` requires evidence; no selection from loss alone.
 - checkpoint: notes, reconciliation or corrections; include `corrects_event_id` when correcting an earlier entry. Summary is a chronological index; read correction events before relying on past claims.
