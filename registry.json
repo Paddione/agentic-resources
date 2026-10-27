@@ -9,6 +9,16 @@
    "path": "domains/projects/bachelorprojekt-vim",
    "source": "bachelorprojekt"
   },
+  "breadboarding": {
+   "path": "domains/devtools/breadboarding",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/ajoslin/dot",
+    "revision": "8aa8e87ab2fed38a42acefb4a2d9a3a557f0b1ed",
+    "path": "config/opencode/skills/breadboarding",
+    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
+   }
+  },
   "code-analyzer": {
    "path": "core/code-analyzer",
    "source": "home",
@@ -85,6 +95,16 @@
   "freetoken-setup": {
    "path": "domains/devtools/freetoken-setup",
    "source": "bachelorprojekt"
+  },
+  "frontend-design": {
+   "path": "domains/web/frontend-design",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/anthropics/skills",
+    "revision": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+    "path": "skills/frontend-design",
+    "mode": "vendored"
+   }
   },
   "gh-fix-ci": {
    "path": "domains/devtools/gh-fix-ci",
@@ -186,6 +206,16 @@
    "path": "domains/mcp/mcp-builder",
    "source": "home"
   },
+  "mermaid-architecture-diagrams": {
+   "path": "domains/devtools/mermaid-architecture-diagrams",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/bentsolheim/public-skills",
+    "revision": "e5dea31ac3d1d5090428e461787a2fe94d0c922f",
+    "path": "skills/mermaid-architecture-diagrams",
+    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
+   }
+  },
   "mishap-tracker": {
    "path": "core/mishap-tracker",
    "source": "merged"
@@ -231,6 +261,10 @@
   "references": {
    "path": "core/references",
    "source": "merged"
+  },
+  "repo-flow-analysis": {
+   "path": "core/repo-flow-analysis",
+   "source": "home"
   },
   "repo-hygiene": {
    "path": "core/repo-hygiene",
@@ -332,30 +366,6 @@
   },
   "xlsx": {
    "path": "domains/formats/xlsx",
-   "source": "home"
-  },
-  "mermaid-architecture-diagrams": {
-   "path": "domains/devtools/mermaid-architecture-diagrams",
-   "source": "external",
-   "upstream": {
-    "source": "https://github.com/bentsolheim/public-skills",
-    "revision": "e5dea31ac3d1d5090428e461787a2fe94d0c922f",
-    "path": "skills/mermaid-architecture-diagrams",
-    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
-   }
-  },
-  "breadboarding": {
-   "path": "domains/devtools/breadboarding",
-   "source": "external",
-   "upstream": {
-    "source": "https://github.com/ajoslin/dot",
-    "revision": "8aa8e87ab2fed38a42acefb4a2d9a3a557f0b1ed",
-    "path": "config/opencode/skills/breadboarding",
-    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
-   }
-  },
-  "repo-flow-analysis": {
-   "path": "core/repo-flow-analysis",
    "source": "home"
   }
  }
