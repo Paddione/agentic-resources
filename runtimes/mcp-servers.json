@@ -269,6 +269,15 @@
         ]
       }
     },
+    "voice-mcp": {
+      "doc": "Local voice I/O (canonical provider for speak/transcribe): voice_speak (Qwen3-TTS frau-warm :8792), voice_transcribe (faster-whisper de :8791, save=false), voice_health. Use for any speak/listen task; fallback is direct HTTP on 127.0.0.1:8791/:8792. Stdlib-only stdio server, no secrets.",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/voice/server.py"
+        ]
+      }
+    },
     "mcp-postgres-korczewski": {
       "doc": "Korczewski Postgres gateway on :13009 via mcp-postgres-korczewski.service (same script as fleet postgres, separate DB and token). Non-ticket SQL only; ticket reads retired.",
       "http": {
@@ -321,7 +330,8 @@
       "playwright",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -336,7 +346,8 @@
       "playwright",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -350,7 +361,8 @@
       "mcp-task-runner",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -365,7 +377,8 @@
       "playwright",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -380,7 +393,8 @@
       "playwright",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -395,7 +409,8 @@
       "playwright",
       "huggingface",
       "python-sandbox",
-      "mcp-kubernetes"
+      "mcp-kubernetes",
+      "voice-mcp"
     ]
   },
   "upstreams": {
