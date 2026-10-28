@@ -10,5 +10,6 @@
 - Prefer native tools over shell for file operations; use `gh` directly for
   JSON output, polling, and mutations.
 - Ground claims in files read or commands run; label the rest as inferred.
+- Check `.agents/goals/*/PROGRESS.md` before non-trivial work to coordinate with active goals.
 - Autonomous on routine reads and edits; ask before cross-system actions
   (publish, deploy, access changes) and before history rewrites.

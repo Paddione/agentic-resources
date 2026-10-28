@@ -48,6 +48,12 @@ hardcode them. No repo assumptions in shared files; parametrize, don't fork.
 - External origin goes in `registry.json` under `upstream` with revision.
 - One skill = one capability; route instead of duplicating.
 
+## Goals & Multi-Agent Coordination
+
+- Check `.agents/goals/*/PROGRESS.md` for active goals (< 100%) before beginning non-trivial tasks (features, refactoring, migrations).
+- Align new work with active goals; update existing goals rather than creating redundant parallel work.
+- Set `PROGRESS.md` to 100% only when all measurable acceptance criteria are substantiated with evidence.
+
 ## Workflows
 
 - Change work: `dev-flow-plan` → `dev-flow-execute`; maintenance:
