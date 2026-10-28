@@ -294,6 +294,27 @@
       "http": {
         "url": "http://127.0.0.1:18080/mcp"
       }
+    },
+    "mcp-security": {
+      "doc": "Security scanner (Shannon-entropy secrets detection, PII regex pattern scans, file encryption).",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/security/src/main.py"
+        ]
+      }
+    },
+    "mcp-audit": {
+      "doc": "Append-only SQLite audit ledger for tool invocation logging, session metrics, and compliance reporting.",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/audit/server.py"
+        ],
+        "env": {
+          "LOCALCOWORK_AUDIT_DB": "/home/patrick/.agents/audit.db"
+        }
+      }
     }
   },
   "harnesses": {
@@ -331,7 +352,9 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "mcp-security",
+      "mcp-audit"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -347,7 +370,9 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "mcp-security",
+      "mcp-audit"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -362,7 +387,9 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "mcp-security",
+      "mcp-audit"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -378,7 +405,9 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "mcp-security",
+      "mcp-audit"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -394,7 +423,9 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "mcp-security",
+      "mcp-audit"
     ],
     "muse": [
       "codebase-memory-mcp",
