@@ -287,22 +287,20 @@ zu heben. Diese Stufe läuft **nur manuell/agentisch**, nie automatisiert in der
    ```
 3. **Optional — Vision-gestützte Verifikation:** Screenshots aus dem Testlauf an das lokale
    vision-fähige Modell senden und die Antwort (UI-Elemente, Text, Positionierung korrekt?)
-   ins Testergebnis einbetten. Der Weg führt über den **llm-proxy auf `127.0.0.1:18235`** mit
-   dem Modellalias **`gemma4-e4b-unsloth`** (verifiziert: beschreibt UI-Screenshots
-   korrekt, ca. 8 s):
+   ins Testergebnis einbetten. Der Weg führt über den **Devmesh Router auf `127.0.0.1:18235`**
+   (oder direkt `:1919` Qwen3.8-27B mit mmproj-Vision):
    ```bash
-   curl -sf -m 3 http://127.0.0.1:18235/v1/models | grep -q gemma4-e4b-unsloth \
-     && echo "Vision verfuegbar" \
-     || echo "kein Vision-Endpunkt — Punkt 3 ueberspringen"
+   curl -sf -m 3 http://127.0.0.1:18235/v1/models | grep -qE 'chat_primary|default|qwen' \
+     && echo "Vision/LLM verfuegbar" \
+     || echo "kein Endpunkt — Punkt 3 ueberspringen"
    ```
    Anfrage-Parameter (Pflicht, sonst Denk-Blockade): `max_tokens` ≥ 800 und
    `reasoning_effort: "low"` — sonst verbrauchen die Modelle das komplette
    Fenster fürs Denken und liefern eine leere Antwort.
 
-   > Frühere Aliase/Ports (`gemma12-vision` auf `:8089`, davor 8094 mit 8091 als
-   > Rückfall) sind dekommissioniert — der Check lief damit ins Leere. Immer den
-   > Alias gegen `/v1/models` verifizieren statt Annahmen aus der Historie zu
-   > übernehmen.
+   > Frühere Aliase/Ports (`gemma12-vision` auf `:8089`, `gemma4-e4b-unsloth`, davor 8094 mit 8091 als
+   > Rückfall) sind dekommissioniert. Immer die aktiven Modelle gegen `/v1/models` auf `:18235`
+   > verifizieren statt historische Namen vorauszusetzen.
 
    Ist der Endpunkt nicht erreichbar, überspringe Punkt 3 — die Verifikation bleibt optional und
    blockiert den Ablauf nicht. Unterscheide dabei „Proxy antwortet nicht" (Proxy starten) von

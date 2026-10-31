@@ -15,19 +15,17 @@ Leitsatz: **Korrektheit vor Kosten.** Im Zweifel eine Stufe höher.
 
 ## 1. Worker-Leiter — live (reale Rails)
 
+Das einheitliche Inferenz-Gateway ist der **Devmesh LLM Router auf `:18235`** (`http://127.0.0.1:18235/v1`), der Requests intelligent auf die zuständigen GPU-Backends und VRAM-Slots verteilt.
+
 | Stufe | Worker | Modell / Rail | Kapazität | Wofür |
 |---|---|---|---|---|
-| Begrenzt | `qwen35-2b` (`plan-worker-qwen35-2b`) | Qwen3.5-2B-BP auf `:8096`, 4 Slots, ~65536 shared KV | XS/S-Dispatches | **Kleine begrenzte Partials**: Single-File-Edits, Config, Boilerplate mit exakten Ankern |
-| Standard | `vllm-4b` (plan-runner: Direkt-Worker, kein opencode-Agent) | Qwen3.5-4B-QUASAR-NVFP4 auf `:8123` (RTX 5070 Ti, bis 40k ctx je Anfrage) | `--direct-slots N` (Default 3; Server bis max-num-seqs 10) | **Default für Implementierungs-Partials**: klar spezifizierte Multi-File-Änderungen, Testausführung/Reporting, Boilerplate, Doc-Sync; Preflight degradiert still auf 0 Slots wenn `:8123` fehlt |
+| Begrenzt | `worker` / `fast` | Qwen3.5-2B-Worker auf `:8099` (via `:18235`, `chat_secondary`) | XS/S-Dispatches | **Kleine begrenzte Partials**: Single-File-Edits, Config, Boilerplate mit exakten Ankern |
+| Standard | `default` / `chat` | Qwen3.8-27B GSQ-RCO auf `:1919` (via `:18235`, `chat_primary`, RTX 5070 Ti, 150k ctx) | 1 Slot (seriell/gequeued) | **Default für Implementierungs-Partials**: klar spezifizierte Multi-File-Änderungen, Testausführung/Reporting, Boilerplate, Doc-Sync |
 | Standard (Cloud) | `plan-worker-muse` | Muse Spark 1.3 (`opencode/muse-spark-1.3-contributor-free`) | `--cloud-slots N` (Default 1) | **Überlauf und Rückfall**: Partials, die der Direkt-Worker nicht schafft; läuft über opencode im Go-Abo |
-| Schwer | `local` (`plan-worker-self`) | Qwen3.8-27B auf `:1919`, 153600 ctx, 1 Slot (seriell, weitere Requests queuen) | L-Dispatches bis ~120k | **Review / Oracle / Design + übergroße Arbeit**: Debugging mit Urteil, adversariale Review, Reasoning-lastige Meta-Arbeit, Partials die auf `vllm-4b` zweimal gescheitert sind |
+| Schwer | `local` (`reasoning`) | Qwen3.8-27B direkt auf `:1919` (oder `:18235` Modell `reasoning`), 153600 ctx | L-Dispatches bis ~120k | **Review / Oracle / Design + übergroße Arbeit**: Debugging mit Urteil, adversariale Review, Reasoning-lastige Meta-Arbeit |
 | Eskalation | `exe-muse` | Muse Spark 1.3 Contributor via OpenCode Go, 1M ctx | Cloud-Rail | Nur per Eskalationskette im Orchestrator-Prompt (lokal 2× gescheitert oder Bedarf über lokalem Fenster) |
 
-`:8123` (vLLM) belegt die RTX 5070 Ti allein (`--gpu-memory-utilization 0.90`); `:8096`
-bedient bis zu 4 Sandbox-Slots parallel. Der Pool `:8080` (Windows-4B) und der CPU-Pool
-`:18199` sind abgeschaltet (dotfiles #131) — auf Hosts ohne `:8123` sind sie der
-Standard-Rückfall (`qwen35-4b` auf `:8080`, 3 Slots; Overflow `plan-worker-cpu2b` auf
-`:18199`); der Preflight degradiert dort still auf 4B/self.
+Die früheren dedizierten Standalone-Pools `:8123` (vLLM), `:8080` (Windows-4B) und `:18199` (CPU-Pool) sind abgeschaltet. Das Routing läuft konsolidiert über den Devmesh-Router auf `:18235`.
 
 ## 2. Geplant — provisorisch, NICHT live
 
