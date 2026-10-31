@@ -30,6 +30,7 @@ Die gesamte Housekeeping-Mechanik ist **SSOT** in
 [`repo-hygiene-ops.md`](../references/repo-hygiene-ops.md) —
 die aktiven Abschnitte der Reihe nach ausführen (§5 entfiel mit T900399):
 
+- **Eingangsschritt (Health-Goal-Intake):** Offene Hygiene-Verletzungen (`G-WT01..06`, `G-RH*`, `G-HYG01..04`) als priorisierte Arbeitsliste einlesen (`bash ~/Bachelorprojekt/scripts/health-goals-check.sh --only=G-WT01,G-WT02,G-WT03,G-WT04,G-WT05,G-WT06` sowie `python3 ~/scripts/repo_health_collect.py --no-k8s --out /tmp/health-pre.json`).
 0. **Arbeitsbaum & Stashes** — §0 (inkl. `repo-hygiene-precheck.sh` + Snapshot-Verifikation)
 1. **Stale Git Worktrees** — §1 (inkl. `worktree-git-op-guard.sh`, `git-worktree-health.sh`, `worktree-clean-check.sh`)
 2. **Stale Branches** (Reaper vor `[gone]`-Prune, Archiv-Tag `refs/tags/reaped/<branch>`) — §2
@@ -38,6 +39,7 @@ die aktiven Abschnitte der Reihe nach ausführen (§5 entfiel mit T900399):
 5. *(entfallen, T900399)* — §5
 6. **Proactive Hygiene Recommendations** — §6 (nach jedem Lauf: Top-3-Empfehlungen, Aging-Report)
 7. **Scheduling & Trigger Guidance** — §7 (Ausführungstiefe, systemd-Timer-Kollisionsmatrix, Gesundheitsampel)
+- **Abschlussschritt (Health-Goal-Verifikation & Sync):** Nach dem Sweep `bash ~/Bachelorprojekt/scripts/health-goals-check.sh --only=G-WT01,G-WT02,G-WT03,G-WT04,G-WT05,G-WT06` und `python3 ~/scripts/repo_health_collect.py` ausführen; verifizieren, dass die bearbeiteten Hygiene-Goals (`G-WT01..06`, `G-HYG01..04`) auf `0` (`achieved`) gefallen sind.
 
 Für Completeness-Triage und Klärungsrunden → `dev-flow-plan`. Für Ausführung:
 Dispatch über Worker-Sandboxes (`operations-management`,

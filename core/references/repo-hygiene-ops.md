@@ -801,14 +801,23 @@ Neue Jobs oder Agenten-Sweeps dürfen NIEMALS mit diesen festen Host-Routinen ko
 - Niemals zur vollen Stunde (`:00`) oder im Morgenfenster **`08:00–08:45`**.
 - Bevorzuge Tageszeiten außerhalb der Nacht- und Morgenfenster (z. B. `09:15` oder `14:00`).
 
-### 7.4 Hygiene-Gesundheitsampel
+### 7.4 Hygiene-Gesundheitsampel & Health-Goal-Kopplung
 
 Einfache Status-Übersicht für den Operator:
 
 ```
-🟢 GRÜN  — <3 stale Worktrees, <5 [gone]-Branches, kein PR >3d
+🟢 GRÜN  — <3 stale Worktrees, <5 [gone]-Branches, kein PR >3d, G-WT01..06 == 0, G-HYG01..04 == 0
 🟡 GELB  — 3–5 stale Worktrees ODER 5–10 [gone]-Branches ODER 1 PR >3d
-🔴 ROT   — >5 stale Worktrees ODER >10 [gone]-Branches
+🔴 ROT   — >5 stale Worktrees ODER >10 [gone]-Branches ODER kritische G-WT*/G-HYG*-Verletzung
 ```
 
 Die Ampel wird am Anfang jedes Quick-Laufs berechnet und bei GELB/ROT im Report ausgegeben.
+
+**Verbindliche Health-Goal-Integration (Intake & Post-Sweep-Verifikation):**
+1. **Vor Beginn (Intake):** Offene Verletzungen der Familien `G-WT01..06` (`wt-hygiene-measure.sh`) und `G-HYG01..04` (`repo-hygiene-audit.json` via `repo_health_collect.py`) abrufen und als konkrete Arbeitsliste für §0–§3 nutzen.
+2. **Nach Abschluss (Verifikation & Board-Sync):**
+   ```bash
+   bash ~/Bachelorprojekt/scripts/health-goals-check.sh --only=G-WT01,G-WT02,G-WT03,G-WT04,G-WT05,G-WT06
+   python3 ~/scripts/repo_health_collect.py
+   ```
+   Beide Läufe bleiben strikt read-only, aktualisieren aber sofort `apps/agent-board/public/health.json` (inkl. Kubernetes-ConfigMap `agent-board-health`), sodass die erledigte Hygiene unmittelbar in `/health` grün sichtbar ist.
