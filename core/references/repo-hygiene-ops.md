@@ -207,8 +207,11 @@ keine Eskalation, sondern der belegte Normalfall — `git worktree remove` verwe
 wegen der Generate. Kommt etwas zurück, ist das ein echter Befund: **kein Remove**, erst sichern.
 
 > Die Musterliste ist eine Arbeitskopie, keine zweite Quelle: maßgeblich ist `ALLOWLIST=` in
-> [`scripts/branch-reaper.sh`](../../../scripts/branch-reaper.sh), das für Branches dieselbe
+> `scripts/branch-reaper.sh` (im Consumer-Repo), das für Branches dieselbe
 > Unterscheidung trifft. Wächst sie dort, gehört der Ausdruck oben nachgezogen.
+> In Repos ohne Generat-Allowlist (`repo.generated_artifacts: false`, z. B. `~` dotfiles oder
+> `agentic-resources` mit Worktrees unter `~/.worktrees/<repo>/*` via `python3 ~/scripts/agent-workspace.py`)
+> gilt direkt `git -C <path> status --porcelain`: jede nicht-leere Ausgabe ist ein echter Befund.
 
 `--force` bleibt eine bewusste Eskalation, sobald der Vorcheck **nicht** sauber ist — etwa bei
 `.locked` Worktrees oder wenn nicht-allowlistete Pfade abweichen und man sich trotzdem entscheidet.
@@ -477,7 +480,7 @@ gh pr view <number> --json closingIssuesReferences -q '.closingIssuesReferences[
   > **Leere Checkliste kann auch Konflikt heißen [T002822]:** An PR #3915 existierten **null**
   > Workflow-Runs, weil der PR mit `main` konfligierte — dass ein CONFLICTING PR die CI
   > unterdrückt, steht in
-  > [`gotchas-footguns.md`](../../../docs/superpowers/references/gotchas-footguns.md), sein
+  > [`dev-flow-gotchas.md`](dev-flow-gotchas.md), sein
   > **Symptom** war bisher nirgends notiert: `gh pr checks` liefert exakt dieselbe Meldung wie
   > bei einem nicht gestarteten Lauf, und `mergeStateStatus` stand auf `UNKNOWN`. Reihenfolge
   > bei leerer Checkliste deshalb: erst `mergeStateStatus` lesen, und bei `UNKNOWN` oder
@@ -519,7 +522,7 @@ gh pr view <number> --json closingIssuesReferences -q '.closingIssuesReferences[
 Nötig bei `mergeStateStatus=BEHIND` und bei den Phantom-Konflikten aus `merge=ours`
 (generierte Artefakte melden auf GitHub `DIRTY`, obwohl der Merge lokal sauber läuft —
 GitHub führt keine Custom-Merge-Driver aus; Details in
-[`gotchas-footguns.md`](../../../docs/superpowers/references/gotchas-footguns.md#mergeours-erzeugt-github-only-phantom-konflikte)).
+[`dev-flow-gotchas.md`](dev-flow-gotchas.md)).
 
 > **Erst den Fall bestimmen — die beiden Fälle haben verschiedene Wege [T002823]:**
 > Bei **`BEHIND`** ist `update-branch` (Schritt 1/2) der Weg. Bei einem
@@ -649,17 +652,32 @@ Hygiene-Gewinn bringen — priorisiert nach Impact.
 ### 6.1 Hygiene-Metriken erheben
 
 ```bash
-# Stale Worktrees (ohne main, ohne aktuell geclaimte)
-git worktree list | grep -v '\[main\]' | wc -l
+# Stale Worktrees (ohne Hauptcheckout $MAIN, ohne aktuell geclaimte)
+git worktree list | grep -v "\\[$MAIN\\]" | wc -l
 
 # Stale Branches (lokal, remote-tracking gone)
 git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads \
   | awk '$2 == "[gone]" {print $1}' | wc -l
 
-# Offene PRs nach Status
-gh pr list --state open --json number,title,statusCheckRollup,isDraft,createdAt \
-  --jq 'group_by(if .isDraft then "draft" elif (.statusCheckRollup | length) == 0 then "no-ci" else "ci-ok" end) | map({key: .[0].statusCheckRollup, count: length})'
-
+# Offene PRs nach Status (Fail-Closed: erst Aufruf prüfen, dann bucketen)
+if pr_raw=$(gh pr list --state open --json number,title,statusCheckRollup,isDraft,createdAt 2>&1); then
+  printf '%s' "$pr_raw" | jq '
+    map(. + {
+      bucket: (
+        if .isDraft then "draft"
+        elif (.statusCheckRollup | length) == 0 then "no-ci"
+        elif any(.statusCheckRollup[]; .conclusion == "FAILURE" or .conclusion == "TIMED_OUT" or .state == "FAILURE" or .state == "ERROR") then "ci-failing"
+        elif any(.statusCheckRollup[]; .status != "COMPLETED" and .state != "SUCCESS") then "ci-pending"
+        else "ci-ok"
+        end
+      )
+    })
+    | group_by(.bucket)
+    | map({key: .[0].bucket, count: length})
+  '
+else
+  echo "FEHLER bei gh pr list: $(printf '%s' "$pr_raw" | head -1)" >&2
+fi
 ```
 
 ### 6.2 Aging-Report
@@ -674,8 +692,10 @@ PRs, Worktrees und Branches nach Alter bucketen (Ticket-Spalte entfiel mit dem R
 | >30d | N | N | N | **Kritisch** — definitiv vergessen, belegt Resourcen |
 
 ```bash
-# Worktree-Alter ermitteln (via letztem Commit-Datum im Worktree):
-for wt in $(git worktree list --porcelain | grep '^worktree ' | grep -v '/main$' | cut -d' ' -f2); do
+# Worktree-Alter ermitteln (via letztem Commit-Datum im Worktree, ohne Hauptcheckout):
+repo_top=$(git rev-parse --show-toplevel)
+for wt in $(git worktree list --porcelain | awk '/^worktree / {print $2}'); do
+  [ "$wt" = "$repo_top" ] && continue
   last_commit=$(git -C "$wt" log -1 --format='%ct' 2>/dev/null || echo 0)
   age_days=$(( ($(date +%s) - last_commit) / 86400 ))
   echo "$wt: ${age_days}d"
@@ -768,16 +788,17 @@ Neue Jobs oder Agenten-Sweeps dürfen NIEMALS mit diesen festen Host-Routinen ko
 | Zeitfenster | Timer / Service | Zweck | Gesperrte Aktionen |
 |-------------|-----------------|-------|--------------------|
 | **`03:00–03:30`** | `nightly-update.timer` | APT dist-upgrade, Tool/CLI/Skill-Updates, devflow-Graph | Keine Paket-/Skill-Installationen, Lock: `/tmp/wsl-nightly-update.lock` |
-| **`04:00` (So)** | `system-cache-hygiene.timer` | Journal vacuum, uv/npm cache prune, stale `/tmp/*.lock` cleanup | Keine Worktree-Operationen während Cache-Prune |
+| **`04:00` (So)** | `system-cache-hygiene.timer` | Journal vacuum, uv/npm cache prune, Worktree-Prune über alle Kern-Repos, stale `/tmp/*.lock` cleanup | Keine Worktree-Operationen während Cache-Prune |
 | **`07:00` (Mo)** | `secrets-integrity-check.timer` | Prüfung von git-crypt und Secret-Attributen | Keine gleichzeitige Secret-Rotation |
 | **`08:00–08:15`** | `repo-hygiene.timer` | Daily Sweep (`repo-hygiene-cron.sh standard`) | **Gesperrt für manuelle Sweeps** (Lock `/tmp/repo-hygiene-tick.lock`) |
+| **`08:15–08:30`** | `repo-hygiene-audit.timer` | Read-only Multi-Repo-, MCP-Config-, DB-Marker- & Serving/GGUF-Audit (`repo-hygiene-audit.py`) | Schreibt `~/.cache/repo-hygiene-audit.json`; keine konkurrierenden Repo-/Model-Scans |
 | **`08:30–08:45`** | `multi-repo-morning.timer` | Multi-Repo Health Brief (`morning-health-brief.py`) | Keine Git-Operationen im Haupt-Checkout (schreibt `~/.cache/morning-brief.md`) |
 | **Stündlich `:00`** | `cbm-refresh.timer` | K3 codebase-memory Refresh & Embed Sync | Keine Reindexierung zur vollen Stunde (`cbm-single-flight.sh`) |
 | **Alle 10 Min (`*:0/10`)** | `mcp-service-watchdog.timer` | MCP-Server & Model-Watchdog | Watchdog überwacht Ports und Prozesse |
 
 **Kollisionsfreie Zeitplanung:**
-- Plane eigene Chores oder wiederkehrende Tasks immer auf **Minute :15, :20 oder :45**.
-- Niemals zur vollen Stunde (`:00`) oder um `08:00`/`08:30`.
+- Plane eigene Chores oder wiederkehrende Tasks immer auf **Minute :20, :45 oder :15 (außerhalb der 08:00-Stunde)**.
+- Niemals zur vollen Stunde (`:00`) oder im Morgenfenster **`08:00–08:45`**.
 - Bevorzuge Tageszeiten außerhalb der Nacht- und Morgenfenster (z. B. `09:15` oder `14:00`).
 
 ### 7.4 Hygiene-Gesundheitsampel

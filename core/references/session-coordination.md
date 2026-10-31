@@ -127,11 +127,12 @@ Auf dem Host laufen periodische systemd user timers (`systemctl --user list-time
 | `04:00` (So) | `system-cache-hygiene.timer` | Worktree prune, Cache prune, /tmp-Cleanup | Stale Worktrees werden bereinigt; aktive Worktrees müssen valide refs halten. |
 | `07:00` (Mo) | `secrets-integrity-check.timer` | git-crypt & Secret-Status | Scannt Secret-Attribute; keine Secret-Edits zur Laufzeit. |
 | `08:00` | `repo-hygiene.timer` | Daily Sweep (`/tmp/repo-hygiene-tick.lock`) | Bereinigt [gone]-Branches/Worktrees. Vor manuellen Sweeps Lock prüfen (`is-active`). |
-| `08:30` | `multi-repo-morning.timer` | Multi-Repo Status-Scan (`~/.cache/morning-brief.md`) | Liest Git-Status und Worktrees aller Repositories. |
+| `08:15` | `repo-hygiene-audit.timer` | Multi-Repo & Serving Read-Only-Audit (`~/.cache/repo-hygiene-audit.json`) | Scannt Git-Status aller 5 Kern-Repos, MCP-Config-Drift, DB-Marker & GGUF/Serving-Units. |
+| `08:30` | `multi-repo-morning.timer` | Multi-Repo Status-Scan (`~/.cache/morning-brief.md`) | Liest Git-Status, Service-Health und `repo-hygiene-audit.json`. |
 | `:00` (stündl.) | `cbm-refresh.timer` | K3 codebase-memory Refresh (`cbm-single-flight.sh`) | Bei Reindexierung Lock prüfen (`cbm-single-flight.sh`). |
 | `*:0/10` | `mcp-service-watchdog.timer` | Liveness-Watchdog für lokale MCP-Server | Überwacht Ports und Prozesse. |
 
 **Regeln für Agenten:**
-- **Vor Arbeitsbeginn / destruktiven Sweeps um 08:00:** Prüfen, ob `repo-hygiene.service` läuft (`systemctl --user is-active repo-hygiene.service` oder `/tmp/repo-hygiene-tick.lock`).
-- **Neue periodische Jobs:** Immer mit Zeitversatz (z. B. `:15`, `:20`, `:45`) und außerhalb der Sperrzeiten (`03:00`, `08:00`, `08:30`) einplanen.
+- **Vor Arbeitsbeginn / destruktiven Sweeps zwischen 08:00 und 08:45:** Prüfen, ob `repo-hygiene.service` oder `repo-hygiene-audit.service` läuft (`systemctl --user is-active repo-hygiene.service repo-hygiene-audit.service` oder `/tmp/repo-hygiene-tick.lock`).
+- **Neue periodische Jobs:** Immer mit Zeitversatz (z. B. `:20`, `:45` oder `:15` außerhalb der 08:00-Stunde) und außerhalb der Sperrzeiten (`03:00–03:30`, `08:00–08:45`) einplanen.
 

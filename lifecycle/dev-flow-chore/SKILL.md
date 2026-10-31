@@ -73,9 +73,10 @@ Frage den User, ob die Chore regelmäßig laufen soll. Falls ja:
    - `04:00` So (system-cache-hygiene: Journal/Cache/Worktree prune)
    - `07:00` Mo (secrets-integrity-check)
    - `08:00–08:15` (repo-hygiene: daily sweep)
+   - `08:15–08:30` (repo-hygiene-audit: read-only multi-repo & serving audit)
    - `08:30–08:45` (multi-repo-morning: daily brief)
    - Stündlich `:00` (cbm-refresh: K3 codebase-memory)
-3. **Kollisionsfreie Slots wählen:** Immer auf ungerade Minuten mit Versatz (z. B. `:15`, `:20`, `:45`) oder in ruhige Tagesfenster (z. B. `09:15`, `14:00`).
+3. **Kollisionsfreie Slots wählen:** Immer auf Minuten mit Versatz (z. B. `:20`, `:45` oder `:15` außerhalb der 08:00-Stunde) und in ruhige Tagesfenster (z. B. `09:15`, `14:00`).
 4. Richte den Job bevorzugt als systemd user timer (`~/.config/systemd/user/`) oder via `/schedule` (mit Jitter/`ExactTiming: false`) ein, niemals blind über `crontab -e`.
 **STOPP hier.**
 

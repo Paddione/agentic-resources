@@ -45,6 +45,7 @@ Is a core service DOWN or DEGRADED right now?
 | Clean up stale worktrees and branches | `repo-hygiene` |
 | Review & merge open PRs | `repo-hygiene` |
 | Funnel issues (dedupe against open issues) | `repo-hygiene` |
+| Multi-repo, runtime drift, or GGUF/serving hygiene audit | `repo-hygiene` |
 | File a bug found after merge (nur wenn `repo.tickets: github`) | GitHub issue (siehe AGENTS.md Bug-Triage-Konvention) |
 | Run a task on the GPU workers | worker sandbox (below) |
 

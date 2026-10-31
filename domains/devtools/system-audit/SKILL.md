@@ -79,8 +79,8 @@ axe critical/Lighthouse <50 ⇒ Critical, sonst Warning, kosmetisch ⇒ Info).
 
 ### repo → delegiert an `repo-hygiene`
 
-Führe die acht Abschnitte der `repo-hygiene-ops`-Referenz aus (§0–§7) inklusive
-`bash scripts/runtime-drift-check.sh`. Die Top-3-Empfehlungen aus §6 und jeder
+Führe die aktiven Abschnitte der [`repo-hygiene-ops.md`](../../core/references/repo-hygiene-ops.md)-Referenz aus (§0–§4, §6–§7; §5 entfallen) inklusive
+`bash scripts/runtime-drift-check.sh` (falls im Repo vorhanden) sowie des Host-weiten Read-Only-Audits (`python3 ~/scripts/repo-hygiene-audit.py` bzw. `~/.cache/repo-hygiene-audit.json` für Multi-Repo-, MCP-Config-, DB-Marker- und Serving-/GGUF-Drift). Die Top-3-Empfehlungen aus §6 und jeder
 Drift-/Aging-Befund werden zu normierten Befunden.
 
 ### toolset → delegiert an `toolset-curate`
