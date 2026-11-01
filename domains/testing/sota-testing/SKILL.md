@@ -113,32 +113,9 @@ End every audit with: findings table, top-3 risks, and a prioritized fix list
 | [`rules/04-integration-contract-system.md`](rules/04-integration-contract-system.md) | testing against real DBs/brokers (Testcontainers-style), contract testing between services (Pact, schema-based), API testing, migrations, message/queue tests, ephemeral environments, and **a bench that fails silently — including a green run that quietly ran fewer tests** |
 | [`rules/05-e2e-and-ui.md`](rules/05-e2e-and-ui.md) | building or pruning an e2e suite: critical-path selection, selector strategy, auto-waiting, page objects/screenplay, visual regression, when to delete e2e tests |
 | [`rules/06-property-fuzzing-mutation.md`](rules/06-property-fuzzing-mutation.md) | going beyond examples: property-based testing (what properties to encode), fuzzing parsers, mutation testing ROI — **including that the revert is part of the probe**, not cleanup — approval testing for legacy code, chaos pointer |
-<<<<<<< lokal
 | [`rules/07-suite-health-and-ci.md`](rules/07-suite-health-and-ci.md) | flaky-test policy and quarantine, coverage philosophy (ratchets not targets), speed budgets, parallelization correctness **and the opposite case of two independent runs sharing one database**, CI sharding, failure triage, **a threshold measured on one population and asserted over a pooled one**, **a PR-diff check that routes deleted, skipped or weakened tests to human sign-off** |
 | [`rules/08-bdd-spec-by-example.md`](rules/08-bdd-spec-by-example.md) | BDD / specification by example: Given-When-Then done declaratively, the three-amigos value (and when there's no cross-role audience), outside-in double loop with TDD, scenario-explosion and UI-script anti-patterns, Gherkin tooling, and tracing scenarios to spec acceptance criteria |
 | [`rules/09-security-testing.md`](rules/09-security-testing.md) | security testing as a test type: WSTG as the verification map, the security-regression set (IDOR/BOLA, BFLA, authn/session, injection, mass-assignment, rate-limit, SSRF, tenant isolation run as the production DB role and pooler, cross-identity cache tests), **a role × method × path authz matrix, OpenAPI-derived auth negatives and a test that the enforcer is still wired**, independent authorship of security tests, business-logic/abuse-case tests from threat models, where SAST/DAST/fuzz fit and their ceiling, security-critical coverage floor, stack fingerprinting and external recon, WebSocket and message-size tests, the penetration-testing process and manual REST technique, security stress runs, logging kept on during security runs |
-
-## Per-language detail
-
-This skill holds test strategy and design. Each language skill carries the mechanics — its runner, fixtures, coverage, fuzzing and CI flags — in one file. Read it beside this one whenever the suite is in that language:
-
-| Language | File |
-|---|---|
-| Python | [`sota-python` rules/07](../sota-python/rules/07-frameworks-testing.md) |
-| Go | [`sota-golang` rules/07](../sota-golang/rules/07-tooling-ci.md) |
-| Rust | [`sota-rust` rules/07](../sota-rust/rules/07-tooling-ci.md) |
-| C / C++ | [`sota-c-cpp` rules/06](../sota-c-cpp/rules/06-build-tooling-ci.md) |
-| Java / Kotlin | [`sota-jvm` rules/06](../sota-jvm/rules/06-build-tooling-ci.md) |
-| C# / .NET | [`sota-dotnet` rules/06](../sota-dotnet/rules/06-build-tooling-ci.md) |
-| JavaScript / TypeScript | [`sota-javascript-typescript` rules/07](../sota-javascript-typescript/rules/07-testing-and-tooling.md) |
-| PHP | [`sota-php` rules/05](../sota-php/rules/05-composer-tooling.md) |
-| Ruby | [`sota-ruby` rules/04](../sota-ruby/rules/04-supply-chain-tooling.md) |
-| Swift | [`sota-swift` rules/08](../sota-swift/rules/08-tooling-ci-testing.md) |
-=======
-| [`rules/07-suite-health-and-ci.md`](rules/07-suite-health-and-ci.md) | flaky-test policy and quarantine, coverage philosophy (ratchets not targets), speed budgets, parallelization correctness **and the opposite case of two independent runs sharing one database**, CI sharding (CI speed and caching itself: [`sota-devsecops` rules/16](../sota-devsecops/rules/16-fast-ci-without-blind-spots.md)), failure triage, **a threshold measured on one population and asserted over a pooled one**, **a PR-diff check that routes deleted, skipped or weakened tests to human sign-off** |
-| [`rules/08-bdd-spec-by-example.md`](rules/08-bdd-spec-by-example.md) | BDD / specification by example: Given-When-Then done declaratively, the three-amigos value (and when there's no cross-role audience), outside-in double loop with TDD, scenario-explosion and UI-script anti-patterns, Gherkin tooling, and tracing scenarios to spec acceptance criteria ([`sota-docs-workflow` rules/05](../sota-docs-workflow/rules/05-spec-driven-development.md)) |
-| [`rules/09-security-testing.md`](rules/09-security-testing.md) | security testing as a test type: WSTG as the verification map, the security-regression set (IDOR/BOLA, BFLA, authn/session, injection, mass-assignment, rate-limit, SSRF, tenant isolation run as the production DB role and pooler, cross-identity cache tests), **a role × method × path authz matrix, OpenAPI-derived auth negatives and a test that the enforcer is still wired**, independent authorship of security tests, business-logic/abuse-case tests from threat models, where SAST/DAST/fuzz fit and their ceiling, security-critical coverage floor, stack fingerprinting and external recon, WebSocket and message-size tests, the penetration-testing process and manual REST technique, security stress runs, logging kept on during security runs. Pairs with [`sota-code-security`](../sota-code-security/SKILL.md), [`sota-threat-modeling`](../sota-threat-modeling/SKILL.md), [`sota-devsecops` rules/05](../sota-devsecops/rules/05-analysis-gates.md) |
->>>>>>> upstream
 
 ## Per-language detail
 

@@ -425,7 +425,6 @@ More precise *and* more sensitive, not a trade.
       builder/helper indirection, a magic value has no comment saying what it is, or a
       regression test does not name the bug it pins → Low (§2.9).
 - [ ] Hidden retries (§2.7): grep `@pytest.mark.flaky|retries:|jest.retryTimes|@Retry|FlakyTest` → High unless tied to a tracked quarantine ([`rules/07`](07-suite-health-and-ci.md)).
-<<<<<<< lokal
 
 ## Lokale Ergänzung (agentic-resources)
 
@@ -436,5 +435,3 @@ Ein Test muss bei relevant falschem Verhalten scheitern. Prüfe Ergebnis, Status
 Könnte die Assertion auch bei kaputter Implementierung bestehen? Werden Exceptions verschluckt oder Sleeps als Synchronisierung benutzt?
 
 Suchsignale sind nur Kandidaten: `skip`, `xfail`, `only`, `sleep`, leere Assertions und gefangene Exceptions im Kontext prüfen. Ein Treffer allein ist kein Befund.
-=======
->>>>>>> upstream

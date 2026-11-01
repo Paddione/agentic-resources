@@ -1,3 +1,6 @@
 staging/
 # Local repo-code-graph artifacts (same convention as Bachelorprojekt)
 .codebase-memory/
+# Python bytecode (vendor-sync CI runs pytest before `git add -A`)
+__pycache__/
+*.pyc
