@@ -49,7 +49,9 @@ also masks *real* intermittent bugs, the most expensive kind.
 5. **Retries**: at most one auto-retry, with both outcomes recorded and
    feeding the detector. Retry-to-green WITHOUT tracking is the suite
    silently rotting; blanket `retries: 3` to "stabilize CI" is a High
-   finding wherever you see it.
+   finding wherever you see it — High rather than Medium because a suite
+   retried until green also passes real regressions, security gates included
+   ([`sota-devsecops` rules/05](../../sota-devsecops/rules/05-analysis-gates.md) §5.7).
 
 ```python
 # BAD — permanent amnesty; nothing tracks it, nothing expires it
@@ -189,9 +191,12 @@ a suite that can't run parallel is telling you it has shared state.
 - **The merge queue / main must run the full blocking suite.** Skipping on
   "it passed on the PR branch" breaks under concurrent merges (semantic
   conflicts between independently-green PRs).
+- Speeding up a pipeline without making a required check pass unrun (measuring first,
+  safe change-scoping, an aggregator over shards): [`sota-devsecops` rules/16](../../sota-devsecops/rules/16-fast-ci-without-blind-spots.md).
 - Cache dependency/image layers, never test *results* across code changes
   unless keyed by a content hash you trust (build systems that hash inputs
-  may; hand-rolled "skip if green yesterday" may not).
+  may; hand-rolled "skip if green yesterday" may not). A runner that reuses a gate's own
+  pass meets that bar only under [`sota-devsecops` rules/16](../../sota-devsecops/rules/16-fast-ci-without-blind-spots.md) §16.2's conditions.
 
 ## 7.6 Failure triage discipline
 
