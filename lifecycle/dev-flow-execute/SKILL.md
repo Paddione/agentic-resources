@@ -155,6 +155,7 @@ Auftrag an den Finalizer (wörtlich Teil des Prompts):
 - **Abschluss über die manuelle Einheit,** keine freie Rekonstruktion der Einzelschritte: [plan-archive-steps](references/plan-archive-steps.md) der Reihe nach (Merge verifizieren → Plan `completed` → Claim freigeben → Worktree/Branch entfernen). Only-if-tickets: stattdessen die idempotente Einheit `bash scripts/devflow-post-merge-finalize.sh "$TICKET_ID" --pr "$PR_NUM"` (PR verlinken, Ticket `done`, `verify:done`-Event, Plan archivieren, Claims freigeben, Worktree/Branch entfernen).
 - **Standing-Direktive bei Kontext-Überlauf:** stoppen und einen strukturierten Handoff-Report liefern (erledigte Schritte, Git-Zustand, offene Schritte).
 - **Positiven Endzustand prüfen:** Zum tatsächlichen PR-Head müssen die Required Checks `SUCCESS` belegen; `SKIPPED` genügt nicht. Danach unabhängig prüfen, dass Plan-`completed` gesetzt ist (only-if-tickets: zusätzlich Ticket-Closure mit strukturiertem Receipt) und der eigene Worktree sowie lokaler und Remote-Branch tatsächlich fehlen; Exit 0 allein beweist keinen Abschluss. Bei verbleibenden Refs/Worktrees offen berichten.
+- **Goal-Fortschritt (nur bei verlinktem Goal):** `PROGRESS.md` mit Belegen fortschreiben (Merge-SHA + Verifikationsevidenz); 100 % erst nach Merge plus belegter Verifikation. Schreibt der Finalizer, nicht der Implementer.
 - **Rückmeldung an den Auftraggeber (Pflicht):** Endzustand berichten — erledigt, offen.
 
 **Der Orchestrator endet hier** und führt 6.4–7.5 NICHT im eigenen Kontext aus. Er bleibt nur für
@@ -218,6 +219,7 @@ Danach `dev-flow-e2e` ausführen, um E2E-Tests gegen die Live-Umgebung zu schrei
 - `<repo.main_branch>` enthält die gemergten Änderungen (squash commit)
 - Worktree `.worktrees/<slug>` gelöscht, Branch `feature/<slug>` gelöscht
 - Plan-Status = `completed` (only-if-tickets: Ticket status = `done`)
+- Verlinktes Goal in `PROGRESS.md` mit Belegen fortgeschrieben (100 % nur nach Merge + Verifikation)
 - Branch-Lock freigegeben
 - Deployed (falls Deploy-Routing Pfad-Treffer)
 **Kreislauf zurück zu `<repo.main_branch>`** — nächste Arbeit startet mit `dev-flow-plan` von einem frischen `git pull`.
@@ -228,6 +230,7 @@ Danach `dev-flow-e2e` ausführen, um E2E-Tests gegen die Live-Umgebung zu schrei
 |-------|-----------|
 | `dev-flow-plan` | **Vorgänger im Kreislauf** — liefert Branch + committiertem Plan |
 | `dev-flow-e2e` | Folge — schreibt E2E-Tests nach Deploy |
+| `goal` | Verlinktes Goal — `PROGRESS.md` mit Belegen fortschreiben |
 | `mishap-tracker` | Abschluss — protokolliert Frictions (lokal) |
 
 ## Nachbereitung

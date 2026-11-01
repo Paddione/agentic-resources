@@ -40,7 +40,9 @@ Is a core service DOWN or DEGRADED right now?
 | Situation | Route |
 |-----------|-------|
 | Service is down or crashing | `incident-response` |
-| New feature, bug report, or chore needs a plan | `dev-flow-plan` |
+| New feature, bug report, or chore needs a plan | `dev-flow-plan` (dort Schritt 0.5: Goal-Check) |
+| Vague request, goal unclear | `setgoal` — one round, then `dev-flow-plan` |
+| Active goal (< 100 %) already covers the work | reuse the link (`goal: <slug>` + `plan_refs:`), no new goal |
 | Approved work goes to execution sandboxes | worker sandbox (below), then `dev-flow-execute` |
 | Clean up stale worktrees and branches | `repo-hygiene` |
 | Review & merge open PRs | `repo-hygiene` |
@@ -75,8 +77,10 @@ All sub-skills carry the mishap tracking preamble. After completing either, invo
 | Skill | Relationship |
 |-------|--------------|
 | `incident-response` | Production incident triage & recovery |
-| `dev-flow-plan` | Plan work: specs, partials, plan-lint |
+| `dev-flow-plan` | Plan work: specs, partials, plan-lint (dort Schritt 0.5: Goal-Check) |
 | `dev-flow-execute` | Execute approved plans in worker sandboxes |
+| `setgoal` | Vague request → one question round, then plan |
+| `goal` | Reuse active goals (< 100 %), persist the link |
 | `repo-hygiene` | Repository state: branches, worktrees, PRs |
 | `mishap-tracker` | Local friction log (no ticket backend) |
 

@@ -20,3 +20,7 @@ Anlegen: Ordner und beide Dateien schreiben; Erfolgskriterien messbar formuliere
 ## Regeln
 
 Genau ein Ziel je Ordner. Erfolg ohne Beleg gilt nicht als Erfolg. Annahmen als Annahmen markieren. Kein Code und keine fremden Dateien als Nebeneffekt.
+
+## Dev-flow-Anbindung (Modell B)
+
+Der Plan trägt das Goal: `dev-flow-plan` prüft aktive Goals und verlinkt bidirektional (`goal:` in `tasks.md`, `plan_refs:` in `GOAL.md`), `dev-flow-execute` schreibt belegte Fortschritte zurück. 100 % erst nach Merge plus Verifikation. Chores und E2E bekommen kein eigenes Goal.

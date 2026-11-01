@@ -13,7 +13,7 @@ Anfrage und governing Repo-Dateien lesen. Keine breite Suche nach hypothetischen
 
 Genau eine Fragerunde stellen: 3 bis 5 Fragen, jede mit Empfehlung und einem Satz Begründung. Dann auf die Antwort warten. Keine zweite Runde, außer die Antwort öffnet einen neuen Sperrpunkt.
 
-Danach den idealen Goal-Prompt ausgeben: Objective, Erfolgskriterien, Scope und Nicht-Ziele, Randbedingungen. Format so wählen, dass er direkt in den goal-Skill oder ein natives Muse-Goal passt.
+Danach den idealen Goal-Prompt ausgeben: Objective, Erfolgskriterien, Scope und Nicht-Ziele, Randbedingungen. Format so wählen, dass er direkt in den goal-Skill, ein natives Muse-Goal oder `dev-flow-plan` Schritt 0.5 passt.
 
 ## Regeln
 
