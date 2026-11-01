@@ -103,16 +103,16 @@
       "doc": "Central authenticated MCP hub through existing gateway and owner-specific ToolHive views. Backend definitions are maintained here; harnesses register only this entry.",
       "stdio": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/opencode-client.json"
         ]
       },
       "codex": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/codex-client.json"
         ],
@@ -124,40 +124,40 @@
       },
       "opencode": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/opencode-client.json"
         ]
       },
       "claude": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/claude-client.json"
         ]
       },
       "gemini": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/gemini-client.json"
         ]
       },
       "qwen": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/qwen-client.json"
         ]
       },
       "muse": {
         "command": [
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/node",
-          "/home/patrick/.local/share/remote-workspace/releases/7cb600dbd59a1ca4fbda165f388db81bc79602e0/mcp-servers/remote-workspace/client.mjs",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/node",
+          "/home/patrick/.local/share/remote-workspace/releases/62dbd9aee45a7bb5a27cad062c361da8c22d2b1b/mcp-servers/remote-workspace/client.mjs",
           "--config",
           "/home/patrick/.config/remote-workspace/muse-client.json"
         ]
