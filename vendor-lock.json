@@ -25,24 +25,24 @@
       "path": "skills/gitops-cluster-debug",
       "dest": "domains/gitops/gitops-cluster-debug",
       "track": "release",
-      "ref": "e7e95ef1648a72f5276db6f98b799c5974ea846f",
-      "version": "v0.3.0"
+      "ref": "de81eb4ed7e991cac9da05adc2271b1bea8a4304",
+      "version": "v0.4.0"
     },
     "gitops-knowledge": {
       "repo": "fluxcd/agent-skills",
       "path": "skills/gitops-knowledge",
       "dest": "domains/gitops/gitops-knowledge",
       "track": "release",
-      "ref": "e7e95ef1648a72f5276db6f98b799c5974ea846f",
-      "version": "v0.3.0"
+      "ref": "de81eb4ed7e991cac9da05adc2271b1bea8a4304",
+      "version": "v0.4.0"
     },
     "gitops-repo-audit": {
       "repo": "fluxcd/agent-skills",
       "path": "skills/gitops-repo-audit",
       "dest": "domains/gitops/gitops-repo-audit",
       "track": "release",
-      "ref": "e7e95ef1648a72f5276db6f98b799c5974ea846f",
-      "version": "v0.3.0"
+      "ref": "de81eb4ed7e991cac9da05adc2271b1bea8a4304",
+      "version": "v0.4.0"
     },
     "hf-mem": {
       "repo": "huggingface/skills",
