@@ -22,7 +22,7 @@ Training uses the RTX 5070 Ti. Deployment targets Ubuntu/WSL2, two 16 GB Intel-i
 5. Preserve raw manifests/reports as the primary evidence. Ledger records index them and retain history. Never silently overwrite earlier evaluations. Correct mistakes with a new event referencing the earlier event ID.
 6. Before ending, record what completed, what failed or remains unknown, and the next concrete action. Update project decisions only when the user changes requirements or measured evidence warrants a change.
 
-Create/edit/commit skill memory in an owned dotfiles worktree using `~/scripts/agent-workspace.py`; preserve unrelated changes. Use the current skill installation's memory as input so a fresh worktree cannot silently lose uncommitted newer events. Reconcile divergent event histories by event ID before publishing. Do not auto-merge branches or replace an installation with divergent memory.
+Create/edit/commit skill memory in an owned dotfiles worktree using `~/scripts/agent-workspace.py`; preserve unrelated changes. Use the current skill installation's memory as input so a fresh worktree cannot silently lose uncommitted newer events. Reconcile divergent event histories by event ID before publishing. Merge memory PRs only through the `automerge` label on green CI, and never replace an installation with divergent memory.
 
 ## Evidence rules
 
