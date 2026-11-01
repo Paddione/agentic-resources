@@ -82,6 +82,13 @@ Diese Skill plant nur (Feature/Fix) und stoppt vor der Umsetzung; die übernimmt
 Entscheidungstabelle + PRD-Checkliste:
 [plan-artifact-level](.agents/skills/references/plan-artifact-level.md).
 
+### Schritt 0.5: Goal-Check — Wiederverwenden vor Anlegen (Modell B)
+
+Der Plan trägt das Goal; kein separates Vorab-Goal nötig.
+- **Aktive Goals prüfen:** `.agents/goals/*/PROGRESS.md` nach Goals unter 100 % sichten (Bestands-SSOT: shared-agent-goals-System — Indexer/`active_goals`, wo verfügbar). Passt eines, wird es verlinkt statt neu angelegt — bidirektional: `tasks.md`-Frontmatter `goal: <slug>`, `GOAL.md` nennt `plan_refs: [.agents/plans/<slug>/tasks.md]`.
+- **Vage Anfrage:** genau eine `setgoal`-Fragerunde, dann den idealen Prompt per `goal`-Skill persistieren (Datei-Spiegel nur auf Wunsch; mit nativem Goal das native Goal bevorzugen).
+- **Ohne Goal:** Chores und E2E bekommen kein eigenes Goal.
+
 ## Schritt 0.7: Prior-Art-Suche vor der ersten Architekturfrage [T002829]
 Bevor dem User eine **Architekturfrage** gestellt wird („gemeinsame Quelle oder duplizieren?",
 „Bibliothek oder Inline?", „Hook oder Helper?"), MUSS geprüft sein, ob dieselbe Frage im Repo
@@ -276,6 +283,8 @@ Status-Übersicht und Ausführungsoptionen: [plan-batch-status](references/plan-
 | `superpowers:writing-plans` | Aufgerufen vom Plan-Subagenten (Schritt 3.7) |
 | `dev-flow-execute` | **Nachfolger im Kreislauf** — implementiert den erstellten Plan |
 | `dev-flow-chore` | Geschwister — Chores statt Features/Fixes (direkter Kurzschluss) |
+| `setgoal` | Klärt vage Anfragen in einer Fragerunde (Schritt 0.5) |
+| `goal` | Persistiert das verlinkte Goal, trägt Bidirektional-Link |
 | `mishap-tracker` | Abschluss — protokolliert Frictions |
 
 ## Nachbereitung & Mishap Report
