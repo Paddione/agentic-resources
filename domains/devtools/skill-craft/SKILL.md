@@ -1,6 +1,6 @@
 ---
 name: skill-craft
-description: 'Skill lifecycle entry point for this repo: find, evaluate, install, audit, analyze and sync skills across agent tools (Claude Code, OpenCode, Antigravity, Codex). Triggers on skill-craft, audit skills, analyze skills, find skill, install skill, skill lifecycle, npx skills. Authoring a new skill or improving an existing one routes to skill-creator.'
+description: 'Skill lifecycle entry point for this repo: find, evaluate, install, audit, analyze and sync skills across agent harnesses. Triggers on skill-craft, audit skills, analyze skills, find skill, install skill, skill lifecycle, npx skills. Authoring a new skill or improving an existing one routes to skill-creator. Not for MCP servers or plugins — that is agentic-resource-lookup.'
 ---
 
 # Skill Craft
@@ -19,7 +19,8 @@ Match the user's task to a useful existing skill before adding anything new.
 Ordinary requests for help with a task do not require a skill search.
 
 **Discover:** check the available skill catalog and existing installations first
-(`.opencode/skills/`, harness loader, `skills-lock.json`). If a suitable skill
+(`registry.json`, symlinked installs under `.agents/skills/`, `.claude/skills/`,
+`.codex/skills/`, `.opencode/skills/`, `.zcode/skills/`). If a suitable skill
 is already installed, use or point to it. Search external sources only when the
 user requests discovery or an actual capability gap warrants it.
 
@@ -64,9 +65,10 @@ Probe first, never assume paths — create nothing by hand:
    harness-specific views) are created exclusively by the consumer repo's
    tooling (e.g. `bootstrap.sh`, `agent-resources.py restore`) — never `cp` or
    symlink them by hand.
-5. Registry entries (`docs/agent-guide/registry/skills.yaml`,
-   `capabilities.yaml` via `toolset-curate`, `vendor-lock.json`) only where the
-   consumer repo actually keeps them — verify the paths exist before writing.
+5. Registry entries (`registry.json`, `vendor-lock.json`) — consumer-specific files
+   (`docs/agent-guide/registry/skills.yaml`, `capabilities.yaml` via `toolset-curate`,
+   `skills-lock.json`) only exist in consumer repos such as Bachelorprojekt,
+   never in this SSOT — verify the paths exist before writing.
 
 Locations in a consumer checkout of this ecosystem:
 
@@ -94,4 +96,6 @@ Existing skill misfiring, stale, or too broad? Route to `skill-creator`
 ## Guardrails
 
 - Link to `skill-creator`; never copy its content into new skills.
+- Skills only — MCP servers and plugins belong to `agentic-resource-lookup`,
+  tool curation to `toolset-curate`.
 - New skills stay untracked until the user asks for a branch/PR (`chore/*` flow).

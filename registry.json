@@ -84,10 +84,6 @@
    "path": "core/explore",
    "source": "home"
   },
-  "find-skills": {
-   "path": "core/find-skills",
-   "source": "home"
-  },
   "freetoken-setup": {
    "path": "domains/devtools/freetoken-setup",
    "source": "bachelorprojekt"
