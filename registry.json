@@ -29,10 +29,6 @@
     "source": "https://github.com/jablonkai/skills"
    }
   },
-  "code-graph-interpretation": {
-   "path": "domains/devtools/code-graph-interpretation",
-   "source": "bachelorprojekt"
-  },
   "codebase-memory": {
    "path": "core/codebase-memory",
    "source": "home"
