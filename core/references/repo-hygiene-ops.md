@@ -41,8 +41,8 @@ Konsequenz ist dieselbe wie bei einem echten Tick, aber aus dem richtigen Grund:
 `--porcelain`-Prüfung unmittelbar vor jedem Remove wiederholen, statt sich auf den Vorcheck zu
 verlassen.
 
-Er prüft beides: den laufenden Hygiene-Tick **und** den `main-checkout`-Claim aus
-`scripts/agent-lock.sh`. Der zweite Teil ist die Lehre aus dem 2026-08-30: der alte Vorcheck
+Er prüft beides: den laufenden Hygiene-Tick **und** den `main-checkout`-Claim im gemeinsamen
+Lock-Register (`<git-common-dir>/agent-locks/`). Der zweite Teil ist die Lehre aus dem 2026-08-30: der alte Vorcheck
 kannte nur den Tick, und eine **interaktive Fremdsession** mutiert ohne `/tmp/repo-hygiene-tick.lock`.
 An diesem Tag geschah das zweimal in einem Lauf — einmal ein `git reset` auf `origin/main`,
 einmal ein Branch-Wechsel, der einen Commit auf einem fremden Branch landen ließ. Während beider
@@ -50,8 +50,17 @@ Vorfälle war `agent-lock.sh list` leer: der Scope, der genau diesen Konflikt ve
 nie beansprucht. Wer auf dem Hauptcheckout arbeitet, beansprucht ihn:
 
 ```bash
-bash scripts/agent-lock.sh claim main-checkout
+python3 ~/scripts/agent-workspace.py lock claim main-checkout --repo .
+# … Sweep …
+python3 ~/scripts/agent-workspace.py lock release main-checkout --repo .
 ```
+
+> **Lifecycle-Befehle laufen über `agent-workspace.py` [Mishap 2026-11-02].** In Agent-Sessions
+> blockt der agent-workspace-Guard (PreToolUse-Hook) die rohen Formen `bash scripts/agent-lock.sh`,
+> `git worktree remove/prune`, `git branch -d/-D`, `git push origin :<ref>`, `gh pr create` und
+> `gh pr merge`. Die Guard-konformen Gegenstücke stehen jeweils im Abschnitt: `lock`, `finish`,
+> `reap`, `create`, `pr create`, Auto-Merge. Shell-Skripte und systemd-Timer außerhalb einer
+> Agent-Session betrifft der Guard nicht.
 
 **Der Fingerabdruck schlägt die Aufzählung.** Mutationsquellen aufzuzählen scheitert an der
 nächsten, die niemand kannte — beide Vorfälle waren genau das. Deshalb misst der Vorcheck den
@@ -161,9 +170,28 @@ bash scripts/git-worktree-health.sh orphans   # 0 sauber, 1 Orphan(s), 2 nicht p
 
 # Für jeden Worktree (außer main, außer aktuell gehaltener):
 bash scripts/worktree-clean-check.sh <path>   # 0 sauber, 1 Befund, 2 nicht prüfbar
-git worktree unlock <path> 2>/dev/null || true   # worktree-create.sh sperrt jeden Worktree (T900046) — sonst Exit 128 (T900340)
-git worktree remove <path>
+python3 ~/scripts/agent-workspace.py reap --repo . --dry-run   # REAP/SKIP je Worktree mit Nachweis
+git worktree unlock <path> 2>/dev/null || true   # gesperrte Worktrees (T900046) — sonst scheitert das Entfernen (T900340)
+python3 ~/scripts/agent-workspace.py finish --repo . --path <path>   # Tag reaped/<branch>, Worktree, Branch, Remote
 ```
+
+`finish` (und `reap`, das `finish` je Kandidat aufruft) entfernt nur mit Merge-Nachweis und nur
+einen Worktree mit leerem `git status --porcelain`:
+
+| Nachweis | Bedeutung |
+|----------|-----------|
+| `pr:<n>` | gemergter PR, dessen Head exakt der Tip ist |
+| `ff:<sha>` | Tip liegt im lokalen Default-Branch |
+| `pr:<n>+patch:<k>` | nach dem Head eines gemergten PRs folgen `k` Commits, jeder per `git cherry` patch-identisch im Default-Branch oder leer |
+| `patch:<k>` | dasselbe ohne PR, z. B. ein leerer Anchor-Branch |
+
+Kein Nachweis gibt es für Branches, deren Inhalt auf anderem Weg (anders umgesetzt, redigiert,
+Sammel-PR) in `main` kam. Das belegt nur der Blob-Vergleich aus §2, und das Entfernen bleibt beim
+Menschen (siehe §2 „Guard-Grenze im Auto-Mode").
+
+> **Lokalen Default-Branch zuerst nachziehen.** `ff:` und `patch:` messen gegen den lokalen
+> Default-Branch, und `create` spiegelt Skill-Links aus dem Hauptcheckout. Ein Hauptcheckout hinter
+> `origin` liefert deshalb zu wenige Nachweise. Am 2026-11-02 lag er 38 Commits zurück.
 
 Die Piping-Form des Vorchecks war trügerisch: `git -C <path> status --porcelain | cut -c4- |
 grep -Ev …` verwirft den Exit-Code von `git status`. Fehlt das Worktree-Verzeichnis physisch
@@ -202,9 +230,10 @@ git -C <path> status --porcelain | cut -c4- \
   | grep -Ev '^(\.release-please-manifest\.json|components/website/CHANGELOG\.md|components/website/package\.json|docs/spec-atlas\.md)$'
 ```
 
-Bleibt die Ausgabe leer, ist der Worktree im Sinne dieses Runbooks sauber. `--force` ist dann
-keine Eskalation, sondern der belegte Normalfall — `git worktree remove` verweigert sonst allein
-wegen der Generate. Kommt etwas zurück, ist das ein echter Befund: **kein Remove**, erst sichern.
+Bleibt die Ausgabe leer, ist der Worktree im Sinne dieses Runbooks sauber. `finish` verlangt aber
+einen vollständig leeren `--porcelain`: die allowlisteten Generate im Worktree deshalb verwerfen
+(`git -C <path> checkout -- <pfade>`, ungetrackte Generate löschen) und dann `finish`. Kommt
+etwas zurück, ist das ein echter Befund: **kein Remove**, erst sichern.
 
 > Die Musterliste ist eine Arbeitskopie, keine zweite Quelle: maßgeblich ist `ALLOWLIST=` in
 > `scripts/branch-reaper.sh` (im Consumer-Repo), das für Branches dieselbe
@@ -213,14 +242,35 @@ wegen der Generate. Kommt etwas zurück, ist das ein echter Befund: **kein Remov
 > `agentic-resources` mit Worktrees unter `~/.worktrees/<repo>/*` via `python3 ~/scripts/agent-workspace.py`)
 > gilt direkt `git -C <path> status --porcelain`: jede nicht-leere Ausgabe ist ein echter Befund.
 
-`--force` bleibt eine bewusste Eskalation, sobald der Vorcheck **nicht** sauber ist — etwa bei
-`.locked` Worktrees oder wenn nicht-allowlistete Pfade abweichen und man sich trotzdem entscheidet.
+Ein Entfernen gegen nicht-allowlistete Abweichungen ist keine Agent-Entscheidung: `finish` kennt
+kein `--force`, und der rohe `git worktree remove --force` ist im Guard gesperrt.
 
 ## 2. Stale Branches
 
 ```bash
-git branch --merged "$MAIN" | grep -v "$MAIN" | xargs git branch -d   # gemergte lokale Branches
 git fetch --prune                                                  # gone remote-tracking refs
+# Lokale Branches OHNE Worktree: create übernimmt den vorhandenen Branch, finish prüft den
+# Nachweis (§1-Tabelle) und entfernt Branch, Remote-Branch und Hilfs-Worktree.
+p=$(python3 ~/scripts/agent-workspace.py create --repo . <branch>)
+python3 ~/scripts/agent-workspace.py finish --repo . --path "$p"
+```
+
+Die Branch-Löschungen in den Codeblöcken dieses Abschnitts (`git branch -D`, `git push origin
+--delete` bzw. `:<ref>`) beschreiben die Entscheidungslogik. In einer Agent-Session führt sie
+`create` + `finish` aus. `finish` löscht den Remote-Branch selbst, nachdem der Archiv-Tag steht.
+
+### Guard-Grenze im Auto-Mode [Mishap 2026-11-02]
+
+Hat ein Branch keinen der Nachweise aus §1 (PR geschlossen und Inhalt anders übernommen, Branch
+ohne PR mit eigenständigem Inhalt), bleibt das Entfernen beim Menschen. Den Ausweg des Guards
+(`AGENT_WORKSPACE_BYPASS=<grund> <befehl>`) blockt der Auto-Mode-Classifier, auch mit Freigabe
+im Chat. Nicht erneut versuchen und keinen Umweg bauen. Stattdessen dem Menschen den Beleg
+(Blob-Vergleich, PR-Kommentar) und die fertigen Befehle übergeben, Archiv-Tags zuerst:
+
+```bash
+git push origin <sha>:refs/tags/reaped/<branch> :refs/heads/<branch>   # Tag und Remote-Delete in einem Push
+git worktree remove <path>                                              # nur bei leerem --porcelain
+git branch -D <branch>
 ```
 
 > **Reihenfolge: Reaper VOR [gone]-Prune [T003183].** `scripts/branch-reaper.sh` löscht
@@ -400,11 +450,16 @@ BRANCH=$(gh pr view <number> --json headRefName -q '.headRefName')
 gh pr view <number> --json closingIssuesReferences -q '.closingIssuesReferences[].number'
 ```
 
-* **Merge (mergeable, CI grün, kein Draft):**
+* **Merge (mergeable, CI grün, kein Draft):** Im Bachelorprojekt aktiviert
+  `.github/workflows/auto-enable-automerge.yml` Squash-Auto-Merge auf jedem Nicht-Draft-PR;
+  GitHub mergt, sobald die Required-Checks grün sind. Ein Draft wird mit `gh pr ready <number>`
+  freigegeben, neue PRs entstehen mit `python3 ~/scripts/agent-workspace.py pr create --repo
+  <worktree> --title … --body-file … [--ready]`. Rohes `gh pr merge`/`gh pr create` blockt der
+  Guard. In Repos ohne Auto-Merge-Workflow merget der Mensch oder ein freigegebener Bypass:
   ```bash
   # KEIN --delete-branch (T004612): das plan-Archiv läuft nach dem Merge und braucht
-  # den Branch noch; Verwaiste räumt branch-reaper.sh ab.
-  gh pr merge <number> --squash
+  # den Branch noch; Verwaiste räumen branch-reaper.sh bzw. finish ab.
+  gh pr merge <number> --squash   # außerhalb einer Agent-Session
   ```
   > **Exit 1 nach Squash-Merge ist KEIN Fehler** (`not possible to fast-forward` — der PR ist
   > trotzdem gemergt). **Immer per Timestamp verifizieren, nie per Exit-Code:**
@@ -431,7 +486,8 @@ gh pr view <number> --json closingIssuesReferences -q '.closingIssuesReferences[
   > m=$(printf '%s' "$raw" | jq -r '.mergedAt')
   > [ -n "$m" ] && [ "$m" != "null" ] || { echo "FAIL: mergedAt leer"; exit 1; }
   > ```
-  Bei noch laufendem CI stattdessen `--auto` — GitHub mergt, sobald die Checks grün sind.
+  Bei noch laufendem CI genügt der gesetzte Auto-Merge — GitHub mergt, sobald die Checks grün
+  sind; den Abschluss über `mergedAt` belegen (Warteschleife als Hintergrund-Job, nicht pollen).
 
 * **Verknüpfte Issues kommentieren, sobald `mergedAt` gesetzt ist** (nur wenn Issues
   gefunden; Merge-Keywords schließen sie automatisch, der Kommentar dokumentiert):
@@ -708,9 +764,9 @@ Aus den Metriken werden die drei wirkungsvollsten Aktionen abgeleitet:
 
 | Rang | Bedingung | Empfehlung |
 |------|-----------|------------|
-| 1 | `>5 stale Worktrees` ODER `>10 [gone]-Branches` | **Massen-Cleanup**: `repo-hygiene` §1+§2 vollständig ausführen. Vorher `bash scripts/agent-lock.sh reap`. Geschätzte Zeit: 2–5 min. |
-| 2 | `≥1 PR mit CI=green, kein Draft, reviewDecision=APPROVED` | **PR mergen**: `gh pr merge --squash` (kein `--delete-branch` — Archiv läuft nach dem Merge, T004612). |
-| 3 | `≥1 Worktree >30d ohne Commit` | **Worktree entsorgen**: `git worktree unlock <path> 2>/dev/null \|\| true && git worktree remove --force <path>` nach Allowlist-Check (§1). |
+| 1 | `>5 stale Worktrees` ODER `>10 [gone]-Branches` | **Massen-Cleanup**: `repo-hygiene` §1+§2 vollständig ausführen. Vorher `python3 ~/scripts/agent-workspace.py lock reap --repo .`, dann `reap --repo . --dry-run`. Geschätzte Zeit: 2–5 min. |
+| 2 | `≥1 PR mit CI=green, kein Draft, reviewDecision=APPROVED` | **PR mergen**: Auto-Merge prüfen (§3); Draft per `gh pr ready <n>` freigeben (kein `--delete-branch` — Archiv läuft nach dem Merge, T004612). |
+| 3 | `≥1 Worktree >30d ohne Commit` | **Worktree entsorgen**: `python3 ~/scripts/agent-workspace.py finish --repo . --path <path>` nach Allowlist-Check (§1); ohne Nachweis an den Menschen (§2 „Guard-Grenze im Auto-Mode"). |
 | 4 | `≥3 PRs offen vom selben Author` | **PR-Stau**: Author pingen oder PRs bündeln (wenn thematisch verwandt). |
 | 5 | `≥5 offene GitHub-Issues ohne Zuordnung` | **Issue-Triage**: via Issue-Kommentar klären oder Worker-Sandbox-Dispatch (`operations-management`). |
 
