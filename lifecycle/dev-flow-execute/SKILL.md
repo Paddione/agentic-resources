@@ -75,6 +75,8 @@ Phasen-Telemetrie (best-effort): [phase-events](references/phase-events.md).
 
 Delegiere die **gesamte Implementierung an EINEN frischen Subagenten**. Du behältst den Plan-Kontext und verifizierst danach unabhängig — kein Per-Task-Fan-out (verschachtelte Delegation sprengt den Kontext, 162k-Prompt-Lehre). Spawn-Matrix je Harness (opencode: `background-agents.ts`-Delegation; Worktree-`cd`-Pflicht und Effort-Formulierungen dort), Kontext-Injektion (Plan-Datei, Branch, Plan-Intel-Bundle aus `intel.json`; only-if-tickets: zusätzlich Ticket-ID und `$ATTACHMENT_DIR`), Test-Pflicht (pytest) und Auftrag (Ein-Ebenen-Regel, SID-Propagation T006365, Freshness-Pflicht vor PR-Erstellung, ENDE T002365): [implementer-handoff](references/implementer-handoff.md) — den Auftrag wörtlich in den Subagenten-Prompt übernehmen.
 
+Inhaltliche Task-Schleife und Evidence-Ledger: [executing-plans](../../core/executing-plans/SKILL.md).
+
 ### Wenn keine Delegation möglich ist
 
 Ohne Subagent (Session-Policy, Harness ohne Agent-Tool, Offline) **implementiert der Orchestrator

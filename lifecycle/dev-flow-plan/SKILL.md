@@ -279,8 +279,8 @@ Status-Übersicht und Ausführungsoptionen: [plan-batch-status](references/plan-
 | Skill | Beziehung |
 |-------|-----------|
 | `using-git-worktrees` | Hintergrund — ersetzt durch Worktree-Helper des Repos (git-crypt-safe) |
-| `superpowers:brainstorming` | **IMMER** aufgerufen — Feature-Pfad Schritt 3, Fix-Pfad Schritt 2.8 |
-| `superpowers:writing-plans` | Aufgerufen vom Plan-Subagenten (Schritt 3.7) |
+| `explore` | **IMMER** aufgerufen — Feature-Pfad Schritt 3, Fix-Pfad Schritt 2.8 |
+| `writing-plans` | Aufgerufen vom Plan-Subagenten (Schritt 3.7) |
 | `dev-flow-execute` | **Nachfolger im Kreislauf** — implementiert den erstellten Plan |
 | `dev-flow-chore` | Geschwister — Chores statt Features/Fixes (direkter Kurzschluss) |
 | `setgoal` | Klärt vage Anfragen in einer Fragerunde (Schritt 0.5) |

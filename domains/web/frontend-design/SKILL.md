@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Use when designing frontends, dashboards, or design systems without templated defaults or generic AI slop. Triggers on frontend design, UI design, visual identity, anti-slop, design direction.
+description: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Use when designing frontends, dashboards, or design systems without templated defaults or generic AI slop. Triggers on frontend design, UI design, visual identity, anti-slop, design direction. Not for theming an existing artifact (theme-factory) or building it (web-artifacts-builder, lavish).
 license: Complete terms in LICENSE.txt
 ---
 

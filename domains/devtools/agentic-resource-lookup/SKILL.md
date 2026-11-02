@@ -17,7 +17,7 @@ node scripts/agentic-lookup.mjs find <query>
 ```
 
 Liest in fester Reihenfolge:
-1. `docs/agent-guide/registry/capabilities.yaml` — bereits kuratierte Einträge (lokal)
+1. `docs/agent-guide/registry/capabilities.yaml` — bereits kuratierte Einträge (lokal, Bachelorprojekt-Consumer)
 2. `~/.claude/plugins/known_marketplaces.json` — installierte Marktplätze (lokal)
 3. `https://registry.modelcontextprotocol.io/v0/servers?search=<query>` — offizielle Registry (Netz)
 

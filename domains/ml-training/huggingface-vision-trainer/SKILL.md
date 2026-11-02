@@ -21,8 +21,8 @@ Use this skill when users want to:
 
 ## Related Skills
 
-- **`hugging-face-jobs`** — General HF Jobs infrastructure: token authentication, hardware flavors, timeout management, cost estimation, secrets, environment variables, scheduled jobs, and result persistence. **Refer to the Jobs skill for any non-training-specific Jobs questions** (e.g., "how do secrets work?", "what hardware is available?", "how do I pass tokens?").
-- **`hugging-face-model-trainer`** — TRL-based language model training (SFT, DPO, GRPO). Use that skill for text/language model fine-tuning.
+- **`huggingface-llm-trainer`** — General HF Jobs infrastructure: token authentication, hardware flavors, timeout management, cost estimation, secrets, environment variables, scheduled jobs, and result persistence. **See that skill's Jobs sections for any non-training-specific Jobs questions** (e.g., "how do secrets work?", "what hardware is available?", "how do I pass tokens?").
+- **`trl-training`** — TRL-based language model training (SFT, DPO, GRPO). Use that skill for text/language model fine-tuning.
 
 ## Local Script Execution
 
@@ -244,7 +244,7 @@ If you write a custom script, you MUST include this token injection before the `
 
 - Do NOT call `login()` in custom scripts unless replicating the full pattern from `scripts/object_detection_training.py`
 - Do NOT rely on implicit token resolution (`hub_token=None`) — unreliable in Jobs
-- See the `hugging-face-jobs` skill → *Token Usage Guide* for full details
+- See `huggingface-llm-trainer` for Jobs token usage.
 
 ### 3. JobInfo attribute
 
@@ -361,7 +361,7 @@ Start with `facebook/sam2.1-hiera-small` for fast iteration. SAM2 models are gen
 
 All recommended OD and IC models are under 100M params — **`t4-small` (16 GB VRAM, $0.40/hr) is sufficient for all of them.** Image classification models are generally smaller and faster than object detection models — `t4-small` handles even ViT-Base comfortably. For SAM2 models up to `hiera-base-plus`, `t4-small` is sufficient since only the mask decoder is trained. For `sam2.1-hiera-large` or SAM v1 models, use `l4x1` or `a10g-large`. Only upgrade if you hit OOM from large batch sizes — reduce batch size first before switching hardware. Common upgrade path: `t4-small` → `l4x1` (~$0.80/hr, 24 GB) → `a10g-large` (~$1.50/hr, 24 GB) → `l40s` (~$6/hr, 48 GB).
 
-For full hardware flavor list: refer to the `hugging-face-jobs` skill. For cost estimation: run `scripts/estimate_cost.py`.
+For hardware flavors, see `huggingface-llm-trainer`. For cost estimation: run `scripts/estimate_cost.py`.
 
 ## Quick start — Object Detection
 

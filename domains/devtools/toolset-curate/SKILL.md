@@ -164,7 +164,7 @@ enthält. `--json` liefert dasselbe maschinenlesbar.
 
 | Pfad | Rolle |
 |---|---|
-| `docs/agent-guide/registry/capabilities.yaml` | SSOT für Auswahl **und** Nutzung |
+| `docs/agent-guide/registry/capabilities.yaml` | SSOT für Auswahl **und** Nutzung (Bachelorprojekt-Consumer; Pfad ggf. pro repo.yaml auflösen) |
 | `docs/agent-guide/registry/mcp.yaml` | SSOT für die *Erreichbarkeit* eines Servers |
 | `docs/agent-guide/maps/toolset-map.md` | generierte, menschenlesbare Karte |
 | `docs/agent-guide/registry/toolset.lock.yaml` | gemessene Tool-Zahlen (`probe.mjs`) |

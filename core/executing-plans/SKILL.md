@@ -34,7 +34,8 @@ through authorized tasks without asking whether to continue after each one.
 
 At the end, check integration boundaries, inspect the final diff and execute the
 repository-required checks. The final check is literally `task test:changed`,
-`task freshness:regenerate`, `task freshness:check`. Report actual validation and
+`task freshness:regenerate`, `task freshness:check` (repos with a task runner;
+otherwise the repo-native equivalent). Report actual validation and
 remaining limitations. Leave merge evidence to the repository's finalize flow (in this
 repo: lifecycle receipt in the local evidence ledger); the ledger keeps per-task evidence.
 Commit/push/review/merge only through the repository's established workflow.

@@ -184,6 +184,4 @@ arbeiten. Details: [worktree-cleanup](references/worktree-cleanup.md).
 
 ## Verwandte Skills
 
-- `superpowers:using-git-worktrees` — Worktree korrekt anlegen
-- `superpowers:finishing-a-development-branch` — Optionen nach Implementierung
 - `dev-flow-chore`, `dev-flow-execute` — nutzen diesen Skill intern
