@@ -22,7 +22,7 @@ bei einem **frischen Cluster-Setup** oder **Node-Replacement** ausgeführt — i
 ## Control-Plane INIT (erster CP)
 
 ```bash
-WG_KEY=$(grep WG_MESH_PK4_PRIVATE_KEY environments/.secrets/fleet-korczewski.yaml | awk '{print $2}')
+WG_KEY=$(grep WG_MESH_PK4_PRIVATE_KEY environments/.secrets/prodmesh-korczewski.yaml | awk '{print $2}')
 # WG_CONF_B64: ehemals via generate-wg-conf.sh generiert (entfallen mit ADR-014, fleet ohne WireGuard)
 WG_CONF_B64=""
 
@@ -47,7 +47,7 @@ kubectl --context fleet get nodes -w
 ```bash
 K3S_TOKEN=$(ssh patrick@204.168.244.104 "sudo cat /var/lib/rancher/k3s/server/node-token")
 
-WG_KEY=$(grep WG_MESH_PK6_PRIVATE_KEY environments/.secrets/fleet-korczewski.yaml | awk '{print $2}')
+WG_KEY=$(grep WG_MESH_PK6_PRIVATE_KEY environments/.secrets/prodmesh-korczewski.yaml | awk '{print $2}')
 # WG_CONF_B64: ehemals via generate-wg-conf.sh generiert (entfallen mit ADR-014)
 WG_CONF_B64=""
 
