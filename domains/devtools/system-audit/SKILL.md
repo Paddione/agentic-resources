@@ -22,7 +22,7 @@ angehängten Proposals.
 | `flux-cluster` | Live-Fleet-Cluster (ns `workspace`; `workspace-korczewski` eingefroren, T002479) | Checkliste [§1](references/checklists.md#1-flux-cluster-live-sweep) | eigen |
 | `website` | Brand-Seite mentolder (korczewski eingefroren) | Skill `web-audit` | delegiert |
 | `repo` | Repo-Zustand, PRs | Skill `repo-hygiene` §0–§7 inkl. Runtime-Drift | delegiert |
-| `toolset` | Tool-Registry (`capabilities.yaml`) | Skill `toolset-curate` Schritt 1–2 | delegiert |
+| `toolset` | Tool-Registry (`capabilities.yaml`, Bachelorprojekt-Consumer) | Skill `toolset-curate` Schritt 1–2 | delegiert |
 | `security` | SealedSecrets, OIDC, DSGVO, Secret-Alter | Checkliste [§2](references/checklists.md#2-security-sealedsecrets-oidc-dsgvo) (+ infra-ops `references/runbooks-operations.md` §6) | eigen |
 | `database` | PostgreSQL (Backups, Schema, Wachstum) | Checkliste [§3](references/checklists.md#3-datenbank-postgresql) (+ infra-ops `references/runbooks-operations.md` §7) | eigen |
 | `llm-pipeline` | GPU-Host, llm-proxy, Loadouts | Checkliste [§4](references/checklists.md#4-llm-pipeline-gpu-proxy-loadouts) (+ infra-ops `references/runbooks-operations.md` §5) | eigen |

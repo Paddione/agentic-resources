@@ -16,7 +16,7 @@ Existing user authorization and the repository dev-flow lifecycle govern fixes. 
 ## Overview
 
 Use gh to locate failing PR checks, fetch GitHub Actions logs for actionable failures, summarize the failure snippet, then propose a fix plan and implement within existing user authorization.
-- If a plan-oriented skill (for example `create-plan`) is available, use it; otherwise draft a concise plan inline; ask only when the concrete action lacks user authorization.
+- If a plan-oriented skill (for example `dev-flow-plan`) is available, use it; otherwise draft a concise plan inline; ask only when the concrete action lacks user authorization.
 
 Prereq: authenticate with the standard GitHub CLI once (for example, run `gh auth login`), then confirm with `gh auth status` (repo + workflow scopes are typically required).
 

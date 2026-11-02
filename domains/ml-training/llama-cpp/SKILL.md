@@ -40,7 +40,7 @@ Pure C/C++ LLM inference with minimal dependencies, optimized for CPUs and non-N
 brew install llama.cpp
 
 # Or build from source
-git clone https://github.com/ggerganov/llama.cpp
+git clone https://github.com/ggml-org/llama.cpp
 cd llama.cpp
 
 # CPU only (default)
@@ -258,7 +258,7 @@ cat prompts.txt | ./llama-cli \
 
 ## Resources
 
-- **GitHub**: https://github.com/ggerganov/llama.cpp
+- **GitHub**: https://github.com/ggml-org/llama.cpp
 - **Models**: https://huggingface.co/models?library=gguf
 - **Discord**: https://discord.gg/llama-cpp
 

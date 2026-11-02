@@ -27,7 +27,7 @@ Write every plan so it passes the canonical gates without rework. Shape of `task
 - YAML frontmatter first: non-empty `title`, `domains` (non-empty list), `status`.
 - Then `# <slug> — Implementation Plan` (H1), followed by `## File Structure` (H2) listing created/modified files.
 - At least one failing-test step with the literal phrase `expected: FAIL` plus a real runner call (`bats`, `vitest`, `pytest`, `jest`, `mocha`, `go test`, `playwright test`).
-- Last task lists literally `task test:changed`, `task freshness:regenerate`, `task freshness:check`.
+- Last task lists literally `task test:changed`, `task freshness:regenerate`, `task freshness:check` (repos with a task runner; otherwise the repo-native equivalent).
 - Per touched file record the effective budget (baseline vs limit); never plan around a gate with a baseline exception. No `TBD`/`TODO`/`FIXME` in prose.
 - Do not duplicate the gate rules here — `.agents/skills/references/plan-quality-gates.md` is canonical (S1–S4, CQ02, vitest, plan-lint hard rules F1/F2/STRUCT/P1/B1a/B1b).
 

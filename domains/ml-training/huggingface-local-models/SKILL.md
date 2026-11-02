@@ -12,6 +12,7 @@ Search the Hugging Face Hub for llama.cpp-compatible GGUF repos, choose the righ
 1. Search the Hub with `apps=llama.cpp`.
 2. Open `https://huggingface.co/<repo>?local-app=llama.cpp`.
 3. Prefer the exact HF local-app snippet and quant recommendation when it is visible.
+   Size VRAM with `hf-mem` (`uvx hf-mem --model-id <repo>`) before downloading.
 4. Confirm exact `.gguf` filenames with `https://huggingface.co/api/models/<repo>/tree/main?recursive=true`.
 5. Launch with `llama-cli -hf <repo>:<QUANT>` or `llama-server -hf <repo>:<QUANT>`.
 6. Fall back to `--hf-repo` plus `--hf-file` when the repo uses custom file naming.
