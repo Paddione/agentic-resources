@@ -312,6 +312,19 @@ zu heben. Diese Stufe läuft **nur manuell/agentisch**, nie automatisiert in der
    Für einen **breiten** vision-geurteilten Durchgang über alle Routen statt einer Einzelprüfung:
    den Visual-Sweep-Task des Consumer-Repos (Quell-Repo: `task test:e2e:visual-sweep:vision`;
    nur wenn `repo.task_runner` = `taskfile`) — report-only, kein CI-Gate.
+
+   **Belegte Praxis — LFM3-Vision mit SQLite-Ablage (board-e2e-headed-vision):**
+   Für Repos mit vielen dichten Flächen (Boards/Cockpits) statt Einzel-Screenshots:
+   - Voraussetzung: Headless-Suite grün; Vision-Modell in `VISION_MODEL.md` belegt
+     (Modell, Revision/Pfad, Anfrage-Parameter wie `max_tokens`/`temperature`, Beispiel-Urteil).
+   - Headed-Lauf (`--headed`, sichtbarer Chromium): ein Screenshot je Fläche aus `AREAS.md`,
+     Urteil pro Screenshot vom Modell einholen (`korrekt`/`auffällig` + Begründung).
+   - Ablage in eingebetteter SQLite-DB `~/.agents/eval/e2e-vision.db`
+     (Host-seitig, außerhalb des Repos), Schema:
+     `runs(id, started_at, base_url, model)` +
+     `verdicts(run_id, area, screenshot_path, verdict, reason)`.
+   - Report-only: Fehl-Urteile oder Flakes brechen den Lauf nicht ab,
+     sie stehen als `auffällig` in der DB. Kein CI-Gate.
 4. **Kein Abbruch bei Fehler:** Diese Stufe informiert den Agenten, blockiert aber nicht den
    Merge- oder Deploy-Flow — sie läuft grundsätzlich erst nach Merge/Deploy (Schritt 8).
 
