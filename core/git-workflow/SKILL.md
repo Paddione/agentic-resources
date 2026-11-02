@@ -126,7 +126,9 @@ git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
 ```
 
 Push-Schutz des Repos (Wrapper/Hooks für inhalts-äquivalente Divergenz)
-beachten. Direkte Pushes auf `<main_branch>` nur für Trivialitäten, sonst PR.
+beachten. Direkte Pushes auf `<main_branch>` laufen ohne Rückfrage, sobald lokale Checks
+und `pre-push` grün sind (kein Force, kein Hook-Bypass). CI-Fehler danach
+repariert der CI-Watchdog. Bei geschütztem `<main_branch>` bleibt der PR-Pfad.
 
 ## Schritt 4 — PR-Erstellung
 

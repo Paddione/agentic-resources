@@ -60,7 +60,10 @@ hardcode them. No repo assumptions in shared files; parametrize, don't fork.
   `dev-flow-chore` (inline, then merge).
 - Git lifecycle per `git-workflow`: pull-first, explicit pathspecs (never
   broad add), Conventional Commits, verify via the repo's own checks, PR,
-  squash-merge, cleanup. No direct pushes to the main branch.
+  squash-merge, cleanup. Direct pushes to the main branch need no confirmation
+  once the repo's local checks and `pre-push` pass (no force, no hook bypass);
+  the CI watchdog repairs post-push CI failures. Repos with a protected main
+  branch keep the PR path.
 - Work in the target repo's checkout. This repo holds shared skills only;
   read-only questions work from anywhere, mutating work does not.
 
