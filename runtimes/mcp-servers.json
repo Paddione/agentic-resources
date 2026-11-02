@@ -315,6 +315,15 @@
           "LOCALCOWORK_AUDIT_DB": "/home/patrick/.agents/audit.db"
         }
       }
+    },
+    "board-mcp": {
+      "doc": "Agent-board command layer (same endpoint as buttons and voice): board_command (run or propose actions, stage 2+ waits in human approval queue, never self-approve), board_status (approval queue and goal commands), board_ask (structured questions to the human, answer arrives as next message). Token via AGENT_BOARD_COMMAND_TOKEN or ~/.config/agent-board/command-token. Stdlib-only stdio server, no secrets in manifest.",
+      "stdio": {
+        "command": [
+          "/usr/bin/python3",
+          "/home/patrick/mcp-servers/board/server.py"
+        ]
+      }
     }
   },
   "harnesses": {
@@ -354,7 +363,8 @@
       "mcp-kubernetes",
       "voice-mcp",
       "mcp-security",
-      "mcp-audit"
+      "mcp-audit",
+      "board-mcp"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -372,7 +382,8 @@
       "mcp-kubernetes",
       "voice-mcp",
       "mcp-security",
-      "mcp-audit"
+      "mcp-audit",
+      "board-mcp"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -389,7 +400,8 @@
       "mcp-kubernetes",
       "voice-mcp",
       "mcp-security",
-      "mcp-audit"
+      "mcp-audit",
+      "board-mcp"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -407,7 +419,8 @@
       "mcp-kubernetes",
       "voice-mcp",
       "mcp-security",
-      "mcp-audit"
+      "mcp-audit",
+      "board-mcp"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -425,7 +438,8 @@
       "mcp-kubernetes",
       "voice-mcp",
       "mcp-security",
-      "mcp-audit"
+      "mcp-audit",
+      "board-mcp"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -441,7 +455,8 @@
       "huggingface",
       "python-sandbox",
       "mcp-kubernetes",
-      "voice-mcp"
+      "voice-mcp",
+      "board-mcp"
     ]
   },
   "upstreams": {
