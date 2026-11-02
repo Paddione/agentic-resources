@@ -3,7 +3,7 @@
 Consolidated on 2026-10-09 from local sources:
 
 - Former global `.zcode/skills/codebase-memory/SKILL.md`: query routing, evidence tiers, coverage and child handoff. Its old fixed tool-count and 100k query ceiling were replaced with live schema inspection.
-- `Bachelorprojekt/.opencode/skills/code-graph-interpretation/SKILL.md` and `references/test-impact-analysis.md`, `references/synthesis-and-goals.md`: snapshot checks, invalid-direction regression, failure/diff seeds, impact, absence, tests and evaluation goals.
+- Former Bachelorprojekt skill `code-graph-interpretation` (retired SKILL.md plus previous `references/` notes on test-impact-analysis, synthesis-and-goals): snapshot checks, invalid-direction regression, failure/diff seeds, impact, absence, tests and evaluation goals.
 - `Bachelorprojekt/docs/brain/k3-code-graph.md` and `docs/runbooks/cbm-index-stampede.md`: indexing, receipt freshness, serialized refresh and repository operations.
 - `Bachelorprojekt/docs/brain/embed-store.md` and `embed-rerank-eval.md`: durable receipt-keyed vector artifacts and independently attributable retrieval evidence.
 
