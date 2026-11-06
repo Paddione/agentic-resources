@@ -152,7 +152,7 @@ git add \
   docs/agent-guide/maps/danger-map.md \
   components/website/src/lib/agent-guide.generated.json \
   components/website/src/lib/platform-descriptions.generated.json \
-  docs/generated/graph.json \
+  docs/generated/graph-k8s-env.json \
   docs/generated/api-map.json \
   docs/generated/blast-radius.md \
   docs/diagrams/architecture.md \
