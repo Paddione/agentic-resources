@@ -226,7 +226,7 @@
       "path": "skills/vitest",
       "dest": "domains/testing/vitest",
       "track": "branch",
-      "ref": "7de210b51c8d48cc405a4eac3e17cbb1396c653b",
+      "ref": "f63e9ec7bc85f67364b6596c2d29da87e83ce445",
       "version": null
     },
     "vitest-testing": {
@@ -234,7 +234,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "8e6d0a70aceaac44ff8a8bce22e5a74024443074",
+      "ref": "0919813b41351e8b1f221e63904a3100f895fa6a",
       "version": null
     }
   }
