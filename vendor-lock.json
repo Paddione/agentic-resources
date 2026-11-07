@@ -9,7 +9,7 @@
       "path": "skills/frontend-design",
       "dest": "domains/web/frontend-design",
       "track": "branch",
-      "ref": "ca45fc496a3436251f191354091d557da31c15b5",
+      "ref": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
       "version": null
     },
     "gh-fix-ci": {
@@ -178,7 +178,7 @@
       "path": "plugins/python-development/skills/python-testing-patterns",
       "dest": "domains/testing/python-testing-patterns",
       "track": "branch",
-      "ref": "7e2fb559cf4b824b27f1fec49fe88f7511066d26",
+      "ref": "4bde3168b43c0655c4d00ea2726e631719908a6d",
       "version": null
     },
     "skill-creator": {
@@ -186,7 +186,7 @@
       "path": "skills/skill-creator",
       "dest": "domains/devtools/skill-creator",
       "track": "branch",
-      "ref": "ca45fc496a3436251f191354091d557da31c15b5",
+      "ref": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
       "version": null
     },
     "sota-testing": {
@@ -194,7 +194,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "4c4837e3f891b4194623e467fec6294df4ff8d0a",
+      "ref": "6cfaca4a7bfdc8740d3eb22f01d2864d45ff869a",
       "version": null
     },
     "train-sentence-transformers": {
@@ -234,7 +234,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "0919813b41351e8b1f221e63904a3100f895fa6a",
+      "ref": "c5cabb6dd13c71e2156612fe50734c4f195d162d",
       "version": null
     }
   }
