@@ -74,6 +74,13 @@ Der Subagent hat per Konstruktion **keinen** Kontext — gib alles explizit, abe
   Kann der Worker ein Kommando nicht ausführen, bricht er mit der
   Fehlermeldung ab — Repos, PR-Nummern oder Outputs werden **nie erfunden**
   (Beleg 2026-11-09: fabulierte PRs nach falscher Umgebungsannahme).
+  Grenze (Test 2026-11-09): Step-0 wird nicht zuverlässig befolgt,
+  Konfabulieren bleibt möglich — **Primary-Verifikation** (jeder Claim
+  gegen `gh`/`git` gegengeprüft) bleibt PFLICHT und wird durch nichts ersetzt.
+- **Degradierte Infra:** Misstrauensregel — bei <1 tok/s Engine-Throughput
+  (oder sonstiger GPU-Verhungerung) Worker-Output grundsätzlich verwerfen
+  oder parken statt stapeln; Qualität bricht unter Starvation weiter ein
+  (Beleg 2026-11-09: 0,7 tok/s, 2/3 Items eines Test-Pakets fabuliert).
 - **Lösch-Vokabular:** PFLICHT — read-only-Pakete enthalten keine
   Lösch-/Entfernungs-Ansprache (`delete`, `remove`, `-D`, „aufräumen").
   Der Worker liefert nur die Inventur; ausführbare Befehle schreibt der
