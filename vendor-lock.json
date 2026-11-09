@@ -170,7 +170,7 @@
       "path": "playwright-best-practices",
       "dest": "domains/brand-site/playwright-best-practices",
       "track": "branch",
-      "ref": "283d5cbc5d11aac1abda058b16ad22c317d54dc0",
+      "ref": "0b75b5835a87de1fdd202ba965f3bc5a27738fdf",
       "version": null
     },
     "python-testing-patterns": {
@@ -194,7 +194,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "6cfaca4a7bfdc8740d3eb22f01d2864d45ff869a",
+      "ref": "896bb26459d676f9facd3193b81e7838383636ee",
       "version": null
     },
     "train-sentence-transformers": {
