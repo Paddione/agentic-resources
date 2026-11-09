@@ -31,9 +31,7 @@ resolve_layers() {
     find -L "$AR" -name SKILL.md -not -path "*/staging/*" | xargs -n1 dirname
   else
     for l in ${LAYERS//,/ }; do
-      if [[ "$l" == domains/* ]]; then echo "$AR/$l"
-      else find -L "$AR/$l" -maxdepth 2 -name SKILL.md 2>/dev/null | xargs -n1 dirname
-      fi
+      find -L "$AR/$l" -maxdepth 2 -name SKILL.md 2>/dev/null | xargs -n1 dirname
     done
   fi
 }

@@ -67,6 +67,27 @@ def _fixture_resources(tmp_path):
     return script
 
 
+def test_domains_pack_links_skills_not_pack(tmp_path):
+    resources = tmp_path / "resources"
+    (resources / "runtimes").mkdir(parents=True)
+    for skill in ("sota-testing", "vitest-testing"):
+        d = resources / "domains/testing" / skill
+        d.mkdir(parents=True)
+        (d / "SKILL.md").write_text("---\nname: %s\ndescription: fixture\n---\n" % skill)
+    script = resources / "runtimes/init.sh"
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "runtimes/init.sh", script)
+    consumer = tmp_path / "consumer"
+    consumer.mkdir()
+    result = subprocess.run(
+        ["bash", str(script), "--repo", str(consumer),
+         "--layers", "domains/testing", "--dry-run"],
+        capture_output=True, text=True, check=True,
+    )
+    assert "sota-testing" in result.stdout
+    assert "vitest-testing" in result.stdout
+    assert "/testing\n" not in result.stdout and not result.stdout.rstrip().endswith("/testing")
+
+
 def test_dangling_link_is_repaired(tmp_path):
     script = _fixture_resources(tmp_path)
     consumer = tmp_path / "consumer"
