@@ -69,6 +69,16 @@ Der Subagent hat per Konstruktion **keinen** Kontext — gib alles explizit, abe
 - Branch-Name, Artefakt-Pfade (Spec/Plan; Ticket nur wenn `repo.tickets != none`),
   `budget_tokens` (S ~32k / M ~80k / L ~100k — der Orchestrator sizt jedes Paket selbst).
 - Bei mehreren Vorstufen-Ergebnissen: **zusammenfassen, nie Roh-JSON dumpen**.
+- **Umgebungs-Grounding:** PFLICHT — jedes Paket beginnt mit einem
+  Selbst-Check (`pwd`, Tool-Verfügbarkeit wie `gh auth status`).
+  Kann der Worker ein Kommando nicht ausführen, bricht er mit der
+  Fehlermeldung ab — Repos, PR-Nummern oder Outputs werden **nie erfunden**
+  (Beleg 2026-11-09: fabulierte PRs nach falscher Umgebungsannahme).
+- **Lösch-Vokabular:** PFLICHT — read-only-Pakete enthalten keine
+  Lösch-/Entfernungs-Ansprache (`delete`, `remove`, `-D`, „aufräumen").
+  Der Worker liefert nur die Inventur; ausführbare Befehle schreibt der
+  Orchestrator primary-seitig (Beleg 2026-11-09: Refusal trotz
+  Nur-Sichten-Auftrag, Neufassung ohne Lösch-Vokabular lief).
 
 **Kontext-Budget-Selbstmeldung (PFLICHT-Direktive in jedem Prompt)** [T001571]:
 > Überwache dein eigenes Kontext-Budget. Bei Anzeichen von Kontext-Überlauf
