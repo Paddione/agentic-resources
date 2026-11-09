@@ -77,6 +77,12 @@ Der Subagent hat per Konstruktion **keinen** Kontext — gib alles explizit, abe
   Grenze (Test 2026-11-09): Step-0 wird nicht zuverlässig befolgt,
   Konfabulieren bleibt möglich — **Primary-Verifikation** (jeder Claim
   gegen `gh`/`git` gegengeprüft) bleibt PFLICHT und wird durch nichts ersetzt.
+  Tragend sind exakte Kommandos + Roh-Output-Zitate, nicht die Präambel
+  (Beleg: 2/2 Pakete mit Zitierpflicht fehlerfrei, Grounding in 0/3 zitiert).
+- **Leer-/Brei-Resultat:** Liefert ein Worker Echo, Abbruchfetzen oder gar
+  keine Ausführung (Startversagen, keine Disziplinlosigkeit), **einmal**
+  identisch neu dispatchen — erst bei Wiederholung eskalieren
+  (Beleg 2026-11-09: 1/3 Pakete Startversagen, Rest desselben Formats perfekt).
 - **Degradierte Infra:** Misstrauensregel — bei <1 tok/s Engine-Throughput
   (oder sonstiger GPU-Verhungerung) Worker-Output grundsätzlich verwerfen
   oder parken statt stapeln; Qualität bricht unter Starvation weiter ein
