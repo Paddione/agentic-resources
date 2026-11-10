@@ -1,0 +1,59 @@
+# links.yaml — SSOT über die drei Skill-Sync-Mechanismen (AR-SSOT-Gates P3).
+# tests/test_link_matrix.py prüft alle drei Matrizen fail-closed gegen die Quellen.
+schema_version: 1
+master: ~/.agents/skills
+mechanisms:
+  - name: init.sh
+    source: runtimes/init.sh
+    owner: consumer-linker
+    role: verlinkt Layer-Skills additiv in Consumer-Projekt (+ optisch --harness Home)
+    project_dirs:
+      - .agents/skills
+      - .claude/skills
+      - .codex/skills
+      - .opencode/skills
+      - .zcode/skills
+    harness_dirs:
+      - ~/.agents/skills
+      - ~/.claude/skills
+      - ~/.codex/skills
+      - ~/.config/opencode/skills
+      - ~/.zcode/skills
+      - ~/.gemini/config/skills
+      - ~/.pi/agent/skills
+      - ~/.qwen/skills
+      - ~/.openclaw/skills
+  - name: share-agent-resources.sh
+    source: runtimes/scripts/share-agent-resources.sh
+    owner: home-linker
+    role: verlinkt Master-Skills additiv in Home-Harness-Dirs (+ Kontextdateien)
+    skill_dirs:
+      - .claude/skills
+      - .codex/skills
+      - .config/opencode/skills
+      - .zcode/skills
+      - .gemini/config/skills
+      - .pi/agent/skills
+      - .qwen/skills
+      - .openclaw/skills
+    context_files:
+      - .codex/AGENTS.md
+      - .qwen/QWEN.md
+      - .pi/agent/AGENTS.md
+  - name: agent-resources.py
+    source: runtimes/scripts/agent-resources.py
+    owner: read-only-inventory
+    role: inventarisiert Home-Ressourcen (scan/check), kein Schreiber im Sync-Sinn
+    skill_roots:
+      - .agents/skills
+      - .claude/skills
+      - .codex/skills
+      - .config/opencode/skills
+      - .zcode/skills
+      - .gemini/config/skills
+      - .codex/plugins/cache
+      - .claude/plugins/cache
+notes:
+  - "share-agent-resources.sh kennt ~/.agents/skills nicht als Ziel: das ist die Master-Quelle."
+  - "Plugin-Caches (.codex/.claude/plugins/cache) nur im Inventar, nie Link-Ziele (provider-verwaltet)."
+  - ".opencode weicht bewusst ab: Projekt .opencode/skills vs. Home .config/opencode/skills."
