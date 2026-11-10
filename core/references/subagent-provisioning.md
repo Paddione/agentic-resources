@@ -69,6 +69,29 @@ Der Subagent hat per Konstruktion **keinen** Kontext — gib alles explizit, abe
 - Branch-Name, Artefakt-Pfade (Spec/Plan; Ticket nur wenn `repo.tickets != none`),
   `budget_tokens` (S ~32k / M ~80k / L ~100k — der Orchestrator sizt jedes Paket selbst).
 - Bei mehreren Vorstufen-Ergebnissen: **zusammenfassen, nie Roh-JSON dumpen**.
+- **Umgebungs-Grounding:** PFLICHT — jedes Paket beginnt mit einem
+  Selbst-Check (`pwd`, Tool-Verfügbarkeit wie `gh auth status`).
+  Kann der Worker ein Kommando nicht ausführen, bricht er mit der
+  Fehlermeldung ab — Repos, PR-Nummern oder Outputs werden **nie erfunden**
+  (Beleg 2026-11-09: fabulierte PRs nach falscher Umgebungsannahme).
+  Grenze (Test 2026-11-09): Step-0 wird nicht zuverlässig befolgt,
+  Konfabulieren bleibt möglich — **Primary-Verifikation** (jeder Claim
+  gegen `gh`/`git` gegengeprüft) bleibt PFLICHT und wird durch nichts ersetzt.
+  Tragend sind exakte Kommandos + Roh-Output-Zitate, nicht die Präambel
+  (Beleg: 2/2 Pakete mit Zitierpflicht fehlerfrei, Grounding in 0/3 zitiert).
+- **Leer-/Brei-Resultat:** Liefert ein Worker Echo, Abbruchfetzen oder gar
+  keine Ausführung (Startversagen, keine Disziplinlosigkeit), **einmal**
+  identisch neu dispatchen — erst bei Wiederholung eskalieren
+  (Beleg 2026-11-09: 1/3 Pakete Startversagen, Rest desselben Formats perfekt).
+- **Degradierte Infra:** Misstrauensregel — bei <1 tok/s Engine-Throughput
+  (oder sonstiger GPU-Verhungerung) Worker-Output grundsätzlich verwerfen
+  oder parken statt stapeln; Qualität bricht unter Starvation weiter ein
+  (Beleg 2026-11-09: 0,7 tok/s, 2/3 Items eines Test-Pakets fabuliert).
+- **Lösch-Vokabular:** PFLICHT — read-only-Pakete enthalten keine
+  Lösch-/Entfernungs-Ansprache (`delete`, `remove`, `-D`, „aufräumen").
+  Der Worker liefert nur die Inventur; ausführbare Befehle schreibt der
+  Orchestrator primary-seitig (Beleg 2026-11-09: Refusal trotz
+  Nur-Sichten-Auftrag, Neufassung ohne Lösch-Vokabular lief).
 
 **Kontext-Budget-Selbstmeldung (PFLICHT-Direktive in jedem Prompt)** [T001571]:
 > Überwache dein eigenes Kontext-Budget. Bei Anzeichen von Kontext-Überlauf
