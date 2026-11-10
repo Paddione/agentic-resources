@@ -25,5 +25,9 @@ repo:
   agent_tier1_max_lines: 300
   # true, wenn .aiderignore/.claudeignore im Root gepflegt werden.
   agent_ignore_files: true
+  # Pfad zur Toolset-Registry des Consumers (SSOT extern: Bachelorprojekt
+  # docs/agent-guide/registry/capabilities.yaml). AR hält keinen lokalen
+  # capabilities.yaml-Spiegel (P2-Entscheid: external).
+  toolset_registry_path: docs/agent-guide/registry/capabilities.yaml
 
 # Beispielprofile liegen in runtimes/profiles/ (dotfiles.yaml, bachelorprojekt.yaml).
