@@ -16,7 +16,8 @@
     "source": "https://github.com/ajoslin/dot",
     "revision": "8aa8e87ab2fed38a42acefb4a2d9a3a557f0b1ed",
     "path": "config/opencode/skills/breadboarding",
-    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
+    "mode": "curated; vendored resources retained, shared flow-analysis routing added",
+    "vendor_id": "ajoslin/dot"
    }
   },
   "code-analyzer": {
@@ -98,14 +99,22 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/anthropics/skills",
-    "revision": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+    "revision": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
     "path": "skills/frontend-design",
-    "mode": "vendored"
+    "mode": "vendored",
+    "vendor_id": "frontend-design"
    }
   },
   "gh-fix-ci": {
    "path": "domains/devtools/gh-fix-ci",
-   "source": "bachelorprojekt"
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/openai/skills",
+    "revision": "49f948faa9258a0c61caceaf225e179651397431",
+    "path": "skills/.curated/gh-fix-ci",
+    "mode": "vendored",
+    "vendor_id": "gh-fix-ci"
+   }
   },
   "git-workflow": {
    "path": "core/git-workflow",
@@ -210,7 +219,8 @@
     "source": "https://github.com/bentsolheim/public-skills",
     "revision": "e5dea31ac3d1d5090428e461787a2fe94d0c922f",
     "path": "skills/mermaid-architecture-diagrams",
-    "mode": "curated; vendored resources retained, shared flow-analysis routing added"
+    "mode": "curated; vendored resources retained, shared flow-analysis routing added",
+    "vendor_id": "bentsolheim/public-skills"
    }
   },
   "mishap-tracker": {
