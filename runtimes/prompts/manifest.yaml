@@ -1,0 +1,48 @@
+# prompts-Manifest — SSOT über runtimes/prompts/*.md (AR-SSOT-Gates P1).
+# Jede Prompt-Datei braucht genau einen Eintrag mit id, role, harness, version.
+# Rollen-Vokabular: bp-build/bp-run/bp-ship/orchestrator/big-pickle/omp/all leben
+# in Bachelorprojekt scripts/toolset/lib/roles.mjs (externer SSOT, dort geprüft).
+# AR-lokale Rollen (primary-agent, local-subagent, worker) sind hier dokumentiert
+# und werden nur auf interne Konsistenz (Eintrag vorhanden) geprüft.
+schema_version: 1
+prompts:
+  - id: bp-build
+    file: bp-build.md
+    role: bp-build
+    harness: bachelorprojekt
+    version: 1
+  - id: bp-run
+    file: bp-run.md
+    role: bp-run
+    harness: bachelorprojekt
+    version: 1
+  - id: bp-ship
+    file: bp-ship.md
+    role: bp-ship
+    harness: bachelorprojekt
+    version: 1
+  - id: local-subagent
+    file: local-subagent.md
+    role: local-subagent
+    harness: local
+    version: 1
+  - id: orchestrator
+    file: orchestrator.md
+    role: orchestrator
+    harness: all
+    version: 1
+  - id: primary-agent
+    file: primary-agent.md
+    role: primary-agent
+    harness: bachelorprojekt
+    version: 1
+  - id: qwen35-worker
+    file: qwen35-worker.md
+    role: worker
+    harness: local
+    version: 1
+  - id: vllm-worker
+    file: vllm-worker.md
+    role: worker
+    harness: local
+    version: 1
