@@ -178,7 +178,7 @@
       "path": "plugins/python-development/skills/python-testing-patterns",
       "dest": "domains/testing/python-testing-patterns",
       "track": "branch",
-      "ref": "4bde3168b43c0655c4d00ea2726e631719908a6d",
+      "ref": "9c61ab243def98f72da12abd41cfcf5bcd91af9d",
       "version": null
     },
     "skill-creator": {
@@ -194,7 +194,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "896bb26459d676f9facd3193b81e7838383636ee",
+      "ref": "78bebb3e5e04599b03bc5bb88a774e7b0f71b513",
       "version": null
     },
     "train-sentence-transformers": {
@@ -226,7 +226,7 @@
       "path": "skills/vitest",
       "dest": "domains/testing/vitest",
       "track": "branch",
-      "ref": "f63e9ec7bc85f67364b6596c2d29da87e83ce445",
+      "ref": "d524ed287eef22757297827ce42e3cad88abd20c",
       "version": null
     },
     "vitest-testing": {
@@ -234,7 +234,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "c5cabb6dd13c71e2156612fe50734c4f195d162d",
+      "ref": "cce7ecf35435cc666813cb26ad75c30a261cdcc5",
       "version": null
     }
   }
