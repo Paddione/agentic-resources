@@ -34,7 +34,7 @@ die aktiven Abschnitte der Reihe nach ausführen (§5 entfiel mit T900399):
 0. **Arbeitsbaum & Stashes** — §0 (inkl. `repo-hygiene-precheck.sh` + Snapshot-Verifikation)
 1. **Stale Git Worktrees** — §1 (inkl. `worktree-git-op-guard.sh`, `git-worktree-health.sh`, `worktree-clean-check.sh`)
 2. **Stale Branches** (Reaper vor `[gone]`-Prune, Archiv-Tag `refs/tags/reaped/<branch>`) — §2
-3. **PR-Triage → mergen** (`python3 scripts/agent-workspace.py pr merge --repo <repo> --number <n>`: Squash ohne `--delete-branch`, nur bei grünen Checks, mit Timestamp-Verifikation; rohes `gh pr merge` bleibt per Guard verboten; `closingIssuesReferences` kommentieren; kein Ticket-Close) — §3
+3. **PR-Triage → mergen** (`python3 ~/scripts/agent-workspace.py pr merge --repo <repo> --number <n>`: Squash ohne `--delete-branch`, nur bei grünen Checks, mit Timestamp-Verifikation; rohes `gh pr merge` bleibt per Guard verboten; `closingIssuesReferences` kommentieren; kein Ticket-Close) — §3
 4. **GitHub-Issue-Intake** (nur bei `repo.tickets: github`; Dedupe-Guard gegen offene Issues + `.mishaps.log`) — §4
 5. *(entfallen, T900399)* — §5
 6. **Proactive Hygiene Recommendations** — §6 (nach jedem Lauf: Top-3-Empfehlungen, Aging-Report)
