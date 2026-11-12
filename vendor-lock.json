@@ -194,7 +194,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "78bebb3e5e04599b03bc5bb88a774e7b0f71b513",
+      "ref": "be145badc1059fe638e3135a03441f86e8dfd921",
       "version": null
     },
     "train-sentence-transformers": {
