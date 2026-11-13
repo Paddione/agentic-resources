@@ -192,6 +192,17 @@
    "path": "domains/ml-training/huggingface-zerogpu",
    "source": "bachelorprojekt"
   },
+  "impeccable": {
+   "path": "domains/web/impeccable",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/pbakaus/impeccable",
+    "revision": "c4cd1924c389f68d37c687d9c2bbf13f12547c41",
+    "path": ".agents/skills/impeccable",
+    "mode": "vendored; LICENSE und NOTICE.md aus Upstream-Wurzel beigelegt, Engine-Binary wird nicht mitgeliefert",
+    "vendor_id": "impeccable"
+   }
+  },
   "incident-response": {
    "path": "core/incident-response",
    "source": "merged"

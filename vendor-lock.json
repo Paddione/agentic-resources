@@ -148,6 +148,14 @@
       "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
       "version": null
     },
+    "impeccable": {
+      "repo": "pbakaus/impeccable",
+      "path": ".agents/skills/impeccable",
+      "dest": "domains/web/impeccable",
+      "track": "branch",
+      "ref": "c4cd1924c389f68d37c687d9c2bbf13f12547c41",
+      "version": null
+    },
     "lavish": {
       "repo": "kunchenguid/lavish-axi",
       "path": "skills/lavish",
