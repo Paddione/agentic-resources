@@ -1,0 +1,20 @@
+schema_version: 1
+
+# Consumer-Vertrag des Master-Repos selbst (Schema: runtimes/repo.yaml.schema,
+# erweitert um verify/land/deps aus dotfiles scripts/repo_contract.py).
+repo:
+  main_branch: main
+  scopes: free
+  tickets: none
+  generated_artifacts: false
+  task_runner: none
+
+# Wie .github/workflows/ci.yml.
+verify:
+  - python3 -m pytest tests -q -p no:cacheprovider
+  - python3 runtimes/scripts/vendor-sync.py check
+
+# Abschluss über PR mit Squash-Merge (automerge.yml).
+land: pr-squash
+
+deps: []
