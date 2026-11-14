@@ -1,5 +1,7 @@
 # Active-plans-Injektion für Domain-Agenten
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Geteilter Kontrakt für alle `.claude/agents/bachelorprojekt-*.md`. Die Agent-Dateien
 verweisen hierher, statt diesen Text sechsmal zu wiederholen.
 

@@ -1,5 +1,7 @@
 # CI-Fix-Schleife (SSOT)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Genutzt von `dev-flow-execute` (Schritt 5.5) und `git-workflow` (Schritt 5). Einzige
 CI-Fix-Referenz — die frühere Zweitkopie `dev-flow-execute/references/ci-fix-loop.md` ist
 hierher konsolidiert.
@@ -164,7 +166,7 @@ invalidierten CI-Gates werden danach erneut durchlaufen. Der Finalizer behauptet
 Timeout, offenem/geschlossenem PR oder Konflikt keinen Abschluss (mit `repo.tickets`:
 schließt dabei kein Ticket).
 
-Genutzt von `dev-flow-execute` (Schritt 6.4). `gh pr merge --auto` kehrt sofort zurück — der eigentliche Merge passiert asynchron im Hintergrund. Warten, bis der Merge tatsächlich durch ist, bevor abgeschlossen (mit `repo.tickets`: das Ticket geschlossen) wird (vermeidet Drift T001149-M1).
+Genutzt von `dev-flow-execute` (Schritt 6.4). `gh pr merge --auto` kehrt sofort zurück — der eigentliche Merge passiert asynchron im Hintergrund. Warten, bis der Merge tatsächlich durch ist, bevor abgeschlossen (mit `repo.tickets`: das Ticket geschlossen) wird (vermeidet Drift T001149-M1). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
 
 ```bash
 PR_NUM=$(gh pr view --json number -q '.number')

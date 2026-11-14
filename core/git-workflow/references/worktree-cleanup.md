@@ -11,15 +11,15 @@ cd "$MAIN_REPO"
 # Repo-eigene Branch-Sperre (falls vorhanden) erst im Haupt-Repo freigeben —
 # aus dem Worktree heraus verweigern viele Wrapper den Release.
 git worktree unlock "$WORKTREE_PATH" 2>/dev/null || true   # falls Worktrees gesperrt angelegt werden — sonst Exit 128 beim Remove
-git worktree remove "$WORKTREE_PATH"
-git worktree prune
+git worktree remove "$WORKTREE_PATH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git worktree prune  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
 
 # Der Merge löscht den Remote-Branch nicht automatisch — erst hier, NACH
 # einem nötigen Post-Merge-Archiv, löschen.
 git push origin --delete "$BRANCH_NAME"
 # Squash-Commit ist ein neuer Commit, `git branch -d` würde fehlschlagen; `-D` ist nötig.
 if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME" 2>/dev/null; then
-  git branch -D "$BRANCH_NAME"
+  git branch -D "$BRANCH_NAME"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 fi
 ```
 

@@ -1,5 +1,7 @@
 # dev-flow Gotchas
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Sammlung bekannter Probleme und Workarounds der dev-flow-Pipeline. Der [Lifecycle-Vertrag](dev-flow-lifecycle.md) besitzt Transitionen und Rollen; ausführbare Git-, Verifikations- und Merge-Mechanik bleibt in den referenzierten SSOTs.
 
 Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). Main-Branch, Scope-Allowlist, Ticket-Regeln, generierte Artefakte und Task-Runner-Namen unten kommen aus diesen Keys. Ticket-Einträge gelten nur bei `repo.tickets: github` — sonst sind sie retiriert.
@@ -11,7 +13,7 @@ Nie direkt auf den Main-Branch (`repo.main_branch`) committen oder pushen. Immer
 Visual-Companion-Port immer dynamisch aus dem Rückgabewert von `start-server.sh` ableiten. Fest codierte oder geratene Ports aus früheren Sessions geben 502 Bad Gateway.
 
 ### [T000298] Git Auto-Merge in Worktrees
-`gh pr merge --auto` in `.worktrees/*` kann still scheitern, weil Git den Main-Branch durch den Haupt-Worktree als belegt sieht. Merge entweder mit explizitem `--repo` aus dem Haupt-Repo-Verzeichnis oder Checks sequenziell pollen (ohne `--auto`) und dann mergen.
+`gh pr merge --auto` in `.worktrees/*` kann still scheitern, weil Git den Main-Branch durch den Haupt-Worktree als belegt sieht. Merge entweder mit explizitem `--repo` aus dem Haupt-Repo-Verzeichnis oder Checks sequenziell pollen (ohne `--auto`) und dann mergen. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
 
 ### [T000346] K8s Object verification before Planning
 Vor einem Deployment-Patch Objektnamen per `kubectl kustomize` oder `kubectl get` verifizieren, keine Namen annehmen.
@@ -82,8 +84,8 @@ Vor der ersten Architekturfrage Requirements zum selben Gegenstand suchen, Funds
 ### [T001434] Plan-Stage-Commits heißen `chore(plans):`, nie `fix(`/`feat(`
 Stage-Commit enthält nur RED-Test und Plan-Artefakte, keinen Production-Code. Immer `chore(plans):` (Scopes aus `repo.scopes`). Guard: `scripts/check-commit-vs-diff.sh` + `.githooks/commit-msg`; Notfall-Bypass `SKIP_COMMIT_VS_DIFF=1`.
 
-### [T001974] Detached-HEAD-Falle bei `git worktree add <remote-ref>`
-`git worktree add <pfad> <remote-ref>` erzeugt detached HEAD — Commits landen unerreichbar, `git push` meldet fälschlich "up-to-date". Nach dem Create sofort Branch checken oder Projekt-Helper `scripts/worktree-create.sh <branch> <pfad>` verwenden (in dev-flow immer).
+### [T001974] Detached-HEAD-Falle bei `git worktree add <remote-ref>` (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)
+`git worktree add <pfad> <remote-ref>` erzeugt detached HEAD — Commits landen unerreichbar, `git push` meldet fälschlich "up-to-date". Nach dem Create sofort Branch checken oder Projekt-Helper `scripts/worktree-create.sh <branch> <pfad>` verwenden (in dev-flow immer). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)
 
-### [T000426] Bare `git worktree add` stirbt mit exit 128 (git-crypt)
-Bare `git worktree add` scheitert am git-crypt-Smudge-Filter (exit 128). Immer `scripts/worktree-create.sh <branch> <pfad>` verwenden (behandelt Key-Copy und node_modules-Symlink).
+### [T000426] Bare `git worktree add` stirbt mit exit 128 (git-crypt) (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)
+Bare `git worktree add` scheitert am git-crypt-Smudge-Filter (exit 128). Immer `scripts/worktree-create.sh <branch> <pfad>` verwenden (behandelt Key-Copy und node_modules-Symlink). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)

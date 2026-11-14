@@ -1,5 +1,7 @@
 # Fortsetzungs-Kontrakt für angefangene Branches
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Referenz zu `dev-flow-execute`. Fortschritt lebt in Repo-Dateien (Commits, `phase-events.log`), nicht in einer DB. Ticket-Pfad (Hold-Gate, `reclaim`, Factory-Events) nur bedingt, siehe unten.
 
 Der Kontrakt gilt für **Mensch und Automation gleichermaßen**. Es gibt bewusst keinen zweiten Ausführungs-Skill (E1).

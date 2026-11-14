@@ -5,6 +5,8 @@ description: 'Use when implementing, executing, or delivering a staged plan on a
 
 # dev-flow-execute — Plan-Ausführung & PR
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Repo-Spezifika stehen nicht hier, sondern in `repo.yaml` im Consumer-Repo-Root:
 Vor Beginn `repo.main_branch`, `repo.scopes`, `repo.tickets`,
 `repo.generated_artifacts` und `repo.task_runner` aus `repo.yaml` lesen.
@@ -37,7 +39,7 @@ Hier nur Leistung und Abbruchbedingung:
 |---|---|---|
 | **−1 Pre-Flight-Lock** | Branch claimen (`agent-lock claim branch` — kein ticket-Scope), Broadcast an andere Sessions | eine lebende Session den Branch schon hält |
 | **0 Main-Sync** | Reaper, ungelesene Agent-Nachrichten, `git pull --rebase` im Haupt-Repo | — |
-| **0 Worktree-Konsistenz** | Branch-Guard [T001363]: gültiger Branch ausgecheckt **und** unter `.worktrees/*` gearbeitet; legt sonst per `scripts/worktree-create.sh` (bzw. Repo-Äquivalent) einen an | detached HEAD, oder Worktree-Erstellung schlägt fehl |
+| **0 Worktree-Konsistenz** | Branch-Guard [T001363]: gültiger Branch ausgecheckt **und** unter `.worktrees/*` gearbeitet; legt sonst per `scripts/worktree-create.sh` (bzw. Repo-Äquivalent) einen an | detached HEAD, oder Worktree-Erstellung schlägt fehl (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`) |
 | **0.5 Rebase** | `git fetch origin <repo.main_branch> && git rebase origin/<repo.main_branch>` | Konflikt — dann manuell lösen |
 | **1 Plan-Pfad laden** | Plan-Datei **im Git-Tree** prüfen — only-if-tickets: `FACTORY-PLAN-REF` aus der DB (`stage-plan` setzt sie); sonst: Slug aus dem Branch-Namen, `.agents/plans/<slug>/tasks.md` (Slug = Branch-Name ohne `feature/`- bzw. `fix/`-Präfix) | Pfad fehlt, Datei nicht in `HEAD` (only-if-tickets: kein `plan_ref`) |
 | **1.4–1.7** | Doppelarbeit-Guard, Pipeline-Modus (`slot_count`), Claim gehört noch dieser Session (only-if-tickets: zusätzlich Ticket auf `in_progress`, `touched_files`, Ticket-Anhänge laden) | Claim gehört nicht mehr dieser Session |
@@ -50,8 +52,8 @@ Hier nur Leistung und Abbruchbedingung:
 ### Schritt −1.1: Branch-Claim ist branch-scoped
 
 Der Pre-Flight-Lock claimt **branch-scoped** — niemals über das Ticket:
-`bash scripts/agent-lock.sh claim branch "$BRANCH"`. Verifikation:
-`bash scripts/agent-lock.sh check branch "$(git branch --show-current)"`. Release nach
+`python3 ~/scripts/agent-workspace.py lock claim branch "$BRANCH"`. Verifikation:
+`python3 ~/scripts/agent-workspace.py lock check branch "$(git branch --show-current)"`. Release nach
 dem Merge (Schritt 6.4–7.5), ebenfalls branch-scoped.
 
 ## Schritt 1.8: Hold-Freigabe — nur only-if-tickets
@@ -139,7 +141,7 @@ bash scripts/devflow-phase.sh check
 # GitHub merged selbstständig, sobald Required Checks grün sind.
 # KEIN --delete-branch: die Archivierung braucht den Branch noch (Löschung in 7.5).
 # Die Anforderung ist idempotent, wenn Auto-Merge bereits aktiv ist.
-(cd "$MAIN_REPO" && gh pr merge --auto --squash)
+(cd "$MAIN_REPO" && gh pr merge --auto --squash)  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py pr merge --number <n>
 ```
 
 ## Schritt 3.9: Finalisierung delegieren
@@ -171,7 +173,7 @@ Nur wenn `repo.generated_artifacts` true ist, gilt der **Freshness-Guard (vor de
 ## Schritt 5: PR erstellen
 
 Commit → Push → PR läuft nach **`git-workflow` Schritt 2–4** (SSOT): Scope vorab gegen `repo.scopes` prüfen (Annahme: Allowlist mit Preflight), explizite Pathspecs statt `git add -A`, Commit-Verifikation `HEAD_SHA != BASE_SHA`, Scope-Preflight vor `gh pr create`, REST-Fallback für Titel-Edits. Only-if-tickets: Ticket-ID `[$TICKET_ID]` im Subject und `Closes T000XXX` im Body bei Fixes; sonst free-form Scope.
-Rufe `commit-commands:commit-push-pr` auf oder führe `gh pr create` manuell aus.
+Rufe `commit-commands:commit-push-pr` auf oder führe `gh pr create` manuell aus. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create`)
 
 > Auto-Merge **nicht** vor dem ersten Implementierungs-Push aktivieren — sonst mergen Proposal-Commits vorzeitig (only-if-tickets: sonst schließt das Ticket vorzeitig). Der Auto-Merge folgt erst im Merge-Gate (3.8).
 
@@ -202,7 +204,7 @@ Bei FAIL zuerst die fehlende Zeile nachholen (insb. `verify done` nach grünen T
 
 ## Schritte 6.4–7.5 — Merge-Wait, Abschluss, Cleanup
 
-Zuständig ist der Finalizer, den Schritt 3.9 als frischen Subagenten spawnt. `gh pr merge --auto` kehrt sofort zurück; erst den
+Zuständig ist der Finalizer, den Schritt 3.9 als frischen Subagenten spawnt. `gh pr merge --auto` kehrt sofort zurück; erst den (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
 Merge abwarten ([ci-fix-loop](references/ci-fix-loop.md) §"PR-Merge-Wait-Loop", T001149-M1), dann abschließen ([plan-archive-steps](references/plan-archive-steps.md) bzw. only-if-tickets per Finalize-Skript, siehe 3.9).
 
 > **Merge = Abschluss** — `qa_review`/`awaiting_deploy` nicht als Zwischenstatus setzen. **Reihenfolge:** Archivierung VOR der Branch-Löschung. **Claims vor dem Worktree-Remove freigeben.**

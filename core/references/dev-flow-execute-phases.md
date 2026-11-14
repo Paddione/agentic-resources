@@ -1,5 +1,7 @@
 # dev-flow-execute — Phasen im Detail
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Referenz zu `dev-flow-execute` und dem [Lifecycle-Vertrag](dev-flow-lifecycle.md). Der Skill-Body führt Ablauf, Delegation und Gates; hier stehen die Befehlsfolgen der mechanischen Schritte.
 
 Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.tickets`, `repo.generated_artifacts`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. Ticket-Blöcke gelten nur bei `repo.tickets: github`; sonst entfällt alles mit Ticket-ID, `ticket.sh`, DB-Reads — Fortschritt lebt in Commits und `phase-events.log`.
@@ -29,7 +31,7 @@ Branch vor der ersten Git-Operation claimen:
 
 ```bash
 CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
-bash scripts/agent-lock.sh claim branch "$CURRENT_BRANCH" --worktree "$(pwd)" --label dev-flow-execute
+python3 ~/scripts/agent-workspace.py lock claim branch "$CURRENT_BRANCH" --worktree "$(pwd)" --label dev-flow-execute
 RET=$?
 case $RET in
   0) echo "Branch $CURRENT_BRANCH geclaimed." ;;
@@ -53,7 +55,7 @@ Nur bei `repo.tickets: github` zusätzlich: Ticket-Status prüfen (`plan_staged`
 
 ```bash
 MAIN=$(grep -oP 'main_branch:\s*\K.*' repo.yaml 2>/dev/null || echo main)
-bash scripts/agent-lock.sh reap
+python3 ~/scripts/agent-workspace.py lock reap
 bash scripts/agent-msg.sh read --unread
 MAIN_REPO=$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')
 if [[ -n "$MAIN_REPO" && -d "$MAIN_REPO" ]]; then
@@ -83,7 +85,7 @@ if [[ "$PWD" != *".worktrees/"* ]]; then
   echo "Kein isolierter Worktree unter .worktrees/* (PWD=$PWD)."
   SLUG=$(echo "$CURRENT_BRANCH" | sed 's#^[a-z]*/##')
   WORKTREE_PATH=".worktrees/${SLUG}"
-  bash scripts/worktree-create.sh "$CURRENT_BRANCH" "$WORKTREE_PATH"
+  python3 ~/scripts/agent-workspace.py create --repo . "$CURRENT_BRANCH"
   if [[ -d "$WORKTREE_PATH" ]]; then
     echo "Worktree bereit unter $WORKTREE_PATH — dort fortsetzen."
   else
@@ -133,7 +135,7 @@ Nur bei `repo.tickets: github`: Pfad stattdessen aus DB (`FACTORY-PLAN-REF branc
 Branch-Claim aus Schritt −1 nur verifizieren:
 
 ```bash
-bash scripts/agent-lock.sh check branch "$CURRENT_BRANCH" | head -1 | grep -q '^mine$' \
+python3 ~/scripts/agent-workspace.py lock check branch "$CURRENT_BRANCH" | head -1 | grep -q '^mine$' \
   || { echo "Branch $CURRENT_BRANCH nicht mehr geclaimed — Abbruch." >&2; exit 1; }
 ```
 
@@ -194,8 +196,8 @@ Läuft nach Schritt 7 — der Fix-PR-Merge löscht den Branch bewusst nicht (`de
 
 ```bash
 git worktree unlock "$MAIN_REPO/.worktrees/<slug>" 2>/dev/null || true
-git worktree remove "$MAIN_REPO/.worktrees/<slug>" --force
-git branch -D "<branch>"
+git worktree remove "$MAIN_REPO/.worktrees/<slug>" --force  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git branch -D "<branch>"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 git push origin --delete "<branch>"
 ```
 

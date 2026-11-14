@@ -4,6 +4,8 @@ description: 'Use for SealedSecrets lifecycle, key generation/rotation, Pocket I
 agent: bp-build
 ---
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 ## Library
 
 At the start of every session, read these library fragments before doing anything else:

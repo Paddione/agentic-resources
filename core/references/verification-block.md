@@ -1,5 +1,7 @@
 # Verifikationsblock — lokale CI-äquivalente Prüfung (SSOT)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Der operative Verify-Block vor jedem Commit/PR. Skills (`dev-flow-execute` Schritt 3,
 `dev-flow-chore` Schritt 3, `git-workflow` Schritt 1) verlinken hierher statt die Sequenz
 zu duplizieren. Die Gate-*Mathematik* (S1–S4, Baseline-Ratchet) ist in

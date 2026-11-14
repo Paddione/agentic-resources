@@ -1,5 +1,7 @@
 # MCP-Tool-Guide
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 SSOT für die MCP-native Tool-Nutzung in Skills und Subagents. Skills verlinken hierher statt die
 Tabellen zu duplizieren. Pro Server: **Tools · Wann bevorzugen · Fallback**. Ticket-Teil retiriert
 2026-10-14 (`ticket.sh` + `ticket-mcp` entfernt, Ticket-Wrapper-Guard in `test_mcp_tooling.py`

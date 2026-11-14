@@ -8,6 +8,8 @@ description: 'Nutze diesen Skill für den Zustand des Repos und die Host-weite M
 
 # repo-hygiene
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Day-to-day repository hygiene, PR merging, issue intake, and multi-repository / model-serving drift audit.
 
 Lies vor Beginn aus `repo.yaml` im Consumer-Repo-Root:

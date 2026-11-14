@@ -1,10 +1,12 @@
 # Feature-Pfad-Guards — dev-flow-plan (Detail)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Vollständige Guard-Liste des Feature-Pfads. Der SKILL.md nennt den Preflight
 (Check merged) inline; alles Weitere steht hier.
 
 - **Preflight: Check merged** (T002279) — beide Pfade, vor der Worktree-Anlage:
-  nur-wenn-Tickets (`repo.tickets != none`): `bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"`
+  nur-wenn-Tickets (`repo.tickets != none`): `python3 ~/scripts/agent-workspace.py lock check-merged "$TICKET_EXT_ID"`
   (`rc=1` = auf `MAIN` schon gefixt → Ticket `done`, abbrechen). Ohne Tickets:
   `git log origin/MAIN --grep='<slug|symptom>'` — Treffer → abbrechen.
   Exit-Codes: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md) §Preflight.

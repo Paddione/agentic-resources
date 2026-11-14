@@ -1,5 +1,7 @@
 # Repo-Hygiene-Mechanik (SSOT)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Die operative Housekeeping-Mechanik von `repo-hygiene`. Änderungen NUR in dieser Datei.
 (`ticket-ops` und Ticket-Pfade retiriert 2026-10-14 mit dem Ticketsystem.)
 
@@ -56,9 +58,9 @@ python3 ~/scripts/agent-workspace.py lock release main-checkout --repo .
 ```
 
 > **Lifecycle-Befehle laufen über `agent-workspace.py` [Mishap 2026-11-02].** In Agent-Sessions
-> blockt der agent-workspace-Guard (PreToolUse-Hook) die rohen Formen `bash scripts/agent-lock.sh`,
-> `git worktree remove/prune`, `git branch -d/-D`, `git push origin :<ref>`, `gh pr create` und
-> `gh pr merge`. Die Guard-konformen Gegenstücke stehen jeweils im Abschnitt: `lock`, `finish`,
+> blockt der agent-workspace-Guard (PreToolUse-Hook) die rohen Formen `bash scripts/agent-lock.sh`, (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap> <scope> [<id>]`)
+> `git worktree remove/prune`, `git branch -d/-D`, `git push origin :<ref>`, `gh pr create` und (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish --path <worktree>; python3 ~/scripts/agent-workspace.py pr create`)
+> `gh pr merge`. Die Guard-konformen Gegenstücke stehen jeweils im Abschnitt: `lock`, `finish`, (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
 > `reap`, `create`, `pr create`, Auto-Merge. Shell-Skripte und systemd-Timer außerhalb einer
 > Agent-Session betrifft der Guard nicht.
 
@@ -135,7 +137,7 @@ Pflicht-Vorcheck vor jedem Remove: **Arbeit muss gesichert sein.** Leerer Commit
 > fi
 > ```
 > Bei laufendem Tick die Worktree-Sektion überspringen **oder** die `--porcelain`-Prüfung
-> unmittelbar vor dem `git worktree remove` wiederholen — die Remove-Entscheidung darf nie
+> unmittelbar vor dem `git worktree remove` wiederholen — die Remove-Entscheidung darf nie (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish --path <worktree>`)
 > auf einem veralteten Messstand basieren.
 
 ```bash
@@ -236,14 +238,14 @@ einen vollständig leeren `--porcelain`: die allowlisteten Generate im Worktree 
 etwas zurück, ist das ein echter Befund: **kein Remove**, erst sichern.
 
 > Die Musterliste ist eine Arbeitskopie, keine zweite Quelle: maßgeblich ist `ALLOWLIST=` in
-> `scripts/branch-reaper.sh` (im Consumer-Repo), das für Branches dieselbe
+> `scripts/branch-reaper.sh` (im Consumer-Repo), das für Branches dieselbe (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 > Unterscheidung trifft. Wächst sie dort, gehört der Ausdruck oben nachgezogen.
 > In Repos ohne Generat-Allowlist (`repo.generated_artifacts: false`, z. B. `~` dotfiles oder
 > `agentic-resources` mit Worktrees unter `~/.worktrees/<repo>/*` via `python3 ~/scripts/agent-workspace.py`)
 > gilt direkt `git -C <path> status --porcelain`: jede nicht-leere Ausgabe ist ein echter Befund.
 
 Ein Entfernen gegen nicht-allowlistete Abweichungen ist keine Agent-Entscheidung: `finish` kennt
-kein `--force`, und der rohe `git worktree remove --force` ist im Guard gesperrt.
+kein `--force`, und der rohe `git worktree remove --force` ist im Guard gesperrt. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish --path <worktree>`)
 
 ## 2. Stale Branches
 
@@ -255,7 +257,7 @@ p=$(python3 ~/scripts/agent-workspace.py create --repo . <branch>)
 python3 ~/scripts/agent-workspace.py finish --repo . --path "$p"
 ```
 
-Die Branch-Löschungen in den Codeblöcken dieses Abschnitts (`git branch -D`, `git push origin
+Die Branch-Löschungen in den Codeblöcken dieses Abschnitts (`git branch -D`, `git push origin (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish`)
 --delete` bzw. `:<ref>`) beschreiben die Entscheidungslogik. In einer Agent-Session führt sie
 `create` + `finish` aus. `finish` löscht den Remote-Branch selbst, nachdem der Archiv-Tag steht.
 
@@ -269,15 +271,15 @@ im Chat. Nicht erneut versuchen und keinen Umweg bauen. Stattdessen dem Menschen
 
 ```bash
 git push origin <sha>:refs/tags/reaped/<branch> :refs/heads/<branch>   # Tag und Remote-Delete in einem Push
-git worktree remove <path>                                              # nur bei leerem --porcelain
-git branch -D <branch>
+git worktree remove <path>                                              # nur bei leerem --porcelain  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git branch -D <branch>  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 ```
 
-> **Reihenfolge: Reaper VOR [gone]-Prune [T003183].** `scripts/branch-reaper.sh` löscht
+> **Reihenfolge: Reaper VOR [gone]-Prune [T003183].** `scripts/branch-reaper.sh` löscht (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 > Remote-Branches und erzeugt dabei selbst neue `[gone]`-Upstreams (der lokale Branch überlebt
 > den Remote-Delete). Läuft der `[gone]`-Prune **vor** dem Reaper, bleiben diese Refs bis zum
 > nächsten Lauf liegen. Kanonische Reihenfolge im Sweep:
-> 1. `scripts/branch-reaper.sh --sweep` (`--ticket T00XXXX` nur wenn `repo.tickets` gesetzt), dann
+> 1. `scripts/branch-reaper.sh --sweep` (`--ticket T00XXXX` nur wenn `repo.tickets` gesetzt), dann (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 > 2. `git fetch --prune` + der `[gone]`-Block unten.
 >
 > **Archiv-Tag als zweites zulässiges Positiv-Signal [T003183]:** Der Reaper pusht vor jedem
@@ -285,7 +287,7 @@ git branch -D <branch>
 > dass der Branch **sicher** abgeräumt wurde (Inhalt ist unter dem Tag erhalten) — das
 > `[gone]`-Delete darf sich dann auf den Tag stützen, ohne den merged-PR-Nachweis zu brauchen:
 > ```bash
-> git rev-parse --verify refs/tags/reaped/<branch>  # vorhanden → git branch -D belegt sicher
+> git rev-parse --verify refs/tags/reaped/<branch>  # vorhanden → git branch -D belegt sicher (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish`)
 > ```
 >
 > `--merged` verfehlt squash-gemergte Branches. Dieses Repo mergt via squash-and-merge
@@ -300,7 +302,7 @@ git branch -D <branch>
 >       # Branch-SHA liegt unter refs/tags/reaped/<b>, ein merged-PR-Nachweis ist dann
 >       # entbehrlich [T003183].
 >       if git rev-parse --verify --quiet "refs/tags/reaped/$b" >/dev/null 2>&1; then
->         git branch -D "$b"   # safe: Inhalt unter refs/tags/reaped/<b> archiviert
+>         git branch -D "$b"   # safe: Inhalt unter refs/tags/reaped/<b> archiviert (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish`)
 >         continue
 >       fi
 >       # Positiv-Signal 2: nachweislich gemergter PR. Exit-Code auswerten, NICHT die
@@ -315,7 +317,7 @@ git branch -D <branch>
 >         continue
 >       fi
 >       if [ -n "$merged" ]; then
->         git branch -D "$b"   # safe: PR #$merged merged, remote gone
+>         git branch -D "$b"   # safe: PR #$merged merged, remote gone (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish`)
 >       else
 >         echo "SKIP $b — upstream gone but no merged PR found; inspect manually"
 >       fi
@@ -356,21 +358,21 @@ git branch -D <branch>
 
 `--merged` und `[gone]` erfassen nur Branches, die selbst gemergt wurden. Plan-Branches laufen aber häufig über einen Sammel-PR nach `main` — auf ihrem eigenen Ref
 findet nie ein Merge statt, also bleiben sie liegen (am 2026-08-01: 24 von 26 Remote-Branches
-ohne jeden PR). Diese Fälle deckt `scripts/branch-reaper.sh` ab; im Post-Merge-Workflow läuft er
+ohne jeden PR). Diese Fälle deckt `scripts/branch-reaper.sh` ab; im Post-Merge-Workflow läuft er (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 automatisch, manuell zum Nachsehen:
 
 ```bash
 # Einzel-Lauf (Post-Merge-Pfad; --ticket nur wenn repo.tickets gesetzt)
-bash scripts/branch-reaper.sh --ticket T00XXXX --dry-run   # zeigt REAP-/KEEP-Zeilen mit Begründung
-bash scripts/branch-reaper.sh --ticket T00XXXX             # löscht, nach Archiv-Tag-Push
+bash scripts/branch-reaper.sh --ticket T00XXXX --dry-run   # zeigt REAP-/KEEP-Zeilen mit Begründung  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
+bash scripts/branch-reaper.sh --ticket T00XXXX             # löscht, nach Archiv-Tag-Push  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
 
 # Ticketloser Inspektionsblick über ALLE Remote-Branches
-bash scripts/branch-reaper.sh --dry-run                    # Kandidatenliste ohne Ticketzwang
+bash scripts/branch-reaper.sh --dry-run                    # Kandidatenliste ohne Ticketzwang  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
 
 # Lösch-Sweep: alle verwaisten Branches (braucht kein --ticket — die ID wird aus dem
 # Branch-Namen extrahiert, das Archiv-Tag dokumentiert den gelöschten Ref)
-bash scripts/branch-reaper.sh --sweep --dry-run            # zeigt, was gelöscht würde
-bash scripts/branch-reaper.sh --sweep                      # löscht mit Archiv-Tag
+bash scripts/branch-reaper.sh --sweep --dry-run            # zeigt, was gelöscht würde  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
+bash scripts/branch-reaper.sh --sweep                      # löscht mit Archiv-Tag  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
 ```
 
 Gelöscht wird nur, wenn kein offener PR existiert, das Ticket `done`/`archived` ist **und** jede
@@ -454,12 +456,12 @@ gh pr view <number> --json closingIssuesReferences -q '.closingIssuesReferences[
   `.github/workflows/auto-enable-automerge.yml` Squash-Auto-Merge auf jedem Nicht-Draft-PR;
   GitHub mergt, sobald die Required-Checks grün sind. Ein Draft wird mit `gh pr ready <number>`
   freigegeben, neue PRs entstehen mit `python3 ~/scripts/agent-workspace.py pr create --repo
-  <worktree> --title … --body-file … [--ready]`. Rohes `gh pr merge`/`gh pr create` blockt der
+  <worktree> --title … --body-file … [--ready]`. Rohes `gh pr merge`/`gh pr create` blockt der (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create; python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
   Guard. In Repos ohne Auto-Merge-Workflow merget der Mensch oder ein freigegebener Bypass:
   ```bash
   # KEIN --delete-branch (T004612): das plan-Archiv läuft nach dem Merge und braucht
-  # den Branch noch; Verwaiste räumen branch-reaper.sh bzw. finish ab.
-  gh pr merge <number> --squash   # außerhalb einer Agent-Session
+  # den Branch noch; Verwaiste räumen branch-reaper.sh bzw. finish ab.  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py reap
+  gh pr merge <number> --squash   # außerhalb einer Agent-Session  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py pr merge --number <n>
   ```
   > **Exit 1 nach Squash-Merge ist KEIN Fehler** (`not possible to fast-forward` — der PR ist
   > trotzdem gemergt). **Immer per Timestamp verifizieren, nie per Exit-Code:**
@@ -829,12 +831,12 @@ Der Daily Sweep ist über **systemd user timers** automatisiert (`repo-hygiene.t
 
 Das Skript (`scripts/repo-hygiene-cron.sh`, seit T003486) wird von `repo-hygiene.service` aufgerufen:
 1. `git fetch origin "$MAIN" --prune` ausführt
-2. `bash scripts/agent-lock.sh reap` (stale Locks)
+2. `python3 ~/scripts/agent-workspace.py lock reap` (stale Locks)
 3. Die Hygiene-Metriken (Worktree/Branch/PR-Counts) als JSON nach stdout schreibt
 4. Oberhalb von `STALE_THRESHOLD` stale Artifacts eine Warnung ausgibt
 
 > **Es kennt zwei Modi — `standard` (default) und `deep`**, nicht die drei Tiefen aus §7.2.
-> `deep` ergänzt `branch-reaper.sh --dry-run` und zählt dessen Kandidaten mit. Die Zuordnung
+> `deep` ergänzt `branch-reaper.sh --dry-run` und zählt dessen Kandidaten mit. Die Zuordnung (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 > lautet also: §7.2 *Quick*/*Standard* → `standard`, §7.2 *Full* → `deep`.
 
 #### Reservierte Host-Automatisierungsfenster (Kollisionsmatrix)

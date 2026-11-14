@@ -1,5 +1,7 @@
 # Phase-Events — dev-flow-execute Telemetrie (Detail, lokal)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Phasen-Events sind Zeilen in `.agents/plans/<slug>/phase-events.log`
 (Format: `<phase> <state> <utc-timestamp> <detail>`, Slug = Branch ohne Typ-Präfix).
 Pflichtkette für den Merge: `plan done`, `implement entered`, `verify done`.

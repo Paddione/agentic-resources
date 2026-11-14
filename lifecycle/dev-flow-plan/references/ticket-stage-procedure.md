@@ -8,7 +8,7 @@ entfallen alle Schritte auf dieser Seite ersatzlos — der Push IST das Stagen.
 Vor der Worktree-Anlage prüfen, ob der Fix auf `MAIN` schon drin ist:
 
 ```bash
-bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"
+python3 ~/scripts/agent-workspace.py lock check-merged "$TICKET_EXT_ID"
 ```
 
 `rc=1` = schon gefixt → Ticket `done`, abbrechen.

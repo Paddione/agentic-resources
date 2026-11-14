@@ -5,6 +5,8 @@ description: 'Lokales Friction-Log als Schlussschritt von Runbook-Skills — jed
 
 # mishap-tracker — lokales Friction-Log
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Sammelt Ausführungs-Mishaps **lokal** (stderr + `.mishaps.log` im git common
 dir, `git rev-parse --git-common-dir`). Kein Sammel-Container, kein Cycle,
 kein Carry-over. Ob zusätzlich ein Ticket angelegt wird, steht in
