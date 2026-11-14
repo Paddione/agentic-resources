@@ -1,5 +1,7 @@
 # Shared operations and repository adapter
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 ## Central MCP hub
 
 Use the existing central MCP hub beside the central gateway as the client-facing surface. The gateway owns transport/authentication; the hub owns tool aggregation and discovery; graph and embedding services remain backends. Server registries are configuration authorities, not necessarily aggregators. Inspect the actual deployed hub routes before naming an endpoint or asserting a migration is complete.

@@ -1,5 +1,7 @@
 # Deploy-Routing
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Diese Tabelle ist die **einzige** verbindliche Quelle dafür, welcher Deploy-Task zu welchen
 geänderten Pfaden gehört. `dev-flow-execute` (Post-Merge-Deploy), `dev-flow-chore` (Schritt 7)
 und lokale Dev-Redeploys (workspace-dev auf Fleet) verweisen alle hierher — **nicht** die Tabelle

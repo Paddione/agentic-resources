@@ -4,6 +4,8 @@ description: 'Use for maintenance with NO behavior change — documentation, dep
 ---
 # dev-flow-chore — Wartung direkt ausführen & mergen
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 > **Repo-Profil (PFLICHT):** Vor Schritt 0 `repo.yaml` im Consumer-Repo-Root lesen:
 > `repo.main_branch`, `repo.scopes` (`free` oder Allowlist-Quelle), `repo.task_runner`,
 > `repo.generated_artifacts`. Fehlender Schlüssel → Annahme explizit nennen. Unten steht
@@ -87,12 +89,12 @@ Frage den User, ob die Chore regelmäßig laufen soll. Falls ja:
 > entfällt der Worktree als Standardfall, solange kein anderer Prozess konkurrierend im
 > Haupt-Checkout schreibt. Prüfe das:
 > ```bash
-> bash scripts/agent-lock.sh activity   # Locks + laufende Prozesse in Worktree-Pfaden [T003098] — list allein zeigt Sessions erst nach ihrem ersten Commit
+> bash scripts/agent-lock.sh activity   # Locks + laufende Prozesse in Worktree-Pfaden [T003098] — list allein zeigt Sessions erst nach ihrem ersten Commit (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap> <scope> [<id>]`)
 > ```
 > Ist die Liste leer (solo, kein konkurrierender Prozess), arbeite **inline im Haupt-Checkout**:
 > ```bash
 > git checkout -b chore/<slug>
-> bash scripts/agent-lock.sh claim main-checkout --branch "chore/<slug>" --label dev-flow-chore
+> python3 ~/scripts/agent-workspace.py lock claim main-checkout --branch "chore/<slug>" --label dev-flow-chore
 > ```
 > Der `.githooks/pre-commit`-Mutex blockt konkurrierende Commits anderer Sessions währenddessen.
 > Zeigt `activity` fremde lebende Aktivität, oder berührt die Chore auch Nicht-Testdateien
@@ -101,9 +103,9 @@ Frage den User, ob die Chore regelmäßig laufen soll. Falls ja:
 Regulärer Pfad (Default für alles außer dem Test-only-Kurzpfad oben):
 ```bash
 # git-crypt-safe: creates the worktree, handles git-crypt
-bash scripts/worktree-create.sh chore/<slug> <worktree-pfad-nach-Repo-Konvention>
+bash scripts/worktree-create.sh chore/<slug> <worktree-pfad-nach-Repo-Konvention>  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>
 cd <worktree-pfad>
-bash scripts/agent-lock.sh claim branch "chore/<slug>" --worktree "$PWD" --label dev-flow-chore
+python3 ~/scripts/agent-workspace.py lock claim branch "chore/<slug>" --worktree "$PWD" --label dev-flow-chore
 ```
 
 > **Ab hier gilt die cwd-Regel oben:** Datei-Tool-Pfade tragen den Worktree-Präfix, sonst
@@ -136,19 +138,19 @@ Siehe [dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md) für Typ
 
 Läuft nach **`git-workflow` Schritt 2–4** (SSOT): git-crypt-Staging-Guard [T001210]
 (explizite Pathspecs, NIE `git add -A`, Secret-in-index-Guard), Commit-Verifikation
-`HEAD_SHA != BASE_SHA` [T000925], `preflight-pr-scope.sh` vor `gh pr create`,
+`HEAD_SHA != BASE_SHA` [T000925], `preflight-pr-scope.sh` vor `gh pr create`, (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create`)
 REST-Fallback für Titel-Edits.
 
 Chore-spezifisch: Titelformat `chore(<scope>): <subject>`. Scope aus `repo.scopes` lesen —
 bei `free` ein freies Scope-Wort wählen, bei Allowlist via
 `bash scripts/validate-commit-msg.sh scopes` wählen (kein Ticket-Tag).
 
-Rufe `commit-commands:commit-push-pr` auf (Claude Code slash-command) oder führe `gh pr create` manuell aus (beide Frameworks).
+Rufe `commit-commands:commit-push-pr` auf (Claude Code slash-command) oder führe `gh pr create` manuell aus (beide Frameworks). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create`)
 
 ## Schritt 5: Merge wenn CI grün
 
 **`git-workflow` Schritt 5–6** (SSOT): CI-Fix-Loop bis grün, dann aus dem Haupt-Repo
-`gh pr merge --auto --squash` (kein `--delete-branch` — Löschung in Schritt 6, T004612).
+`gh pr merge --auto --squash` (kein `--delete-branch` — Löschung in Schritt 6, T004612). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`)
 
 ## Schritt 6: Worktree & Branch bereinigen
 
@@ -166,9 +168,9 @@ m=$(gh pr view <num> --json mergedAt -q '.mergedAt')
 [ -n "$m" ] && [ "$m" != "null" ] || { echo "FAIL: kein Merge"; exit 1; }
 # Eigenen Branch-Claim freigeben, DANN Worktree + lokalen/Remote-Branch entfernen:
 cd "$MAIN_REPO"
-bash scripts/agent-lock.sh release branch "$BRANCH"
-git worktree remove "$WORKTREE"
-git branch -D "$BRANCH" && git push origin ":$BRANCH"
+python3 ~/scripts/agent-workspace.py lock release branch "$BRANCH"
+git worktree remove "$WORKTREE"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git branch -D "$BRANCH" && git push origin ":$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 ```
 
 Ein Chore ohne Plan hat keinen Plan-Receipt; keinen solchen Archiv-Beleg behaupten.

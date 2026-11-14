@@ -1,14 +1,16 @@
 # Session-Koordination — agent-lock-Lebenszyklus (SSOT)
 
-Der komplette Claim/Release-Lebenszyklus für parallele Sessions. Skills verlinken hierher und zeigen nur skill-spezifische Parameter (`--label`, Scope). Worktree-*Erzeugung* ist SSOT in `scripts/worktree-create.sh`. Branch-Namen für Vergleiche aus `repo.main_branch` auflösen (`MAIN=$(yq .repo.main_branch repo.yaml)`).
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
+Der komplette Claim/Release-Lebenszyklus für parallele Sessions. Skills verlinken hierher und zeigen nur skill-spezifische Parameter (`--label`, Scope). Worktree-*Erzeugung* ist SSOT in `scripts/worktree-create.sh`. Branch-Namen für Vergleiche aus `repo.main_branch` auflösen (`MAIN=$(yq .repo.main_branch repo.yaml)`). (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)
 
 Claims sind **branch-scoped**. Ticket-Claims nur bedingt, siehe unten.
 
 ## Sitzungsstart — Reaper & Nachrichten
 
 ```bash
-bash scripts/agent-lock.sh reap           # Zombie-Prozesse, stale Worktrees & tote Locks räumen
-bash scripts/agent-lock.sh list           # "Wer macht was": laufende Claims anderer Sessions
+python3 ~/scripts/agent-workspace.py lock reap           # Zombie-Prozesse, stale Worktrees & tote Locks räumen
+python3 ~/scripts/agent-workspace.py lock list           # "Wer macht was": laufende Claims anderer Sessions
 bash scripts/agent-msg.sh read --unread   # offene Nachrichten paralleler Sessions sichten
 ```
 
@@ -18,7 +20,7 @@ bash scripts/agent-msg.sh read --unread   # offene Nachrichten paralleler Sessio
 
 ```bash
 # Branch-Claim (immer):
-bash scripts/agent-lock.sh claim branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
+python3 ~/scripts/agent-workspace.py lock claim branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
   || { echo "Branch wird bereits von einer lebenden Session bearbeitet — koordinieren, nicht duplizieren."; exit 1; }
 ```
 
@@ -30,7 +32,7 @@ bash scripts/agent-lock.sh claim branch "<branch>" --worktree "<wt-pfad>" --labe
 **Nur mit Ticket-Backend (`repo.tickets` gesetzt):** zusätzlich Ticket-Claim, sobald die ID bekannt ist:
 
 ```bash
-bash scripts/agent-lock.sh claim ticket "<T00XXXX>" --branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
+python3 ~/scripts/agent-workspace.py lock claim ticket "<T00XXXX>" --branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
   || { echo "Ticket wird bereits bearbeitet — koordinieren."; exit 1; }
 ```
 
@@ -41,9 +43,9 @@ Vor Änderungen an geteilten Registry-Dateien (Liste aus `repo.scopes` bzw. Repo
 ```bash
 for hf in <registry-dateien>; do
   git diff --name-only "origin/$MAIN" | grep -qx "$hf" || continue
-  [ "$(bash scripts/agent-lock.sh check registry "$hf" | head -1)" = "held" ] \
+  [ "$(python3 ~/scripts/agent-workspace.py lock check registry "$hf" | head -1)" = "held" ] \
     && echo "$hf wird parallel bearbeitet → Keep-both-Rebase erwarten."
-  bash scripts/agent-lock.sh claim registry "$hf" --branch "$BRANCH" --label <skill-name> || true
+  python3 ~/scripts/agent-workspace.py lock claim registry "$hf" --branch "$BRANCH" --label <skill-name> || true
 done
 ```
 
@@ -113,8 +115,8 @@ Zuerst ins Haupt-Repo wechseln, DANN freigeben: aus dem Worktree verweigert `rel
 
 ```bash
 cd "$MAIN_REPO"
-bash scripts/agent-lock.sh release branch "<branch>"
-# Nur mit Ticket-Backend: bash scripts/agent-lock.sh release ticket "<T00XXXX>"
+python3 ~/scripts/agent-workspace.py lock release branch "<branch>"
+# Nur mit Ticket-Backend: python3 ~/scripts/agent-workspace.py lock release ticket "<T00XXXX>"
 ```
 
 ## Host-Automatisierung & Timer-Kollisionsschutz

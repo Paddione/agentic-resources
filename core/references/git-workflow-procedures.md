@@ -1,5 +1,7 @@
 # git-workflow — Nachschlagewerk
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Referenz zu [`git-workflow`](../git-workflow/SKILL.md). Der Skill-Body führt den Ablauf und alle
 Guards; hier stehen das Commit-Format im Detail, die Schritt-Übersicht und die Fehlertabelle.
 
@@ -42,9 +44,8 @@ Die erlaubte Liste vor dem ersten Commit ziehen: `bash scripts/validate-commit-m
 ### PR-Body-Vorlage
 
 ```bash
-gh pr create \
-  --title "<type>(<scope>): <subject> [<TICKET_EXT_ID>]" \
-  --body "$(cat <<'EOF'
+# Wrapper statt rohem `gh pr create` (Guard): Body in Datei, dann `pr create`.
+cat > /tmp/pr-body.md <<'EOF'
 ## Summary
 - <was wurde geändert>
 - <warum>
@@ -54,7 +55,8 @@ gh pr create \
 
 🤖 [T<TICKET_EXT_ID>]
 EOF
-)"
+python3 ~/scripts/agent-workspace.py pr create \
+  --title "<type>(<scope>): <subject> [<TICKET_EXT_ID>]" --body-file /tmp/pr-body.md
 ```
 
 ### Titel nachträglich editieren (REST-Fallback)
@@ -75,10 +77,10 @@ gh api -X PATCH "repos/{owner}/{repo}/pulls/<n>" -f title="<neuer Titel>"
 | 2 | Conventional Commit ≤100 Zeichen + Ticket-ID | Jeder Commit |
 | 2 | Commit-Verifikation (`HEAD_SHA != BASE_SHA`) | Nach jedem Commit in Worktrees |
 | 3 | `git push -u origin <branch>` | Einmalig, danach plain `git push` |
-| 4 | `bash scripts/preflight-pr-scope.sh "<PR title>"` + `gh pr create` | Einmal pro PR |
+| 4 | `bash scripts/preflight-pr-scope.sh "<PR title>"` + `gh pr create` | Einmal pro PR (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create`) |
 | 5 | CI Fix Loop | Bis alle Required Checks grün |
-| 6 | `gh pr merge --auto --squash` (kein `--delete-branch` — Archiv läuft vor der Löschung, T004612) | Wenn CI grün |
-| 7 | `git worktree remove` + `agent-lock release` | Nur bei Worktree-Arbeit |
+| 6 | `gh pr merge --auto --squash` (kein `--delete-branch` — Archiv läuft vor der Löschung, T004612) | Wenn CI grün (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr merge --number <n>`) |
+| 7 | `git worktree remove` + `agent-lock release` | Nur bei Worktree-Arbeit (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish --path <worktree>`) |
 
 ## Häufige Fehler
 

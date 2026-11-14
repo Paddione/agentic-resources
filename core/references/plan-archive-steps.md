@@ -1,5 +1,7 @@
 # Plan-Archiv nach Merge
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Branch aus `repo.main_branch` auflösen (`MAIN=$(yq .repo.main_branch repo.yaml)`).
 
 Retiriert: `ticket.sh archive-plan` ist kein primärer Pfad mehr — Archiv läuft
@@ -24,9 +26,9 @@ m=$(gh pr view <num> --json mergedAt -q '.mergedAt')
 
 # 3. Eigenen Branch-Claim freigeben, DANN Worktree + lokalen/Remote-Branch entfernen.
 cd "$MAIN_REPO"
-bash scripts/agent-lock.sh release branch "$BRANCH"
-git worktree remove "$WORKTREE"
-git branch -D "$BRANCH" && git push origin ":$BRANCH"
+python3 ~/scripts/agent-workspace.py lock release branch "$BRANCH"
+git worktree remove "$WORKTREE"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git branch -D "$BRANCH" && git push origin ":$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 ```
 
 Reihenfolge: Archivierung VOR Branch-Löschung, Release aus `$MAIN_REPO`. Jede Session kann offene Schritte nachholen (idempotent: Erledigtes überspringen).

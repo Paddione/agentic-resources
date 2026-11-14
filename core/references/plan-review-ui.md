@@ -1,5 +1,7 @@
 # Plan-Review-UI
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 ### Overview
 
 The Plan Review UI lets you visually review a plan file line-by-line in a local

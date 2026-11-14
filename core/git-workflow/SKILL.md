@@ -5,6 +5,8 @@ description: 'Nutze diesen Skill bei Commit, Push, PR-Erstellung oder Branch-Abs
 
 # Git Workflow — Commit → Push → PR → Merge → Cleanup
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Sage zu Beginn: "Ich nutze git-workflow für den Commit/PR-Ablauf."
 
 Dieser Skill ist die SSOT für Commit → Push → PR → Merge → Cleanup.
@@ -133,13 +135,13 @@ repariert der CI-Watchdog. Bei geschütztem `<main_branch>` bleibt der PR-Pfad.
 ## Schritt 4 — PR-Erstellung
 
 ```bash
-gh pr create --title "<type>(<scope>): <subject>" --body "..."
+gh pr create --title "<type>(<scope>): <subject>" --body "..."  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py pr create
 ```
 
 Body: Summary + Test Plan (welche Suiten liefen, mit Ergebnis). Nur-wenn-
 `tickets` gesetzt: Ticket-/Issue-Referenz nach Repo-Konvention; sonst Issues
 und PRs nur referenzieren, wenn sie existieren. Nur-wenn-`scopes` eine
-Allowlist ist: Scope-Preflight vor `gh pr create` laufen lassen.
+Allowlist ist: Scope-Preflight vor `gh pr create` laufen lassen. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py pr create`)
 
 ## Schritt 5 — CI Fix Loop
 
@@ -159,7 +161,7 @@ git fetch origin <main_branch> && git rebase origin/<main_branch>
 
 ```bash
 MAIN_REPO=$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')
-(cd "$MAIN_REPO" && gh pr merge --squash --auto <n>)
+(cd "$MAIN_REPO" && gh pr merge --squash --auto <n>)  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py pr merge --number <n>
 ```
 
 Immer `--squash` (saubere `<main_branch>`-History). `--auto` kehrt sofort
@@ -175,8 +177,8 @@ Worktree entfernen, lokalen Branch löschen, Remote-Branch prüfen:
 
 ```bash
 (cd "$MAIN_REPO" && git pull --ff-only origin <main_branch>)
-git worktree remove --force <worktree-pfad>
-git branch -D <branch>
+git worktree remove --force <worktree-pfad>  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
+git branch -D <branch>  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 git ls-remote --heads origin <branch>  # leer? sonst: git push origin --delete <branch>
 ```
 

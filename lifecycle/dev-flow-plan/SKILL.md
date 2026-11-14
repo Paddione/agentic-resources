@@ -4,6 +4,8 @@ description: 'Use to choose the development path for a work request in this repo
 ---
 # dev-flow-plan — Pfad-Wahl, Brainstorming & Plan
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 > **Repo-Profil (PFLICHT):** Vor Schritt −3 `repo.yaml` im Consumer-Repo-Root lesen:
 > `repo.main_branch`, `repo.tickets` (`none` oder `github`), `repo.task_runner`,
 > `repo.generated_artifacts`, `repo.scopes`. Fehlender Schlüssel → Annahme explizit
@@ -57,8 +59,8 @@ fi
 Tote Sessions/Zombies/stale Worktrees räumen und sehen, wer gerade was bearbeitet —
 Lock-Lebenszyklus-SSOT: [session-coordination](.agents/skills/references/session-coordination.md) [T000510]:
 ```bash
-bash scripts/agent-lock.sh reap            # cwd-tote Prozesse killen, Worktrees prunen, tote Locks räumen
-bash scripts/agent-lock.sh list            # "Wer macht was": laufende Claims anderer Sessions
+python3 ~/scripts/agent-workspace.py lock reap            # cwd-tote Prozesse killen, Worktrees prunen, tote Locks räumen
+python3 ~/scripts/agent-workspace.py lock list            # "Wer macht was": laufende Claims anderer Sessions
 bash scripts/agent-msg.sh read --unread    # offene Nachrichten paralleler Sessions sichten [T000882]
 git worktree list && bash scripts/worktree-git-op-guard.sh
 ```
@@ -66,7 +68,7 @@ Stale Worktrees nur nach bestandenem Vorcheck löschen [T005115]:
 `bash scripts/worktree-clean-check.sh <path>` lehnt dirty-Worktrees UND solche mit aktivem
 fremden branch-Claim ab (`agent-lock.sh check branch <branch>` — laufende Lauf-/Batch-Session!).
 Bei rc 1 den Worktree stehen lassen, sonst
-`git worktree unlock <path> 2>/dev/null || true && git worktree remove <path> --force && git branch -D <branch>`.
+`git worktree unlock <path> 2>/dev/null || true && git worktree remove <path> --force && git branch -D <branch>`. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py finish; python3 ~/scripts/agent-workspace.py finish --path <worktree>`)
 
 ## Schritt 0: Pfad bestimmen
 Wähle einen Pfad und kläre ihn mit dem User ab:
@@ -112,7 +114,7 @@ Die Planphase startet auf `MAIN`; danach entsteht der Worktree.
 | Phase | Wo | Was |
 |---|---|---|
 | **A — Proposal** | `MAIN` | Assets sammeln, Codebase erkunden, Plan Intel Bundle (`intel.json`) füllen, Design-Bundle co-lokalisieren, Lavish-Board, **Brainstorming**, Plan in `.agents/plans/<slug>/` anlegen — Design-Spec-Frontmatter per Task-Runner/Helper des Repos (`scripts/vda.sh frontmatter` bzw. Repo-Äquivalent) |
-| **B — Branch live** | Worktree | Worktree anlegen (`scripts/worktree-create.sh <branch> <path>` bzw. Repo-Äquivalent), agent-lock claimen, Artefakte verschieben, Scaffold-Commit + Push |
+| **B — Branch live** | Worktree | Worktree anlegen (`scripts/worktree-create.sh <branch> <path>` bzw. Repo-Äquivalent), agent-lock claimen, Artefakte verschieben, Scaffold-Commit + Push (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`) |
 | **C — Partial-Pipeline** | Worktree | Decompose in Partials, pro Partial: Plan schreiben → committen (nur-wenn-Tickets: → stagen → enqueuen); danach plan-lint, Embedding, finaler Push |
 
 Vollständige Schrittfolge samt Befehlen, Decompose-/Fan-out-Mechanik und Kontext-Injektion für
@@ -129,7 +131,7 @@ Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-
 Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos, `scripts/plan-intel.sh` bzw. Repo-Äquivalent) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
 
 **SID-Propagation (PFLICHT, T006365):** Ermittle deine Session-SID mit
-`bash scripts/agent-lock.sh mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst
+`python3 ~/scripts/agent-workspace.py lock mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst
 `export AGENT_LOCK_SID=<deine-sid>` auszuführen — sonst blockiert der Worktree-Write-Guard ihre
 Datei-Tools.
 
@@ -178,13 +180,13 @@ wird nie als niedriger Score gewertet, sondern erneut versucht.
 ### Schritt 4.5: Claim (PFLICHT vor Commit)
 Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-procedure](.agents/skills/references/ticket-stage-procedure.md)), dann ticket-scoped claimen, bevor der Pre-Commit-Guard die Lock-Datei liest:
 ```bash
-bash scripts/agent-lock.sh claim ticket "$TICKET_EXT_ID" \
+python3 ~/scripts/agent-workspace.py lock claim ticket "$TICKET_EXT_ID" \
   --branch "$(git -C "$WT" branch --show-current)" --worktree "$WT" --label dev-flow-plan
 ```
 Nur-wenn-Tickets: Stagen läuft erst **nach** dem Commit ([ticket-stage-procedure](references/ticket-stage-procedure.md)).
 Ohne Tickets — nur den Branch claimen:
 ```bash
-bash scripts/agent-lock.sh claim branch "$(git -C "$WT" branch --show-current)" \
+python3 ~/scripts/agent-workspace.py lock claim branch "$(git -C "$WT" branch --show-current)" \
   --worktree "$WT" --label dev-flow-plan
 ```
 

@@ -1,5 +1,7 @@
 # Implementer-Handoff — dev-flow-execute Schritt 2 (Detail)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Auftrags-Runbook für den frischen Implementer-Subagenten. Der Orchestrator übernimmt den
 Abschnitt „Auftrag" wörtlich in den Subagenten-Prompt.
 
@@ -48,7 +50,7 @@ Details: dev-flow-execute-phases §Tests.
 ## Auftrag (wörtlich Teil des Implementer-Prompts)
 
 - **Ein-Ebenen-Regel (PFLICHT, wörtlich Teil dieses Prompts):** Spawne selbst KEINE Subagenten/Sub-Implementer — rufe `superpowers:executing-plans` IN-CONTEXT auf. Brauchst du einen Sub-Implementer, STOPPE und eskaliere an den Orchestrator zurück. Verschachtelte Delegation ist nicht erlaubt.
-- **SID-Propagation (PFLICHT):** Ermittle deine Session-SID mit `bash scripts/agent-lock.sh mine` und weise den Implementer an, in jedem Bash-Call zuerst `export AGENT_LOCK_SID=<deine-sid>` auszuführen — sonst blockiert der Worktree-Write-Guard seine Edit/Write-Tools im geclaimten Worktree.
+- **SID-Propagation (PFLICHT):** Ermittle deine Session-SID mit `python3 ~/scripts/agent-workspace.py lock mine` und weise den Implementer an, in jedem Bash-Call zuerst `export AGENT_LOCK_SID=<deine-sid>` auszuführen — sonst blockiert der Worktree-Write-Guard seine Edit/Write-Tools im geclaimten Worktree.
 - **/goal: Finish dev-flow-execute and merge the PR cleanly.**
 - *Feature:* Rufe `superpowers:executing-plans` (opencode: inlinede Steps in `dev-flow-execute`) + `test-driven-development` (opencode: `vitest/SKILL.md`) auf und arbeite den Plan vollständig ab. Nach jedem Meilenstein Checkbox im Plan abhaken (`- [ ] M1` → `- [x] M1`), committen, pushen.
 - *Fix:* Zuerst verifizieren, dass ein failing Test existiert, dann Rot-Grün bis grün.

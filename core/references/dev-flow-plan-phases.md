@@ -1,5 +1,7 @@
 # dev-flow-plan — Phasen im Detail
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Referenz zum Skill `dev-flow-plan`. Der Skill-Body führt Pfad-Wahl und Guards; hier stehen die Phasen des Feature-Pfads, die Decompose-/Fan-out-Mechanik und die Schritte des Fix-Pfads.
 
 Repo-Konfiguration: `repo.yaml` (`repo.main_branch`, `repo.scopes`, `repo.tickets`, `repo.task_runner`). `MAIN` unten = `repo.main_branch`. „Gestagt" heißt committiert + gepusht; Ticket-Blöcke (`TICKET_EXT_ID`, `stage-plan`, Ticket-Claims) gelten nur bei `repo.tickets: github`.
@@ -69,10 +71,10 @@ Ab hier trägt jeder Datei-Tool-Pfad den Worktree-Präfix: Read/Write/Edit haben
 # Nur bei repo.tickets: bash scripts/plan-preflight.sh pre-worktree --ticket "$TICKET_EXT_ID"
 # (rc 0 = fortfahren, 1 = bereits gemergt + abbrechen, 2 = Umgebung reparieren)
 
-bash scripts/worktree-create.sh feature/<slug> .worktrees/<slug>
-# Mit Tickets: bash scripts/worktree-create.sh feature/<slug>-T<id> .worktrees/<slug>
+python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>
+# Mit Tickets: python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>-T<id>
 
-bash scripts/agent-lock.sh claim branch "feature/<slug>" --worktree ".worktrees/<slug>" --label dev-flow-plan \
+python3 ~/scripts/agent-workspace.py lock claim branch "feature/<slug>" --worktree ".worktrees/<slug>" --label dev-flow-plan \
   || { echo "Branch wird bereits bearbeitet."; exit 1; }
 # Mit Tickets zusaetzlich: agent-lock.sh claim ticket "$TICKET_EXT_ID" --branch ... --worktree ... --label dev-flow-plan
 ```
@@ -153,7 +155,7 @@ Ausgangspunkt ist das beobachtete Symptom (User-Meldung, Log, failing Check). Sy
 ### Schritt 2: Worktree anlegen
 ```bash
 # Preflight wie B.1 (Standard: git log auf Main-Branch; mit Tickets: plan-preflight.sh --ticket)
-bash scripts/worktree-create.sh fix/<slug> .worktrees/<slug>
+python3 ~/scripts/agent-workspace.py create --repo . fix/<slug>
 WT="$(pwd)/.worktrees/<slug>"
 cd .worktrees/<slug>
 ```
@@ -162,7 +164,7 @@ Das `cd` wirkt nur auf Bash: Datei-Tool-Pfade ab hier explizit unter `.worktrees
 
 ### Schritt 2.5: Branch claimen
 ```bash
-bash scripts/agent-lock.sh claim branch "fix/<slug>" --worktree "$PWD" --label dev-flow-plan
+python3 ~/scripts/agent-workspace.py lock claim branch "fix/<slug>" --worktree "$PWD" --label dev-flow-plan
 ```
 Exit 1 = lebende Session arbeitet schon daran → koordinieren. Nur bei `repo.tickets: github`: zusätzlich Ticket-Claim.
 

@@ -1,5 +1,7 @@
 # gh-axi — GitHub CLI Wrapper
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 `gh-axi` ist ein Ergonomie-Wrapper um die `gh` CLI. **Für die menschliche Anzeige (Read/View-Flows) sollen alle Agents `gh-axi` statt `gh` verwenden**, sofern ein passendes Sub-Kommando existiert. (Framework-agnostisch — funktioniert in Claude Code, opencode und agy gleichermaßen.)
 
 Binary: `~/.npm-global/bin/gh-axi`  

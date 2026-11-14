@@ -1,5 +1,7 @@
 # Plan-Status & Ausführungsoptionen (Feature- und Fix-Pfad)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Aus `dev-flow-plan` Schritt 6.5 (Feature-Pfad) und Schritt 6 (Fix-Pfad) extrahiert.
 
 ## 1. Status laden

@@ -1,5 +1,7 @@
 # Plan-Quality-Gates
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Jeder Implementierungsplan muss gegen diese CI-Gates geschrieben werden. Quelle der Wahrheit ist `docs/code-quality/gates.yaml` (Limits/Scopes dort nachlesen, nicht hier raten — diese Datei ist eine Karte, kein Ersatz). Konkrete Runner, Scopes und Artefaktpfade aus `repo.yaml` auflösen (`repo.task_runner`, `repo.scopes`, `repo.generated_artifacts`, `repo.main_branch`); unten steht `task` für den Runner und `main` für `repo.main_branch`.
 
 ### S1 — Zeilenlimits pro Datei (Ratchet gegen BASELINE, nicht gegen das Limit)
@@ -109,6 +111,6 @@ Dazu:
 Jeder ausgeführte Plan endet mit Receipt UND Delete — kein `.md`-Überhang:
 
 - **Receipt:** Frontmatter-`completed` + Check-Evidenz + Merge-SHA im Plan-File selbst; kein DB-Archiv (Ticket-Retirement).
-- **Delete:** `branch-reaper.sh --sweep --plan-cleanup` entfernt Plan-Ordner per `git rm`, gebündelt als Sammel-Cleanup-PR — nie direkt nach main.
+- **Delete:** `branch-reaper.sh --sweep --plan-cleanup` entfernt Plan-Ordner per `git rm`, gebündelt als Sammel-Cleanup-PR — nie direkt nach main. (verboten, statt dessen `python3 ~/scripts/agent-workspace.py reap`)
 - **Fail-closed:** ohne verifizierten Record kein Delete.
 - **Abgrenzung:** Generieren schreibt Pläne; Validieren (`plan-lint.sh`, Gates, Guards) prüft nur.
