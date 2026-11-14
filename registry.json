@@ -348,6 +348,17 @@
    "path": "domains/ml-training/trl-training",
    "source": "bachelorprojekt"
   },
+  "unity-package-management": {
+   "path": "domains/devtools/unity-package-management",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "path": "skills/unity-package-management",
+    "mode": "vendored",
+    "vendor_id": "unity-package-management"
+   }
+  },
   "update-dependencies": {
    "path": "domains/devtools/update-dependencies",
    "source": "bachelorprojekt"
