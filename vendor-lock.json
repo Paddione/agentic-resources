@@ -229,6 +229,14 @@
       "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
       "version": null
     },
+    "unity-package-management": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/unity-package-management",
+      "dest": "domains/devtools/unity-package-management",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
     "vitest": {
       "repo": "antfu/skills",
       "path": "skills/vitest",
