@@ -1,6 +1,6 @@
 ---
 name: mishap-tracker
-description: 'Lokales Friction-Log als Schlussschritt von Runbook-Skills — jeder MISHAP_LOG-Eintrag landet auf stderr und in .mishaps.log (git common dir). Ticket-Verhalten aus repo.tickets in repo.yaml im Consumer-Repo-Root lesen: ohne Ticket-Backend wird nichts angelegt; nur-wenn-tickets brauchen incident/broken/security ein manuelles GitHub-Issue. Trigger: mishap, MISHAP_LOG, friction report, "report what went wrong", scripts/hooks/mishap-tracker.sh, Schlussschritt von dev-flow-plan, dev-flow-execute, dev-flow-chore, infra-ops, incident-response.'
+description: 'Lokales Friction-Log als Schlussschritt von Runbook-Skills — jeder MISHAP_LOG-Eintrag landet auf stderr und in .mishaps.log (git common dir). Ticket-Verhalten aus repo.tickets in repo.yaml im Consumer-Repo-Root lesen: ohne Ticket-Backend wird nichts angelegt; nur-wenn-tickets brauchen incident/broken/security ein manuelles GitHub-Issue. Trigger: mishap, MISHAP_LOG, friction report, "report what went wrong", mishap-log.py, Schlussschritt von dev-flow-plan, dev-flow-execute, dev-flow-chore, infra-ops, incident-response.'
 ---
 
 # mishap-tracker — lokales Friction-Log
@@ -63,23 +63,34 @@ Nicht prüfbare Mishaps (z. B. kein Cluster-Zugriff) aufnehmen, aber
 
 ## Schritt 2: Lokal loggen
 
-Pro verifiziertem Mishap eine Zeile an `.mishaps.log` anhängen und auf stderr
-spiegeln:
-
-```
-[mishap] <type> <component> — <title> :: <description>
-```
-
-Ist der Hook-Skript vorhanden (Pfad über `repo.task_runner` in `repo.yaml`
-auflösen, z. B. `scripts/hooks/mishap-tracker.sh`):
+Pro verifiziertem Mishap genau einen Aufruf des gemeinsamen Schreibers (alle Repos):
 
 ```bash
-bash <hook-pfad> --friction "<titel>: <beschreibung> [<komponente>]" --severity <minor|major|critical>
+python3 ~/scripts/mishap-log.py --class <klasse> --severity <drift|suspicious|degraded|security> \
+  --area <komponente> --title "<titel>" --detail "<beschreibung>" [--repo <pfad>]
 ```
 
-Das Skript schreibt nach stderr und hängt an `.mishaps.log` an (Exit 0, kein
-Backend, kein Buffer). `--ticket` gilt als Legacy-No-op mit Warnung. Sonst
-direkt anhängen — kein Buffer, kein Flush.
+Er hängt eine datierte Zeile mit Klasse an `<git-common-dir>/.mishaps.log` an und
+spiegelt sie auf stderr:
+
+```
+<ISO-Zeit> [mishap] <severity> <klasse> <komponente> — <titel> :: <beschreibung>
+```
+
+- `--class` ist Pflicht und stammt aus dem festen Vokabular `classes:` in
+  `~/mishaps.yaml`; unbekannte Klassen, Zeilenumbrüche und Secret-Muster weist
+  der Schreiber mit Exit 2 ab und nennt die gültigen Klassen. Passt keine
+  Klasse, `other` wählen.
+- Erfolgs- und Abschlussmeldungen („alles grün“, „aufgelöst“) als
+  `--class resolved-note` loggen; sie zählen nie als Vorfall.
+- `broken`/`incident` → `--severity degraded`, `security` bleibt `security`.
+- Nie von Hand in `.mishaps.log` schreiben: Zeilen ohne Klasse zählen im
+  Report als `unclassified` und machen `G-MISHAP01` rot.
+- Auswertung: `python3 ~/scripts/mishap-report.py --table`; wiederkehrende
+  Klassen (≥ 2 in 30 Tagen) brauchen einen Fix oder eine begründete
+  Schließung in `~/mishaps.yaml:closures`.
+- Bachelorprojekt: `scripts/hooks/mishap-tracker.sh --friction … --class <klasse>`
+  ist ein dünner Wrapper auf denselben Schreiber.
 
 `incident`/`broken`/`security` zusätzlich als lauten Block drucken — sie
 brauchen einen Menschen, keine Automatik meldet sie:
