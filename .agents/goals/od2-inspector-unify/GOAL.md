@@ -17,3 +17,4 @@ Bibliothek überführen, Validate-Graph in komponierbare Checks zerlegen.
 ## Abhängigkeiten
 - Graph-Receipt agentic-resources 2026-11-06 (10.621/18.658).
 - Master-Regel: Änderungen landen hier (nicht in `~/.agents/skills`-Symlinks).
+- health_goals: [G-KNOW07, G-AGENTIC09, G-DOC02, G-GOALS01]

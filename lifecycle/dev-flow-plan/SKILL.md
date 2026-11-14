@@ -86,6 +86,7 @@ Entscheidungstabelle + PRD-Checkliste:
 
 Der Plan trägt das Goal; kein separates Vorab-Goal nötig.
 - **Aktive Goals prüfen:** `.agents/goals/*/PROGRESS.md` nach Goals unter 100 % sichten (Bestands-SSOT: shared-agent-goals-System — Indexer/`active_goals`, wo verfügbar). Passt eines, wird es verlinkt statt neu angelegt — bidirektional: `tasks.md`-Frontmatter `goal: <slug>`, `GOAL.md` nennt `plan_refs: [.agents/plans/<slug>/tasks.md]`.
+- **Spätere `/health`-Graduierung mitdenken:** Beim Anlegen oder Fortschreiben eines `GOAL.md` festlegen, über welche persistenten `/health`-Goals (`health_goals: [G-...]`, `health_probe: {"id":"G-...","title":"...","cmd":"...","target":0}` oder begründetes `health_goals: none (<Begründung>)`) der umgesetzte Zustand nach Abschluss dauerhaft überwacht und ggf. selbstgeheilt wird (`goal-lint.mjs` `G6`, `/health` `G-GOALS01`).
 - **Vage Anfrage:** genau eine `setgoal`-Fragerunde, dann den idealen Prompt per `goal`-Skill persistieren (Datei-Spiegel nur auf Wunsch; mit nativem Goal das native Goal bevorzugen).
 - **Ohne Goal:** Chores und E2E bekommen kein eigenes Goal.
 
