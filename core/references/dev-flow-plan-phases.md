@@ -74,7 +74,8 @@ Ab hier trägt jeder Datei-Tool-Pfad den Worktree-Präfix: Read/Write/Edit haben
 python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>
 # Mit Tickets: python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>-T<id>
 
-python3 ~/scripts/agent-workspace.py lock claim branch "feature/<slug>" --worktree ".worktrees/<slug>" --label dev-flow-plan \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh claim branch "feature/<slug>" --worktree ".worktrees/<slug>" --label dev-flow-plan \
   || { echo "Branch wird bereits bearbeitet."; exit 1; }
 # Mit Tickets zusaetzlich: agent-lock.sh claim ticket "$TICKET_EXT_ID" --branch ... --worktree ... --label dev-flow-plan
 ```
@@ -164,7 +165,7 @@ Das `cd` wirkt nur auf Bash: Datei-Tool-Pfade ab hier explizit unter `.worktrees
 
 ### Schritt 2.5: Branch claimen
 ```bash
-python3 ~/scripts/agent-workspace.py lock claim branch "fix/<slug>" --worktree "$PWD" --label dev-flow-plan
+bash scripts/agent-lock.sh claim branch "fix/<slug>" --worktree "$PWD" --label dev-flow-plan  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 ```
 Exit 1 = lebende Session arbeitet schon daran → koordinieren. Nur bei `repo.tickets: github`: zusätzlich Ticket-Claim.
 

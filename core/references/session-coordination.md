@@ -9,8 +9,8 @@ Claims sind **branch-scoped**. Ticket-Claims nur bedingt, siehe unten.
 ## Sitzungsstart — Reaper & Nachrichten
 
 ```bash
-python3 ~/scripts/agent-workspace.py lock reap           # Zombie-Prozesse, stale Worktrees & tote Locks räumen
-python3 ~/scripts/agent-workspace.py lock list           # "Wer macht was": laufende Claims anderer Sessions
+bash scripts/agent-lock.sh reap           # Zombie-Prozesse, stale Worktrees & tote Locks räumen  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh list           # "Wer macht was": laufende Claims anderer Sessions  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 bash scripts/agent-msg.sh read --unread   # offene Nachrichten paralleler Sessions sichten
 ```
 
@@ -20,7 +20,8 @@ bash scripts/agent-msg.sh read --unread   # offene Nachrichten paralleler Sessio
 
 ```bash
 # Branch-Claim (immer):
-python3 ~/scripts/agent-workspace.py lock claim branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh claim branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
   || { echo "Branch wird bereits von einer lebenden Session bearbeitet — koordinieren, nicht duplizieren."; exit 1; }
 ```
 
@@ -32,7 +33,8 @@ python3 ~/scripts/agent-workspace.py lock claim branch "<branch>" --worktree "<w
 **Nur mit Ticket-Backend (`repo.tickets` gesetzt):** zusätzlich Ticket-Claim, sobald die ID bekannt ist:
 
 ```bash
-python3 ~/scripts/agent-workspace.py lock claim ticket "<T00XXXX>" --branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh claim ticket "<T00XXXX>" --branch "<branch>" --worktree "<wt-pfad>" --label <skill-name> \
   || { echo "Ticket wird bereits bearbeitet — koordinieren."; exit 1; }
 ```
 
@@ -43,9 +45,10 @@ Vor Änderungen an geteilten Registry-Dateien (Liste aus `repo.scopes` bzw. Repo
 ```bash
 for hf in <registry-dateien>; do
   git diff --name-only "origin/$MAIN" | grep -qx "$hf" || continue
-  [ "$(python3 ~/scripts/agent-workspace.py lock check registry "$hf" | head -1)" = "held" ] \
+  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+  [ "$(bash scripts/agent-lock.sh check registry "$hf" | head -1)" = "held" ] \
     && echo "$hf wird parallel bearbeitet → Keep-both-Rebase erwarten."
-  python3 ~/scripts/agent-workspace.py lock claim registry "$hf" --branch "$BRANCH" --label <skill-name> || true
+  bash scripts/agent-lock.sh claim registry "$hf" --branch "$BRANCH" --label <skill-name> || true  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 done
 ```
 
@@ -115,8 +118,8 @@ Zuerst ins Haupt-Repo wechseln, DANN freigeben: aus dem Worktree verweigert `rel
 
 ```bash
 cd "$MAIN_REPO"
-python3 ~/scripts/agent-workspace.py lock release branch "<branch>"
-# Nur mit Ticket-Backend: python3 ~/scripts/agent-workspace.py lock release ticket "<T00XXXX>"
+bash scripts/agent-lock.sh release branch "<branch>"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+# Nur mit Ticket-Backend: bash scripts/agent-lock.sh release ticket "<T00XXXX>"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 ```
 
 ## Host-Automatisierung & Timer-Kollisionsschutz

@@ -31,7 +31,7 @@ Branch vor der ersten Git-Operation claimen:
 
 ```bash
 CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
-python3 ~/scripts/agent-workspace.py lock claim branch "$CURRENT_BRANCH" --worktree "$(pwd)" --label dev-flow-execute
+bash scripts/agent-lock.sh claim branch "$CURRENT_BRANCH" --worktree "$(pwd)" --label dev-flow-execute  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 RET=$?
 case $RET in
   0) echo "Branch $CURRENT_BRANCH geclaimed." ;;
@@ -55,7 +55,7 @@ Nur bei `repo.tickets: github` zusätzlich: Ticket-Status prüfen (`plan_staged`
 
 ```bash
 MAIN=$(grep -oP 'main_branch:\s*\K.*' repo.yaml 2>/dev/null || echo main)
-python3 ~/scripts/agent-workspace.py lock reap
+bash scripts/agent-lock.sh reap  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 bash scripts/agent-msg.sh read --unread
 MAIN_REPO=$(git worktree list --porcelain | awk '/^worktree/{print $2; exit}')
 if [[ -n "$MAIN_REPO" && -d "$MAIN_REPO" ]]; then
@@ -135,7 +135,8 @@ Nur bei `repo.tickets: github`: Pfad stattdessen aus DB (`FACTORY-PLAN-REF branc
 Branch-Claim aus Schritt −1 nur verifizieren:
 
 ```bash
-python3 ~/scripts/agent-workspace.py lock check branch "$CURRENT_BRANCH" | head -1 | grep -q '^mine$' \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh check branch "$CURRENT_BRANCH" | head -1 | grep -q '^mine$' \
   || { echo "Branch $CURRENT_BRANCH nicht mehr geclaimed — Abbruch." >&2; exit 1; }
 ```
 

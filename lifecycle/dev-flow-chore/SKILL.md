@@ -94,7 +94,7 @@ Frage den User, ob die Chore regelmäßig laufen soll. Falls ja:
 > Ist die Liste leer (solo, kein konkurrierender Prozess), arbeite **inline im Haupt-Checkout**:
 > ```bash
 > git checkout -b chore/<slug>
-> python3 ~/scripts/agent-workspace.py lock claim main-checkout --branch "chore/<slug>" --label dev-flow-chore
+> bash scripts/agent-lock.sh claim main-checkout --branch "chore/<slug>" --label dev-flow-chore (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
 > ```
 > Der `.githooks/pre-commit`-Mutex blockt konkurrierende Commits anderer Sessions währenddessen.
 > Zeigt `activity` fremde lebende Aktivität, oder berührt die Chore auch Nicht-Testdateien
@@ -105,7 +105,7 @@ Regulärer Pfad (Default für alles außer dem Test-only-Kurzpfad oben):
 # git-crypt-safe: creates the worktree, handles git-crypt
 bash scripts/worktree-create.sh chore/<slug> <worktree-pfad-nach-Repo-Konvention>  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>
 cd <worktree-pfad>
-python3 ~/scripts/agent-workspace.py lock claim branch "chore/<slug>" --worktree "$PWD" --label dev-flow-chore
+bash scripts/agent-lock.sh claim branch "chore/<slug>" --worktree "$PWD" --label dev-flow-chore  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 ```
 
 > **Ab hier gilt die cwd-Regel oben:** Datei-Tool-Pfade tragen den Worktree-Präfix, sonst
@@ -168,7 +168,7 @@ m=$(gh pr view <num> --json mergedAt -q '.mergedAt')
 [ -n "$m" ] && [ "$m" != "null" ] || { echo "FAIL: kein Merge"; exit 1; }
 # Eigenen Branch-Claim freigeben, DANN Worktree + lokalen/Remote-Branch entfernen:
 cd "$MAIN_REPO"
-python3 ~/scripts/agent-workspace.py lock release branch "$BRANCH"
+bash scripts/agent-lock.sh release branch "$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 git worktree remove "$WORKTREE"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
 git branch -D "$BRANCH" && git push origin ":$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 ```

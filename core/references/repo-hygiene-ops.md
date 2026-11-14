@@ -831,7 +831,7 @@ Der Daily Sweep ist über **systemd user timers** automatisiert (`repo-hygiene.t
 
 Das Skript (`scripts/repo-hygiene-cron.sh`, seit T003486) wird von `repo-hygiene.service` aufgerufen:
 1. `git fetch origin "$MAIN" --prune` ausführt
-2. `python3 ~/scripts/agent-workspace.py lock reap` (stale Locks)
+2. `bash scripts/agent-lock.sh reap` (stale Locks) (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
 3. Die Hygiene-Metriken (Worktree/Branch/PR-Counts) als JSON nach stdout schreibt
 4. Oberhalb von `STALE_THRESHOLD` stale Artifacts eine Warnung ausgibt
 

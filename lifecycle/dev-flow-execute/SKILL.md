@@ -52,8 +52,8 @@ Hier nur Leistung und Abbruchbedingung:
 ### Schritt −1.1: Branch-Claim ist branch-scoped
 
 Der Pre-Flight-Lock claimt **branch-scoped** — niemals über das Ticket:
-`python3 ~/scripts/agent-workspace.py lock claim branch "$BRANCH"`. Verifikation:
-`python3 ~/scripts/agent-workspace.py lock check branch "$(git branch --show-current)"`. Release nach
+`bash scripts/agent-lock.sh claim branch "$BRANCH"`. Verifikation: (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
+`bash scripts/agent-lock.sh check branch "$(git branch --show-current)"`. Release nach (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
 dem Merge (Schritt 6.4–7.5), ebenfalls branch-scoped.
 
 ## Schritt 1.8: Hold-Freigabe — nur only-if-tickets

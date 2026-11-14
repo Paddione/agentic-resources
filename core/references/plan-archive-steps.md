@@ -26,7 +26,7 @@ m=$(gh pr view <num> --json mergedAt -q '.mergedAt')
 
 # 3. Eigenen Branch-Claim freigeben, DANN Worktree + lokalen/Remote-Branch entfernen.
 cd "$MAIN_REPO"
-python3 ~/scripts/agent-workspace.py lock release branch "$BRANCH"
+bash scripts/agent-lock.sh release branch "$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 git worktree remove "$WORKTREE"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish --path <worktree>
 git branch -D "$BRANCH" && git push origin ":$BRANCH"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py finish
 ```
