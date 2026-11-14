@@ -58,6 +58,10 @@ hardcode them. No repo assumptions in shared files; parametrize, don't fork.
 
 - Change work: `dev-flow-plan` → `dev-flow-execute`; maintenance:
   `dev-flow-chore` (inline, then merge).
+- Landing a verified work branch: `python3 ~/scripts/agent-workspace.py land`
+  inside the worktree. The path comes from `repo.yaml:land` (`ff` or
+  `pr-squash`); it rebases, runs `check` plus `repo.yaml:verify`, merges, pushes
+  and calls `finish`. Exit 3 means the PR waits for checks: call `land` again.
 - Git lifecycle per `git-workflow`: pull-first, explicit pathspecs (never
   broad add), Conventional Commits, verify via the repo's own checks, PR,
   squash-merge, cleanup. Direct pushes to the main branch need no confirmation
