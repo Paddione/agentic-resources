@@ -63,6 +63,7 @@ Execution dispatch casts a sandbox on the workers instead of claiming ticket wav
 - **Fallback** (Runner fehlt oder Proxy offline): direkter Sandbox-Call mit demselben
   JSON-Contract (z. B. `PYTHONPATH=scripts python3 -m devflow sandbox`).
 - **Substrat:** Worker-Inventory des Consumer-Repos (Cluster-/Host-Liste dort als SSOT).
+- **Berichtspakete & Abnahme** (nur-wenn das Consumer-Repo `scripts/worker-accept.py` führt): Berichtspakete als `worker-packet/1` schreiben, vor dem Versand `python3 scripts/worker-accept.py preflight --packet <pfad>`, nach dem Bericht `python3 scripts/worker-accept.py judge --packet <pfad> --report <bericht> --transcript <transkript>`; bei Exit 3 (`handover`) übernimmt der Hauptagent.
 - **Approval gate (preserved):** building a dispatch plan does not authorize
   dispatch. Only explicit user approval dispatches.
 

@@ -84,6 +84,7 @@ spiegelt sie auf stderr:
 - Erfolgs- und Abschlussmeldungen („alles grün“, „aufgelöst“) als
   `--class resolved-note` loggen; sie zählen nie als Vorfall.
 - `broken`/`incident` → `--severity degraded`, `security` bleibt `security`.
+- Vorfälle mit `--class secret-exposure` verlangen eine Rotation des betroffenen Secrets als ausdrücklichen Folgeschritt im Log-Eintrag (`--detail`).
 - Nie von Hand in `.mishaps.log` schreiben: Zeilen ohne Klasse zählen im
   Report als `unclassified` und machen `G-MISHAP01` rot.
 - Auswertung: `python3 ~/scripts/mishap-report.py --table`; wiederkehrende
