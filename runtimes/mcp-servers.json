@@ -324,26 +324,49 @@
           "/home/patrick/mcp-servers/board/server.py"
         ]
       }
+    },
+    "unity-sandbox": {
+      "doc": "Official Unity MCP relay for the unity-sandbox project (Editor 6000.0.85f2, relay unity-ai-relay v1.0.12): scene, console-log, run-command and asset-generation tools. Requires a running Editor on the sandbox project; a mutating call may need one GUI approval (Edit > Project Settings > AI > Unity MCP Server).",
+      "stdio": {
+        "command": [
+          "/home/patrick/.unity/relay/relay_linux",
+          "--mcp",
+          "--project-path",
+          "/home/patrick/unity-sandbox/sandbox"
+        ]
+      },
+      "codex": {
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 180.0
+        }
+      }
     }
   },
   "harnesses": {
     "opencode": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ],
     "codex": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ],
     "claude": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ],
     "gemini": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ],
     "qwen": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ],
     "muse": [
-      "fleet-workspace"
+      "fleet-workspace",
+      "unity-sandbox"
     ]
   },
   "hub_backend_allowlists": {
