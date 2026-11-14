@@ -59,8 +59,8 @@ fi
 Tote Sessions/Zombies/stale Worktrees räumen und sehen, wer gerade was bearbeitet —
 Lock-Lebenszyklus-SSOT: [session-coordination](.agents/skills/references/session-coordination.md) [T000510]:
 ```bash
-python3 ~/scripts/agent-workspace.py lock reap            # cwd-tote Prozesse killen, Worktrees prunen, tote Locks räumen
-python3 ~/scripts/agent-workspace.py lock list            # "Wer macht was": laufende Claims anderer Sessions
+bash scripts/agent-lock.sh reap            # cwd-tote Prozesse killen, Worktrees prunen, tote Locks räumen  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh list            # "Wer macht was": laufende Claims anderer Sessions  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 bash scripts/agent-msg.sh read --unread    # offene Nachrichten paralleler Sessions sichten [T000882]
 git worktree list && bash scripts/worktree-git-op-guard.sh
 ```
@@ -131,7 +131,7 @@ Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-
 Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos, `scripts/plan-intel.sh` bzw. Repo-Äquivalent) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
 
 **SID-Propagation (PFLICHT, T006365):** Ermittle deine Session-SID mit
-`python3 ~/scripts/agent-workspace.py lock mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst
+`bash scripts/agent-lock.sh mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
 `export AGENT_LOCK_SID=<deine-sid>` auszuführen — sonst blockiert der Worktree-Write-Guard ihre
 Datei-Tools.
 
@@ -180,13 +180,15 @@ wird nie als niedriger Score gewertet, sondern erneut versucht.
 ### Schritt 4.5: Claim (PFLICHT vor Commit)
 Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-procedure](.agents/skills/references/ticket-stage-procedure.md)), dann ticket-scoped claimen, bevor der Pre-Commit-Guard die Lock-Datei liest:
 ```bash
-python3 ~/scripts/agent-workspace.py lock claim ticket "$TICKET_EXT_ID" \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh claim ticket "$TICKET_EXT_ID" \
   --branch "$(git -C "$WT" branch --show-current)" --worktree "$WT" --label dev-flow-plan
 ```
 Nur-wenn-Tickets: Stagen läuft erst **nach** dem Commit ([ticket-stage-procedure](references/ticket-stage-procedure.md)).
 Ohne Tickets — nur den Branch claimen:
 ```bash
-python3 ~/scripts/agent-workspace.py lock claim branch "$(git -C "$WT" branch --show-current)" \
+# verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
+bash scripts/agent-lock.sh claim branch "$(git -C "$WT" branch --show-current)" \
   --worktree "$WT" --label dev-flow-plan
 ```
 

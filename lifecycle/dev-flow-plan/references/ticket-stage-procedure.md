@@ -1,5 +1,7 @@
 # Ticket-Stage-Prozedur (nur-wenn-Tickets)
 
+> Skript-Verweise gelten nur-wenn das Repo sie führt (Bachelorprojekt-Profil); sonst das Repo-Äquivalent aus `repo.yaml` bzw. `AGENTS.md` des Repos. Lifecycle-Mechanik immer über `python3 ~/scripts/agent-workspace.py`.
+
 Gilt nur für Consumer mit Ticket-Backend (`repo.tickets != none`). Ohne Tickets
 entfallen alle Schritte auf dieser Seite ersatzlos — der Push IST das Stagen.
 
@@ -8,7 +10,7 @@ entfallen alle Schritte auf dieser Seite ersatzlos — der Push IST das Stagen.
 Vor der Worktree-Anlage prüfen, ob der Fix auf `MAIN` schon drin ist:
 
 ```bash
-python3 ~/scripts/agent-workspace.py lock check-merged "$TICKET_EXT_ID"
+bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 ```
 
 `rc=1` = schon gefixt → Ticket `done`, abbrechen.

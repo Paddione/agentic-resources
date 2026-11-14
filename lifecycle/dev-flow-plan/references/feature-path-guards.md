@@ -6,7 +6,7 @@ Vollständige Guard-Liste des Feature-Pfads. Der SKILL.md nennt den Preflight
 (Check merged) inline; alles Weitere steht hier.
 
 - **Preflight: Check merged** (T002279) — beide Pfade, vor der Worktree-Anlage:
-  nur-wenn-Tickets (`repo.tickets != none`): `python3 ~/scripts/agent-workspace.py lock check-merged "$TICKET_EXT_ID"`
+  nur-wenn-Tickets (`repo.tickets != none`): `bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"` (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
   (`rc=1` = auf `MAIN` schon gefixt → Ticket `done`, abbrechen). Ohne Tickets:
   `git log origin/MAIN --grep='<slug|symptom>'` — Treffer → abbrechen.
   Exit-Codes: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md) §Preflight.
