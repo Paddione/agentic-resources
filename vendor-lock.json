@@ -9,7 +9,7 @@
       "path": "skills/frontend-design",
       "dest": "domains/web/frontend-design",
       "track": "branch",
-      "ref": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "ref": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
       "version": null
     },
     "gh-fix-ci": {
@@ -153,7 +153,7 @@
       "path": ".agents/skills/impeccable",
       "dest": "domains/web/impeccable",
       "track": "branch",
-      "ref": "61e73eebd34a845df0bfef463eb0d31ed4eab581",
+      "ref": "2b86d9c07b97d4bed7de23583e1bd1e58dd2baae",
       "version": null
     },
     "lavish": {
@@ -194,7 +194,7 @@
       "path": "skills/skill-creator",
       "dest": "domains/devtools/skill-creator",
       "track": "branch",
-      "ref": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "ref": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
       "version": null
     },
     "sota-testing": {
@@ -202,7 +202,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "df81060991548f3ad1463ed5aa8e2a62cfd16afe",
+      "ref": "9f08b49fdbc9ee7952a30e13baf9a45eeea51ab4",
       "version": null
     },
     "train-sentence-transformers": {
