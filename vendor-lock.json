@@ -153,7 +153,7 @@
       "path": ".agents/skills/impeccable",
       "dest": "domains/web/impeccable",
       "track": "branch",
-      "ref": "c4cd1924c389f68d37c687d9c2bbf13f12547c41",
+      "ref": "61e73eebd34a845df0bfef463eb0d31ed4eab581",
       "version": null
     },
     "lavish": {
@@ -162,8 +162,8 @@
       "dest": "domains/devtools/lavish",
       "track": "release",
       "tag_prefix": "lavish-axi-v",
-      "ref": "69bf3090b24a04773ffd05d2e0b23d91ca41923b",
-      "version": "lavish-axi-v0.1.96"
+      "ref": "79aa0a18dba9c1a1dcec6db19d2ef4eb7643754b",
+      "version": "lavish-axi-v0.1.97"
     },
     "llama-cpp": {
       "repo": "Orchestra-Research/AI-research-SKILLs",
@@ -202,7 +202,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "be145badc1059fe638e3135a03441f86e8dfd921",
+      "ref": "df81060991548f3ad1463ed5aa8e2a62cfd16afe",
       "version": null
     },
     "train-sentence-transformers": {
