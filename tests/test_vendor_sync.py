@@ -167,3 +167,47 @@ def test_explizites_owner_ueberstimmt_keinen_github_besitzer():
     lock = {"trusted_owners": ["Paddione"]}
     assert not vs.in_group(lock, {"repo": "evil/skills", "owner": "Paddione"}, "trusted")
     assert vs.in_group(lock, {"repo": "https://github.com/Paddione/skills"}, "trusted")
+
+
+def test_update_synchronisiert_external_revision_in_registry_und_haelt_konflikt_fest(fx):
+    reg_path = fx.root / "registry.json"
+    reg_path.write_text(json.dumps({
+        "schema_version": 1,
+        "skills": {
+            "zq-demo": {
+                "path": "domains/demo/zq-demo",
+                "source": "external",
+                "upstream": {
+                    "source": str(fx.up),
+                    "revision": fx.base,
+                    "path": "skills/zq-demo",
+                    "mode": "vendored",
+                    "vendor_id": "zq-demo",
+                },
+            },
+            "zq-nicht-external": {
+                "path": "domains/demo/zq-nicht-external",
+                "source": "bachelorprojekt",
+            },
+        },
+    }, indent=1) + "\n")
+
+    fx.release("zeile-e\n", "zeile-e UPSTREAM-ANDERS\n", "v1.1.0")
+    r_conflict = fx.sync("update")
+    assert r_conflict.returncode == 1
+    assert json.loads(reg_path.read_text())["skills"]["zq-demo"]["upstream"]["revision"] == fx.base
+
+    # Konflikt lokal aufloesen und naechstes Release konfliktfrei einspielen
+    (fx.root / "domains/demo/zq-demo/SKILL.md").write_text(
+        SKILL_V1.replace("zeile-e\n", "zeile-e UPSTREAM-ANDERS\n")
+    )
+    fx.release("zeile-a\n", "zeile-a UPSTREAM-NEU\n", "v1.2.0")
+    r_ok = fx.sync("update")
+    assert r_ok.returncode == 0, r_ok.stdout + r_ok.stderr
+    reg_after = json.loads(reg_path.read_text())
+    assert reg_after["skills"]["zq-demo"]["upstream"]["revision"] == fx.lock()["ref"]
+    assert reg_after["skills"]["zq-demo"]["upstream"]["revision"] != fx.base
+    assert reg_after["skills"]["zq-nicht-external"] == {
+        "path": "domains/demo/zq-nicht-external",
+        "source": "bachelorprojekt",
+    }
