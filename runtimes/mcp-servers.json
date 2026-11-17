@@ -341,32 +341,58 @@
           "tool_timeout_sec": 180.0
         }
       }
+    },
+    "blender": {
+      "doc": "MCP for Blender (mcp-for-blender 2.2.6, pinned): scene info, execute_blender_code, look (viewport render), asset search/import. Needs the headless bridge from dotfiles scripts/blender-mcp-host.sh (systemd user unit blender-mcp-host.service, Blender under Xvfb on localhost:9876). Server telemetry (Supabase prompts/screenshots) is forced off via env.",
+      "stdio": {
+        "command": [
+          "/home/patrick/.local/bin/uvx",
+          "mcp-for-blender==2.2.6"
+        ],
+        "env": {
+          "DISABLE_TELEMETRY": "true",
+          "BLENDER_MCP_DISABLE_TELEMETRY": "true",
+          "MCP_DISABLE_TELEMETRY": "true"
+        }
+      },
+      "codex": {
+        "timeouts": {
+          "startup_timeout_sec": 60.0,
+          "tool_timeout_sec": 180.0
+        }
+      }
     }
   },
   "harnesses": {
     "opencode": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "codex": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "claude": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "gemini": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "qwen": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "muse": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ]
   },
   "hub_backend_allowlists": {
