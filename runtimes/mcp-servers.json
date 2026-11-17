@@ -341,6 +341,20 @@
           "tool_timeout_sec": 180.0
         }
       }
+    },
+    "blender": {
+      "doc": "MCP for Blender (mcp-for-blender 2.2.6, pinned): scene info, execute_blender_code, look (viewport render), asset search/import. Needs the headless bridge from dotfiles scripts/blender-mcp-host.sh (systemd user unit blender-mcp-host.service, Blender under Xvfb on localhost:9876). Claude harness only: execute_blender_code runs arbitrary Python as the user and the bridge port is unauthenticated (localhost-bound, up only while the unit runs). Server telemetry (Supabase prompts/screenshots) is forced off via env.",
+      "stdio": {
+        "command": [
+          "/home/patrick/.local/bin/uvx",
+          "mcp-for-blender==2.2.6"
+        ],
+        "env": {
+          "DISABLE_TELEMETRY": "true",
+          "BLENDER_MCP_DISABLE_TELEMETRY": "true",
+          "MCP_DISABLE_TELEMETRY": "true"
+        }
+      }
     }
   },
   "harnesses": {
@@ -354,7 +368,8 @@
     ],
     "claude": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "gemini": [
       "fleet-workspace",
