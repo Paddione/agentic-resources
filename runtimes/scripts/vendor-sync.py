@@ -34,6 +34,7 @@ import sys
 import tempfile
 
 LOCK_REL = "vendor-lock.json"
+REGISTRY_REL = "registry.json"
 CONFLICT_RE = re.compile(r"^(<<<<<<< |>>>>>>> )", re.M)
 
 
@@ -272,6 +273,34 @@ def save_lock(root, lock):
         f.write("\n")
 
 
+def sync_registry_revisions(root, updated_refs):
+    """Spiegelt aktualisierte Lock-Commits in registry.json (`source: external`)."""
+    if not updated_refs:
+        return
+    reg_path = os.path.join(root, REGISTRY_REL)
+    try:
+        with open(reg_path, encoding="utf-8") as f:
+            reg = json.load(f)
+    except FileNotFoundError:
+        return
+    skills = reg.get("skills")
+    if not isinstance(skills, dict):
+        return
+    changed = False
+    for sid, sha in updated_refs.items():
+        spec = skills.get(sid)
+        if not isinstance(spec, dict) or spec.get("source") != "external":
+            continue
+        up = spec.get("upstream")
+        if isinstance(up, dict) and up.get("revision") != sha:
+            up["revision"] = sha
+            changed = True
+    if changed:
+        with open(reg_path, "w", encoding="utf-8") as f:
+            json.dump(reg, f, indent=1, ensure_ascii=False)
+            f.write("\n")
+
+
 def owner_of(entry):
     """Upstream-Besitzer (klein geschrieben). Bei GitHub-förmigem `repo` zählt nur dessen
     Owner — ein explizites `owner` darf die Vertrauensentscheidung nicht überstimmen; es
@@ -298,6 +327,7 @@ def inside(root, path):
 def cmd_update(root, args, dry):
     lock = load_lock(root)
     report = {"skills": []}
+    updated_refs = {}
     for sid in sorted(lock.get("skills", {})):
         entry = lock["skills"][sid]
         if (args.only and sid not in args.only) or not in_group(lock, entry, args.group):
@@ -318,9 +348,11 @@ def cmd_update(root, args, dry):
         res.update(span)
         if res["status"] == "updated":
             entry["ref"], entry["version"] = sha, version
+            updated_refs[sid] = sha
         report["skills"].append(res)
     if not dry:
         save_lock(root, lock)
+        sync_registry_revisions(root, updated_refs)
     if args.report:
         with open(args.report, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2, ensure_ascii=False)
