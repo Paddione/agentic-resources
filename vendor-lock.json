@@ -4,12 +4,68 @@
     "Paddione"
   ],
   "skills": {
+    "2d-pixel-perfect": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/2d-pixel-perfect",
+      "dest": "domains/devtools/2d-pixel-perfect",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "asset-transformer-toolkit": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/asset-transformer-toolkit",
+      "dest": "domains/devtools/asset-transformer-toolkit",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "audio-setup-mixers": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/audio-setup-mixers",
+      "dest": "domains/devtools/audio-setup-mixers",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "build-live-game": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/build-live-game",
+      "dest": "domains/devtools/build-live-game",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "create-2d-physics": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/create-2d-physics",
+      "dest": "domains/devtools/create-2d-physics",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "find-skills": {
+      "repo": "vercel-labs/skills",
+      "path": "skills/find-skills",
+      "dest": "domains/devtools/find-skills",
+      "track": "branch",
+      "ref": "57217cf86ba38148a57af9e90d14a4c049558330",
+      "version": null
+    },
     "frontend-design": {
       "repo": "anthropics/skills",
       "path": "skills/frontend-design",
       "dest": "domains/web/frontend-design",
       "track": "branch",
       "ref": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
+      "version": null
+    },
+    "generate-editor-search-query": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/generate-editor-search-query",
+      "dest": "domains/devtools/generate-editor-search-query",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
       "version": null
     },
     "gh-fix-ci": {
@@ -165,6 +221,14 @@
       "ref": "79aa0a18dba9c1a1dcec6db19d2ef4eb7643754b",
       "version": "lavish-axi-v0.1.97"
     },
+    "levelplay-unity-integration": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/levelplay-unity-integration",
+      "dest": "domains/devtools/levelplay-unity-integration",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
     "llama-cpp": {
       "repo": "Orchestra-Research/AI-research-SKILLs",
       "path": "12-inference-serving/llama-cpp",
@@ -173,12 +237,36 @@
       "ref": "773a52944ba4747a18bd4ae9ade53fff041adcbc",
       "version": null
     },
+    "manage-sprite-atlas": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/manage-sprite-atlas",
+      "dest": "domains/devtools/manage-sprite-atlas",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
+    "migrate-birp-to-urp": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/migrate-birp-to-urp",
+      "dest": "domains/devtools/migrate-birp-to-urp",
+      "track": "branch",
+      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "version": null
+    },
     "playwright-best-practices": {
       "repo": "currents-dev/playwright-best-practices-skill",
       "path": "playwright-best-practices",
       "dest": "domains/brand-site/playwright-best-practices",
       "track": "branch",
       "ref": "0b75b5835a87de1fdd202ba965f3bc5a27738fdf",
+      "version": null
+    },
+    "pytest-patterns": {
+      "repo": "manutej/luxor-claude-marketplace",
+      "path": "plugins/luxor-testing-essentials/skills/pytest-patterns",
+      "dest": "domains/testing/pytest-patterns",
+      "track": "branch",
+      "ref": "1861cc9720d5656410415e5c19b06bef3e4609e8",
       "version": null
     },
     "python-testing-patterns": {

@@ -51,6 +51,9 @@ mechanisms:
       - .config/opencode/skills
       - .zcode/skills
       - .gemini/config/skills
+      - .pi/agent/skills
+      - .qwen/skills
+      - .openclaw/skills
       - .codex/plugins/cache
       - .claude/plugins/cache
 notes:
