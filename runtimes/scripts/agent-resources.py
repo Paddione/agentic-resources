@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DEST = ROOT / 'agent-resources'
 SKILL_ROOTS = ('.agents/skills', '.claude/skills', '.codex/skills',
                '.config/opencode/skills', '.zcode/skills', '.gemini/config/skills',
+               '.pi/agent/skills', '.qwen/skills', '.openclaw/skills',
                '.codex/plugins/cache', '.claude/plugins/cache')
 
 
