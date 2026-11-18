@@ -9,7 +9,7 @@
       "path": "skills/frontend-design",
       "dest": "domains/web/frontend-design",
       "track": "branch",
-      "ref": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
+      "ref": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
       "version": null
     },
     "gh-fix-ci": {
@@ -49,7 +49,7 @@
       "path": "skills/hf-mem",
       "dest": "domains/ml-training/hf-mem",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-best": {
@@ -57,7 +57,7 @@
       "path": "skills/huggingface-best",
       "dest": "domains/ml-training/huggingface-best",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-community-evals": {
@@ -65,7 +65,7 @@
       "path": "skills/huggingface-community-evals",
       "dest": "domains/ml-training/huggingface-community-evals",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-datasets": {
@@ -73,7 +73,7 @@
       "path": "skills/huggingface-datasets",
       "dest": "domains/ml-training/huggingface-datasets",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-llm-trainer": {
@@ -81,7 +81,7 @@
       "path": "skills/huggingface-llm-trainer",
       "dest": "domains/ml-training/huggingface-llm-trainer",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-local-models": {
@@ -89,7 +89,7 @@
       "path": "skills/huggingface-local-models",
       "dest": "domains/ml-training/huggingface-local-models",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-lora-space-builder": {
@@ -97,7 +97,7 @@
       "path": "skills/huggingface-lora-space-builder",
       "dest": "domains/ml-training/huggingface-lora-space-builder",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-paper-publisher": {
@@ -105,7 +105,7 @@
       "path": "skills/huggingface-paper-publisher",
       "dest": "domains/ml-training/huggingface-paper-publisher",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-papers": {
@@ -113,7 +113,7 @@
       "path": "skills/huggingface-papers",
       "dest": "domains/ml-training/huggingface-papers",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-tool-builder": {
@@ -121,7 +121,7 @@
       "path": "skills/huggingface-tool-builder",
       "dest": "domains/ml-training/huggingface-tool-builder",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-trackio": {
@@ -129,7 +129,7 @@
       "path": "skills/huggingface-trackio",
       "dest": "domains/ml-training/huggingface-trackio",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-vision-trainer": {
@@ -137,7 +137,7 @@
       "path": "skills/huggingface-vision-trainer",
       "dest": "domains/ml-training/huggingface-vision-trainer",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "huggingface-zerogpu": {
@@ -145,7 +145,7 @@
       "path": "skills/huggingface-zerogpu",
       "dest": "domains/ml-training/huggingface-zerogpu",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "impeccable": {
@@ -153,7 +153,7 @@
       "path": ".agents/skills/impeccable",
       "dest": "domains/web/impeccable",
       "track": "branch",
-      "ref": "2b86d9c07b97d4bed7de23583e1bd1e58dd2baae",
+      "ref": "d41d9860b0094dcb68030657da63461212835aaa",
       "version": null
     },
     "lavish": {
@@ -194,7 +194,7 @@
       "path": "skills/skill-creator",
       "dest": "domains/devtools/skill-creator",
       "track": "branch",
-      "ref": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
+      "ref": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
       "version": null
     },
     "sota-testing": {
@@ -202,7 +202,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "9f08b49fdbc9ee7952a30e13baf9a45eeea51ab4",
+      "ref": "16fbde8c0d787e9cf0593eda829918c358e00712",
       "version": null
     },
     "train-sentence-transformers": {
@@ -210,7 +210,7 @@
       "path": "skills/train-sentence-transformers",
       "dest": "domains/ml-training/train-sentence-transformers",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "transformers-js": {
@@ -218,7 +218,7 @@
       "path": "skills/transformers-js",
       "dest": "domains/ml-training/transformers-js",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "trl-training": {
@@ -226,7 +226,7 @@
       "path": "skills/trl-training",
       "dest": "domains/ml-training/trl-training",
       "track": "branch",
-      "ref": "25910b3d0ba31a2ba102f901cdc9e008c278a69c",
+      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
       "version": null
     },
     "unity-package-management": {
@@ -234,7 +234,7 @@
       "path": "skills/unity-package-management",
       "dest": "domains/devtools/unity-package-management",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "vitest": {
@@ -242,7 +242,7 @@
       "path": "skills/vitest",
       "dest": "domains/testing/vitest",
       "track": "branch",
-      "ref": "d524ed287eef22757297827ce42e3cad88abd20c",
+      "ref": "4a6bb39e7b45e26402eb215393c51ccf5df1ca4c",
       "version": null
     },
     "vitest-testing": {
@@ -250,7 +250,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "cce7ecf35435cc666813cb26ad75c30a261cdcc5",
+      "ref": "69a254dd6b368732a6f8a153f5826784b7df6746",
       "version": null
     }
   }

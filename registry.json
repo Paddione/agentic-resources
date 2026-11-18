@@ -99,7 +99,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/anthropics/skills",
-    "revision": "1780c5e5a552fd4d1c9d6a7b0cab26b0c2bef064",
+    "revision": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
     "path": "skills/frontend-design",
     "mode": "vendored",
     "vendor_id": "frontend-design"
@@ -197,7 +197,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/pbakaus/impeccable",
-    "revision": "2b86d9c07b97d4bed7de23583e1bd1e58dd2baae",
+    "revision": "d41d9860b0094dcb68030657da63461212835aaa",
     "path": ".agents/skills/impeccable",
     "mode": "vendored; LICENSE und NOTICE.md aus Upstream-Wurzel beigelegt, Engine-Binary wird nicht mitgeliefert",
     "vendor_id": "impeccable"
@@ -353,7 +353,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/unity-package-management",
     "mode": "vendored",
     "vendor_id": "unity-package-management"
