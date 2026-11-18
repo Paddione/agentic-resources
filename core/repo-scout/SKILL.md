@@ -8,6 +8,8 @@ description: Parallel repository scouting for onboarding maps, repo-wide questio
 Scout any git repository with many agents at once and return one report.
 Source of truth: dotfiles (`scripts/repo-scout.py`, `scripts/repo_scout/`).
 
+> Skript-Verweise gelten nur-wenn das dotfiles-Repo mit scripts/repo-scout.py verfügbar ist.
+
 ## Prerequisites
 
 - Local workers (OpenAI-compatible): Devmesh LLM Router `http://127.0.0.1:18235/v1`
