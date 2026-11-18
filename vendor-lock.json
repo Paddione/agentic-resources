@@ -44,6 +44,14 @@
       "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
       "version": null
     },
+    "find-skills": {
+      "repo": "vercel-labs/skills",
+      "path": "skills/find-skills",
+      "dest": "domains/devtools/find-skills",
+      "track": "branch",
+      "ref": "57217cf86ba38148a57af9e90d14a4c049558330",
+      "version": null
+    },
     "frontend-design": {
       "repo": "anthropics/skills",
       "path": "skills/frontend-design",
@@ -251,6 +259,14 @@
       "dest": "domains/brand-site/playwright-best-practices",
       "track": "branch",
       "ref": "0b75b5835a87de1fdd202ba965f3bc5a27738fdf",
+      "version": null
+    },
+    "pytest-patterns": {
+      "repo": "manutej/luxor-claude-marketplace",
+      "path": "plugins/luxor-testing-essentials/skills/pytest-patterns",
+      "dest": "domains/testing/pytest-patterns",
+      "track": "branch",
+      "ref": "1861cc9720d5656410415e5c19b06bef3e4609e8",
       "version": null
     },
     "python-testing-patterns": {

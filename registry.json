@@ -158,8 +158,14 @@
   },
   "find-skills": {
    "path": "domains/devtools/find-skills",
-   "source": "home",
-   "note": "skill discovery via npx skills ecosystem; no upstream pinned"
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/vercel-labs/skills",
+    "revision": "57217cf86ba38148a57af9e90d14a4c049558330",
+    "path": "skills/find-skills",
+    "mode": "vendored",
+    "vendor_id": "find-skills"
+   }
   },
   "freetoken-setup": {
    "path": "domains/devtools/freetoken-setup",
@@ -383,8 +389,14 @@
   },
   "pytest-patterns": {
    "path": "domains/testing/pytest-patterns",
-   "source": "home",
-   "note": "local pytest guide; overlaps vendored python-testing-patterns (wshobson/agents)"
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/manutej/luxor-claude-marketplace",
+    "revision": "1861cc9720d5656410415e5c19b06bef3e4609e8",
+    "path": "plugins/luxor-testing-essentials/skills/pytest-patterns",
+    "mode": "vendored",
+    "vendor_id": "pytest-patterns"
+   }
   },
   "python-testing-patterns": {
    "path": "domains/testing/python-testing-patterns",
