@@ -9,7 +9,7 @@
       "path": "skills/2d-pixel-perfect",
       "dest": "domains/devtools/2d-pixel-perfect",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "asset-transformer-toolkit": {
@@ -17,7 +17,7 @@
       "path": "skills/asset-transformer-toolkit",
       "dest": "domains/devtools/asset-transformer-toolkit",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "audio-setup-mixers": {
@@ -25,7 +25,7 @@
       "path": "skills/audio-setup-mixers",
       "dest": "domains/devtools/audio-setup-mixers",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "build-live-game": {
@@ -33,7 +33,7 @@
       "path": "skills/build-live-game",
       "dest": "domains/devtools/build-live-game",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "create-2d-physics": {
@@ -41,7 +41,7 @@
       "path": "skills/create-2d-physics",
       "dest": "domains/devtools/create-2d-physics",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "find-skills": {
@@ -65,7 +65,7 @@
       "path": "skills/generate-editor-search-query",
       "dest": "domains/devtools/generate-editor-search-query",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "gh-fix-ci": {
@@ -209,7 +209,7 @@
       "path": ".agents/skills/impeccable",
       "dest": "domains/web/impeccable",
       "track": "branch",
-      "ref": "d41d9860b0094dcb68030657da63461212835aaa",
+      "ref": "b49177d32788f2dc585c42831d845dacf1ebed2c",
       "version": null
     },
     "lavish": {
@@ -218,15 +218,15 @@
       "dest": "domains/devtools/lavish",
       "track": "release",
       "tag_prefix": "lavish-axi-v",
-      "ref": "79aa0a18dba9c1a1dcec6db19d2ef4eb7643754b",
-      "version": "lavish-axi-v0.1.97"
+      "ref": "2b32b92ec8e8fcfb7069af3e1a89c0cabc3bf9aa",
+      "version": "lavish-axi-v0.1.98"
     },
     "levelplay-unity-integration": {
       "repo": "Unity-Technologies/skills",
       "path": "skills/levelplay-unity-integration",
       "dest": "domains/devtools/levelplay-unity-integration",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "llama-cpp": {
@@ -242,7 +242,7 @@
       "path": "skills/manage-sprite-atlas",
       "dest": "domains/devtools/manage-sprite-atlas",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "migrate-birp-to-urp": {
@@ -250,7 +250,7 @@
       "path": "skills/migrate-birp-to-urp",
       "dest": "domains/devtools/migrate-birp-to-urp",
       "track": "branch",
-      "ref": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
       "version": null
     },
     "playwright-best-practices": {
@@ -274,7 +274,7 @@
       "path": "plugins/python-development/skills/python-testing-patterns",
       "dest": "domains/testing/python-testing-patterns",
       "track": "branch",
-      "ref": "9c61ab243def98f72da12abd41cfcf5bcd91af9d",
+      "ref": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
       "version": null
     },
     "skill-creator": {
@@ -290,7 +290,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "16fbde8c0d787e9cf0593eda829918c358e00712",
+      "ref": "a45b6edd2c08766b6bc7a50824455447d84b1a59",
       "version": null
     },
     "train-sentence-transformers": {
