@@ -6,7 +6,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/2d-pixel-perfect",
     "mode": "vendored",
     "vendor_id": "2d-pixel-perfect"
@@ -32,7 +32,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/asset-transformer-toolkit",
     "mode": "vendored",
     "vendor_id": "asset-transformer-toolkit"
@@ -43,7 +43,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/audio-setup-mixers",
     "mode": "vendored",
     "vendor_id": "audio-setup-mixers"
@@ -69,7 +69,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/build-live-game",
     "mode": "vendored",
     "vendor_id": "build-live-game"
@@ -99,7 +99,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/create-2d-physics",
     "mode": "vendored",
     "vendor_id": "create-2d-physics"
@@ -187,7 +187,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/generate-editor-search-query",
     "mode": "vendored",
     "vendor_id": "generate-editor-search-query"
@@ -285,7 +285,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/pbakaus/impeccable",
-    "revision": "d41d9860b0094dcb68030657da63461212835aaa",
+    "revision": "b49177d32788f2dc585c42831d845dacf1ebed2c",
     "path": ".agents/skills/impeccable",
     "mode": "vendored; LICENSE und NOTICE.md aus Upstream-Wurzel beigelegt, Engine-Binary wird nicht mitgeliefert",
     "vendor_id": "impeccable"
@@ -308,7 +308,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/levelplay-unity-integration",
     "mode": "vendored",
     "vendor_id": "levelplay-unity-integration"
@@ -323,7 +323,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/manage-sprite-atlas",
     "mode": "vendored",
     "vendor_id": "manage-sprite-atlas"
@@ -349,7 +349,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "e5956e7e34a125982550de15a9e87f8e66af7d86",
+    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
     "path": "skills/migrate-birp-to-urp",
     "mode": "vendored",
     "vendor_id": "migrate-birp-to-urp"
