@@ -33,7 +33,7 @@
       "path": "skills/build-live-game",
       "dest": "domains/devtools/build-live-game",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "create-2d-physics": {
@@ -41,7 +41,7 @@
       "path": "skills/create-2d-physics",
       "dest": "domains/devtools/create-2d-physics",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "find-skills": {
@@ -65,7 +65,7 @@
       "path": "skills/generate-editor-search-query",
       "dest": "domains/devtools/generate-editor-search-query",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "gh-fix-ci": {
@@ -105,7 +105,7 @@
       "path": "skills/hf-mem",
       "dest": "domains/ml-training/hf-mem",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-best": {
@@ -113,7 +113,7 @@
       "path": "skills/huggingface-best",
       "dest": "domains/ml-training/huggingface-best",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-community-evals": {
@@ -121,7 +121,7 @@
       "path": "skills/huggingface-community-evals",
       "dest": "domains/ml-training/huggingface-community-evals",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-datasets": {
@@ -129,7 +129,7 @@
       "path": "skills/huggingface-datasets",
       "dest": "domains/ml-training/huggingface-datasets",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-llm-trainer": {
@@ -137,7 +137,7 @@
       "path": "skills/huggingface-llm-trainer",
       "dest": "domains/ml-training/huggingface-llm-trainer",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-local-models": {
@@ -145,7 +145,7 @@
       "path": "skills/huggingface-local-models",
       "dest": "domains/ml-training/huggingface-local-models",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-lora-space-builder": {
@@ -153,7 +153,7 @@
       "path": "skills/huggingface-lora-space-builder",
       "dest": "domains/ml-training/huggingface-lora-space-builder",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-paper-publisher": {
@@ -161,7 +161,7 @@
       "path": "skills/huggingface-paper-publisher",
       "dest": "domains/ml-training/huggingface-paper-publisher",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-papers": {
@@ -169,7 +169,7 @@
       "path": "skills/huggingface-papers",
       "dest": "domains/ml-training/huggingface-papers",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-tool-builder": {
@@ -177,7 +177,7 @@
       "path": "skills/huggingface-tool-builder",
       "dest": "domains/ml-training/huggingface-tool-builder",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-trackio": {
@@ -185,7 +185,7 @@
       "path": "skills/huggingface-trackio",
       "dest": "domains/ml-training/huggingface-trackio",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-vision-trainer": {
@@ -193,7 +193,7 @@
       "path": "skills/huggingface-vision-trainer",
       "dest": "domains/ml-training/huggingface-vision-trainer",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "huggingface-zerogpu": {
@@ -201,7 +201,7 @@
       "path": "skills/huggingface-zerogpu",
       "dest": "domains/ml-training/huggingface-zerogpu",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "impeccable": {
@@ -226,7 +226,7 @@
       "path": "skills/levelplay-unity-integration",
       "dest": "domains/devtools/levelplay-unity-integration",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "llama-cpp": {
@@ -242,7 +242,7 @@
       "path": "skills/manage-sprite-atlas",
       "dest": "domains/devtools/manage-sprite-atlas",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "migrate-birp-to-urp": {
@@ -250,7 +250,7 @@
       "path": "skills/migrate-birp-to-urp",
       "dest": "domains/devtools/migrate-birp-to-urp",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "playwright-best-practices": {
@@ -274,7 +274,7 @@
       "path": "plugins/python-development/skills/python-testing-patterns",
       "dest": "domains/testing/python-testing-patterns",
       "track": "branch",
-      "ref": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
+      "ref": "34e50fee32114afd9475f25d81492712f08cb71c",
       "version": null
     },
     "skill-creator": {
@@ -290,7 +290,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "a45b6edd2c08766b6bc7a50824455447d84b1a59",
+      "ref": "d5425a76c6ea9c2416bd42d3f031b5407a1f781d",
       "version": null
     },
     "train-sentence-transformers": {
@@ -298,7 +298,7 @@
       "path": "skills/train-sentence-transformers",
       "dest": "domains/ml-training/train-sentence-transformers",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "transformers-js": {
@@ -306,7 +306,7 @@
       "path": "skills/transformers-js",
       "dest": "domains/ml-training/transformers-js",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "trl-training": {
@@ -314,7 +314,7 @@
       "path": "skills/trl-training",
       "dest": "domains/ml-training/trl-training",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "d67b12054923df5bbfa07c5ff1331412deebdf4f",
       "version": null
     },
     "unity-package-management": {
@@ -322,7 +322,7 @@
       "path": "skills/unity-package-management",
       "dest": "domains/devtools/unity-package-management",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
       "version": null
     },
     "vitest": {

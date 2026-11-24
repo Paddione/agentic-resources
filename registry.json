@@ -69,7 +69,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/build-live-game",
     "mode": "vendored",
     "vendor_id": "build-live-game"
@@ -99,7 +99,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/create-2d-physics",
     "mode": "vendored",
     "vendor_id": "create-2d-physics"
@@ -187,7 +187,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/generate-editor-search-query",
     "mode": "vendored",
     "vendor_id": "generate-editor-search-query"
@@ -308,7 +308,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/levelplay-unity-integration",
     "mode": "vendored",
     "vendor_id": "levelplay-unity-integration"
@@ -323,7 +323,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/manage-sprite-atlas",
     "mode": "vendored",
     "vendor_id": "manage-sprite-atlas"
@@ -349,7 +349,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/migrate-birp-to-urp",
     "mode": "vendored",
     "vendor_id": "migrate-birp-to-urp"
@@ -494,7 +494,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "8974588c0d76745c7eb9bee530b4053451bfc1aa",
     "path": "skills/unity-package-management",
     "mode": "vendored",
     "vendor_id": "unity-package-management"
