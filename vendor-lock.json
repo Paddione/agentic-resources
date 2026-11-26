@@ -4,28 +4,12 @@
     "Paddione"
   ],
   "skills": {
-    "2d-pixel-perfect": {
+    "build-gtk": {
       "repo": "Unity-Technologies/skills",
-      "path": "skills/2d-pixel-perfect",
-      "dest": "domains/devtools/2d-pixel-perfect",
+      "path": "skills/build-gtk",
+      "dest": "domains/devtools/build-gtk",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
-      "version": null
-    },
-    "asset-transformer-toolkit": {
-      "repo": "Unity-Technologies/skills",
-      "path": "skills/asset-transformer-toolkit",
-      "dest": "domains/devtools/asset-transformer-toolkit",
-      "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
-      "version": null
-    },
-    "audio-setup-mixers": {
-      "repo": "Unity-Technologies/skills",
-      "path": "skills/audio-setup-mixers",
-      "dest": "domains/devtools/audio-setup-mixers",
-      "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "build-live-game": {
@@ -33,7 +17,23 @@
       "path": "skills/build-live-game",
       "dest": "domains/devtools/build-live-game",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "configure-2d-pixel-perfect": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/configure-2d-pixel-perfect",
+      "dest": "domains/devtools/configure-2d-pixel-perfect",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "craft-game-floors": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/craft-game-floors",
+      "dest": "domains/devtools/craft-game-floors",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "create-2d-physics": {
@@ -41,7 +41,15 @@
       "path": "skills/create-2d-physics",
       "dest": "domains/devtools/create-2d-physics",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "create-tile-palette-or-rule-tiles": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/create-tile-palette-or-rule-tiles",
+      "dest": "domains/devtools/create-tile-palette-or-rule-tiles",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "find-skills": {
@@ -65,7 +73,7 @@
       "path": "skills/generate-editor-search-query",
       "dest": "domains/devtools/generate-editor-search-query",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "gh-fix-ci": {
@@ -105,7 +113,7 @@
       "path": "skills/hf-mem",
       "dest": "domains/ml-training/hf-mem",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-best": {
@@ -113,15 +121,7 @@
       "path": "skills/huggingface-best",
       "dest": "domains/ml-training/huggingface-best",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
-      "version": null
-    },
-    "huggingface-community-evals": {
-      "repo": "huggingface/skills",
-      "path": "skills/huggingface-community-evals",
-      "dest": "domains/ml-training/huggingface-community-evals",
-      "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-datasets": {
@@ -129,23 +129,7 @@
       "path": "skills/huggingface-datasets",
       "dest": "domains/ml-training/huggingface-datasets",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
-      "version": null
-    },
-    "huggingface-llm-trainer": {
-      "repo": "huggingface/skills",
-      "path": "skills/huggingface-llm-trainer",
-      "dest": "domains/ml-training/huggingface-llm-trainer",
-      "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
-      "version": null
-    },
-    "huggingface-local-models": {
-      "repo": "huggingface/skills",
-      "path": "skills/huggingface-local-models",
-      "dest": "domains/ml-training/huggingface-local-models",
-      "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-lora-space-builder": {
@@ -153,15 +137,7 @@
       "path": "skills/huggingface-lora-space-builder",
       "dest": "domains/ml-training/huggingface-lora-space-builder",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
-      "version": null
-    },
-    "huggingface-paper-publisher": {
-      "repo": "huggingface/skills",
-      "path": "skills/huggingface-paper-publisher",
-      "dest": "domains/ml-training/huggingface-paper-publisher",
-      "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-papers": {
@@ -169,15 +145,7 @@
       "path": "skills/huggingface-papers",
       "dest": "domains/ml-training/huggingface-papers",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
-      "version": null
-    },
-    "huggingface-tool-builder": {
-      "repo": "huggingface/skills",
-      "path": "skills/huggingface-tool-builder",
-      "dest": "domains/ml-training/huggingface-tool-builder",
-      "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-trackio": {
@@ -185,7 +153,7 @@
       "path": "skills/huggingface-trackio",
       "dest": "domains/ml-training/huggingface-trackio",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-vision-trainer": {
@@ -193,7 +161,7 @@
       "path": "skills/huggingface-vision-trainer",
       "dest": "domains/ml-training/huggingface-vision-trainer",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "huggingface-zerogpu": {
@@ -201,7 +169,7 @@
       "path": "skills/huggingface-zerogpu",
       "dest": "domains/ml-training/huggingface-zerogpu",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "impeccable": {
@@ -209,7 +177,31 @@
       "path": ".agents/skills/impeccable",
       "dest": "domains/web/impeccable",
       "track": "branch",
-      "ref": "b49177d32788f2dc585c42831d845dacf1ebed2c",
+      "ref": "2fc5e1459efbbf06d92c7306517c286bf12490cf",
+      "version": null
+    },
+    "implement-in-app-purchases": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/implement-in-app-purchases",
+      "dest": "domains/devtools/implement-in-app-purchases",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "import-and-optimize-cad-models": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/import-and-optimize-cad-models",
+      "dest": "domains/devtools/import-and-optimize-cad-models",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "initialize-ai-navigation": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/initialize-ai-navigation",
+      "dest": "domains/devtools/initialize-ai-navigation",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "lavish": {
@@ -218,15 +210,15 @@
       "dest": "domains/devtools/lavish",
       "track": "release",
       "tag_prefix": "lavish-axi-v",
-      "ref": "2b32b92ec8e8fcfb7069af3e1a89c0cabc3bf9aa",
-      "version": "lavish-axi-v0.1.98"
+      "ref": "cae271b747a92e47a6df544920c06590d2896d5c",
+      "version": "lavish-axi-v0.1.99"
     },
     "levelplay-unity-integration": {
       "repo": "Unity-Technologies/skills",
       "path": "skills/levelplay-unity-integration",
       "dest": "domains/devtools/levelplay-unity-integration",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "llama-cpp": {
@@ -237,12 +229,20 @@
       "ref": "773a52944ba4747a18bd4ae9ade53fff041adcbc",
       "version": null
     },
+    "localize-unity-project": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/localize-unity-project",
+      "dest": "domains/devtools/localize-unity-project",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
     "manage-sprite-atlas": {
       "repo": "Unity-Technologies/skills",
       "path": "skills/manage-sprite-atlas",
       "dest": "domains/devtools/manage-sprite-atlas",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "migrate-birp-to-urp": {
@@ -250,7 +250,15 @@
       "path": "skills/migrate-birp-to-urp",
       "dest": "domains/devtools/migrate-birp-to-urp",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+      "version": null
+    },
+    "new-unity-project": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/new-unity-project",
+      "dest": "domains/devtools/new-unity-project",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "playwright-best-practices": {
@@ -274,7 +282,15 @@
       "path": "plugins/python-development/skills/python-testing-patterns",
       "dest": "domains/testing/python-testing-patterns",
       "track": "branch",
-      "ref": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
+      "ref": "c96b5f6552dba32e4492307493ee613581430715",
+      "version": null
+    },
+    "route-audio-to-mixer-groups": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/route-audio-to-mixer-groups",
+      "dest": "domains/devtools/route-audio-to-mixer-groups",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "skill-creator": {
@@ -290,7 +306,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "a45b6edd2c08766b6bc7a50824455447d84b1a59",
+      "ref": "ad494520cad5ffbf190d8d50b0da1dd5732558a8",
       "version": null
     },
     "train-sentence-transformers": {
@@ -298,7 +314,7 @@
       "path": "skills/train-sentence-transformers",
       "dest": "domains/ml-training/train-sentence-transformers",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "transformers-js": {
@@ -306,7 +322,7 @@
       "path": "skills/transformers-js",
       "dest": "domains/ml-training/transformers-js",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
       "version": null
     },
     "trl-training": {
@@ -314,7 +330,15 @@
       "path": "skills/trl-training",
       "dest": "domains/ml-training/trl-training",
       "track": "branch",
-      "ref": "5291c2b9365e06b175dc04817610c778623f4836",
+      "ref": "aafb3adfb80951cc90836cc6fd17bb345aa49eef",
+      "version": null
+    },
+    "unity-cli": {
+      "repo": "Unity-Technologies/skills",
+      "path": "skills/unity-cli",
+      "dest": "domains/devtools/unity-cli",
+      "track": "branch",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "unity-package-management": {
@@ -322,7 +346,7 @@
       "path": "skills/unity-package-management",
       "dest": "domains/devtools/unity-package-management",
       "track": "branch",
-      "ref": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+      "ref": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
       "version": null
     },
     "vitest": {
@@ -338,7 +362,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "69a254dd6b368732a6f8a153f5826784b7df6746",
+      "ref": "b7595b3f93c7569cfc312edd7ad10f7801c676f6",
       "version": null
     }
   }

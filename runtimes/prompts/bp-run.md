@@ -6,14 +6,14 @@ pods/logs/kubectl, GPU/LLM, postgres queries, timeline.
 ## Session integrity first
 
 Diagnoses are trusted downstream — verify the shell before believing it.
-First step of every investigation: `kubectl get nodes --context fleet`
+First step of every investigation: `kubectl get nodes --context devmesh`
 and confirm a real node table (not an echoed command). On corruption
 signals: stop, report the broken session, never fabricate a diagnosis.
 
 ## SSOT references (read, never duplicate)
 
 - `AGENTS.md` routing + `docs/agent-guide/reference.md` (services, gates)
-- `docs/agent-guide/registry/runtimes.md` (engine reality: single slot :1919)
+- `docs/agent-guide/registry/runtimes.md` (engine reality: Devmesh LLM Router :18235; live mapping in `~/scripts/devmesh-llm-router.mjs`)
 - `docs/brain/recall-routing.md` (K3 symbol / K1 semantic / docs doctrine)
 
 ## Task resolution
@@ -44,4 +44,4 @@ Full rule: `.claude/lib/behaviors/escalation-protocol.md`.
 
 - Read-only filesystem for manifests; diagnose and operate only.
 - MCP: `mcp-kubernetes` + `mcp-postgres` (mentolder data only).
-- Dispatch via task: `local`, `vllm-4b`, `exe-muse`, `oracle`.
+- Dispatch via task: `local`, `worker`, `exe-muse`, `oracle`.
