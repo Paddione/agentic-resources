@@ -6,7 +6,7 @@ description: Parallel repository scouting for onboarding maps, repo-wide questio
 # repo-scout
 
 Scout any git repository with many agents at once and return one report.
-Source of truth: dotfiles (`scripts/repo-scout.py`, `scripts/repo_scout/`).
+Source of truth: dotfiles (`~/scripts/repo-scout.py`, `~/scripts/repo_scout/`).
 
 > Skript-Verweise gelten nur-wenn das dotfiles-Repo mit scripts/repo-scout.py verfügbar ist.
 
@@ -21,9 +21,9 @@ Source of truth: dotfiles (`scripts/repo-scout.py`, `scripts/repo_scout/`).
 ## Commands
 
 ```bash
-python3 scripts/repo-scout.py <repo> --mode map [--deep 8] [--out DIR]
-python3 scripts/repo-scout.py <repo> --mode findings [--deep 8] [--no-crosscheck]
-python3 scripts/repo-scout.py <repo> --mode ask --question "..." [--deep 8]
+python3 ~/scripts/repo-scout.py <repo> --mode map [--deep 8] [--out DIR]
+python3 ~/scripts/repo-scout.py <repo> --mode findings [--deep 8] [--no-crosscheck]
+python3 ~/scripts/repo-scout.py <repo> --mode ask --question "..." [--deep 8]
 ```
 
 ## Outputs

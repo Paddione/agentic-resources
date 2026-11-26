@@ -52,4 +52,4 @@ introduce a second approval or delegation workflow.
 Use sandbox-plan-executor for bounded local-model execution and
 verification-planning for uncertain evidence paths when available.
 
-Origin and revision: [skill-sources.json](../skill-sources.json).
+Origin and revision: [registry.json](../../registry.json).

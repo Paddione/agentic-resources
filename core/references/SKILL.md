@@ -38,7 +38,7 @@ auf die passende Datei (nicht den ganzen Hub laden, nicht die Inhalte dupliziere
 | Plan Intel Bundle | [`plan-intel-bundle.md`](plan-intel-bundle.md) | `intel.json`-Format: schema-validierte Quellen (codebase-memory, LSP, mcp-postgres, context7) — Schemas in [`schemas/`](schemas/) |
 | Plan-Staging (`repo.tickets == none`) | `devflow-mcp plan_stage` (Commit+Push) | Pläne stagen ohne Ticket-Backend (retiriert 2026-10-14) |
 | git-workflow Nachschlagewerk | [`git-workflow-procedures.md`](git-workflow-procedures.md) | Befehlsfolgen zu `git-workflow`: commit, PR-Scope-Preflight, CI-Fix-Loop |
-| Agent-Active-Plans | [`agent-active-plans.md`](agent-active-plans.md) | Kontrakt zur Plan-Kontext-Injektion für `.claude/agents/bachelorprojekt-*.md` |
+| Agent-Active-Plans | [`agent-active-plans.md`](agent-active-plans.md) | Kontrakt zur Plan-Kontext-Injektion für `.claude/agents/bp-*.md` |
 | Agentenoptimiertes Repo | [`agent-optimized-repo.md`](agent-optimized-repo.md) | Kontext-Budget, Stufen, Größenlimits, Ignores, deterministische Guardrails |
 
 

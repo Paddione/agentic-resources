@@ -7,7 +7,7 @@ Original synthesis of selected practices, not a vendored copy of upstream skills
 - [Community evals](https://github.com/huggingface/skills/tree/main/skills/huggingface-community-evals): smoke tests, consistent task/backend configuration, inspect-ai/lighteval where useful. These complement repo task tests; they do not prove plan-execution ability.
 - [hf-mem](https://github.com/huggingface/skills/tree/main/skills/hf-mem): estimate inference memory before downloading; verify real RSS on target hosts.
 - [Unsloth GGUF export](https://unsloth.ai/docs/basics/inference-and-deployment/saving-to-gguf): merge/export, preserve the chat template, evaluate quantized artifacts.
-- Local `~/.zcode/skills/unsloth-buddy/SKILL.md`: use hardware inspection, checkpoint continuity and role-aware export ideas. Do not inherit its automatic project creation, global memory writes or deployment lifecycle.
+- Former local `unsloth-buddy` skill (retired): retained hardware inspection, checkpoint continuity and role-aware export ideas. Do not inherit its automatic project creation, global memory writes or deployment lifecycle.
 
 Check current library documentation and pinned local code before changing APIs. Existing repository dependency locks take precedence over upstream example pins.
 

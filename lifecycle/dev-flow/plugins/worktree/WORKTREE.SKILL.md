@@ -45,4 +45,4 @@ worktree:cleanup {
 - `.opencode/worktree.jsonc` → config
 - `scripts/worktree-create.sh` → canonical bash harness (guards, git-crypt, agent-lock) (verboten, statt dessen `python3 ~/scripts/agent-workspace.py create --repo <repo> <branch>`)
 
-**Related:** [dev-flow-execute](.claude/skills/dev-flow-execute/SKILL.md)
+**Related:** [dev-flow-execute](../../../dev-flow-execute/SKILL.md)

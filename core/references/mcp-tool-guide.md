@@ -199,7 +199,7 @@ sind entfernt. Ersatzwege (`repo.tickets == none`):
   einen Selektor suchen, einen Konsolen-/Netzwerk-Trace ansehen. Also die Fälle, in denen ein
   Snapshot des lebenden DOM die Frage beantwortet.
 - **Wann NICHT:** für wiederholbare Regressionstests. Die gehören als `.spec.ts` unter
-  `components/website/e2e/` und laufen über [`dev-flow-e2e`](../dev-flow-e2e/SKILL.md) — eine MCP-Sitzung
+  `components/website/e2e/` und laufen über [`dev-flow-e2e`](../../lifecycle/dev-flow-e2e/SKILL.md) — eine MCP-Sitzung
   hinterlässt kein Artefakt, das die CI erneut ausführen könnte.
 - **Fallback:** `npx playwright test --headed --debug` bzw. `codegen` in der Shell.
 
@@ -210,7 +210,7 @@ sind entfernt. Ersatzwege (`repo.tickets == none`):
 
 ## Recall-Schichtwahl (K1/K3/K4)
 
-Kurzwahl je Fragetyp (Tiefe: [recall-routing](../../../docs/brain/recall-routing.md)):
+Kurzwahl je Fragetyp (Tiefe: `docs/brain/recall-routing.md` im Bachelorprojekt-Consumer):
 
 - **K1 zuerst** bei semantischer Was-Frage: `bge-mcp` (`bge_embed`, `bge_rerank`) — Roh-Recall über Code, Specs, Docs.
 - **K3 zuerst** bei bekanntem Symbol/Call-Chain: zentraler MCP-Hub (`fleet-workspace`) mit den Codebase-Memory-Tools (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`, `search_code`) — Präzisions-Check. Keine direkte Graph-/Embedding-Registrierung außerhalb des Hubs.
@@ -307,7 +307,7 @@ verlangt Authentifizierung, obwohl der Standard-Endpunkt anonym funktioniert —
 zwei Instanzen, deren Tools sich im Namensraum überschneiden. Der Server heißt in allen Harnesses
 `context7`, die Claude-Tools also `mcp__context7__*`.
 
-Harness-Setup je Client (Codex, Gemini CLI): [context7-harnesses.md](../../../docs/runbooks/context7-harnesses.md).
+Harness-Setup je Client (Codex, Gemini CLI): `docs/runbooks/context7-harnesses.md` (Bachelorprojekt-Consumer).
 
 ## `warden` — Persönlicher Vaultwarden-Tresor
 

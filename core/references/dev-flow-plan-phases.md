@@ -71,11 +71,13 @@ Ab hier trägt jeder Datei-Tool-Pfad den Worktree-Präfix: Read/Write/Edit haben
 # Nur bei repo.tickets: bash scripts/plan-preflight.sh pre-worktree --ticket "$TICKET_EXT_ID"
 # (rc 0 = fortfahren, 1 = bereits gemergt + abbrechen, 2 = Umgebung reparieren)
 
-python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>
-# Mit Tickets: python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>-T<id>
+WT="$(python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>)"
+# Mit Tickets: WT="$(python3 ~/scripts/agent-workspace.py create --repo . feature/<slug>-T<id>)"
+# (`agent-workspace.py create` legt Worktrees unter `~/.worktrees/<repo-key>/<branch>` an;
+# ältere lokale Helper nutzen `.worktrees/<slug>` — maßgeblich ist der ausgegebene Pfad.)
 
 # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
-bash scripts/agent-lock.sh claim branch "feature/<slug>" --worktree ".worktrees/<slug>" --label dev-flow-plan \
+bash scripts/agent-lock.sh claim branch "feature/<slug>" --worktree "$WT" --label dev-flow-plan \
   || { echo "Branch wird bereits bearbeitet."; exit 1; }
 # Mit Tickets zusaetzlich: agent-lock.sh claim ticket "$TICKET_EXT_ID" --branch ... --worktree ... --label dev-flow-plan
 ```
@@ -83,7 +85,7 @@ bash scripts/agent-lock.sh claim branch "feature/<slug>" --worktree ".worktrees/
 #### Schritt B.2: Artefakte in den Worktree verschieben
 
 ```bash
-WT="${REPO_ROOT}/.worktrees/<slug>"
+# WT aus B.1 (`create`-Ausgabe bzw. `git worktree list`)
 mkdir -p "${WT}/.agents/plans/"
 mv "${REPO_ROOT}/.agents/plans/<slug>" "${WT}/.agents/plans/<slug>"
 [ -f "${REPO_ROOT}/intel.json" ] && mv "${REPO_ROOT}/intel.json" "${WT}/.agents/plans/<slug>/intel.json"
@@ -156,12 +158,13 @@ Ausgangspunkt ist das beobachtete Symptom (User-Meldung, Log, failing Check). Sy
 ### Schritt 2: Worktree anlegen
 ```bash
 # Preflight wie B.1 (Standard: git log auf Main-Branch; mit Tickets: plan-preflight.sh --ticket)
-python3 ~/scripts/agent-workspace.py create --repo . fix/<slug>
-WT="$(pwd)/.worktrees/<slug>"
-cd .worktrees/<slug>
+WT="$(python3 ~/scripts/agent-workspace.py create --repo . fix/<slug>)"
+# (`agent-workspace.py create` legt Worktrees unter `~/.worktrees/<repo-key>/<branch>` an;
+# maßgeblich ist der ausgegebene Pfad.)
+cd "$WT"
 ```
 
-Das `cd` wirkt nur auf Bash: Datei-Tool-Pfade ab hier explizit unter `.worktrees/<slug>/`, sonst treffen sie den Hauptcheckout.
+Das `cd` wirkt nur auf Bash: Datei-Tool-Pfade ab hier explizit unter `$WT/` verwenden, sonst treffen sie den Hauptcheckout.
 
 ### Schritt 2.5: Branch claimen
 ```bash

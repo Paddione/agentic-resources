@@ -28,7 +28,7 @@ hält Dauer und PR-Referenz fest.
 
 **DB-Zugriff:** Reads MCP-first via `mcp-postgres_query` (Nicht-Ticket-Tabellen);
 der `psql()`-Fallback-Helper ist SSOT im
-[`MCP-Tool-Guide`](.agents/skills/references/mcp-tool-guide.md) §mcp-postgres.
+[`MCP-Tool-Guide`](../references/mcp-tool-guide.md) §mcp-postgres.
 
 ---
 
@@ -59,7 +59,7 @@ Cluster-Status-Reads — **MCP-first** (`mcp-kubernetes`, read-only):
 > Logs: `mcp-kubernetes_pods_log({ namespace: "workspace", name: "<pod>" })`
 > Einzelnes Pod-Detail: `mcp-kubernetes_pods_get({ namespace: "workspace", name: "<pod>" })`
 
-Fallback (mcp-kubernetes nicht erreichbar — Verfügbarkeits-Guard siehe [`MCP-Tool-Guide`](.agents/skills/references/mcp-tool-guide.md)):
+Fallback (mcp-kubernetes nicht erreichbar — Verfügbarkeits-Guard siehe [`MCP-Tool-Guide`](../references/mcp-tool-guide.md)):
 
 * **Pod status** (nur wenn `repo.task_runner: taskfile`): Status-Task des Consumer-Repos (CrashLoopBackOff, OOMKilled, Pending).
 * **Logs:** Log-Task des Consumer-Repos für `<service>`.

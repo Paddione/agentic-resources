@@ -42,7 +42,7 @@ die **Nutzung**. Zwei harte Regeln, beide von `check.mjs` erzwungen:
 
 > **`avoid_when` ist kein Ersatz für die Tiefenreferenz.** Die Guard-Prosa —
 > Portforward-Guard, Prod-Write-Guard (T001954), die read-only-Transaktionssemantik von
-> `mcp-postgres` — bleibt in [`mcp-tool-guide.md`](../references/mcp-tool-guide.md), die
+> `mcp-postgres` — bleibt in [`mcp-tool-guide.md`](../../../core/references/mcp-tool-guide.md), die
 > **handgepflegt** ist und **nicht** aus dieser Registry generiert wird. `deep_ref` verlinkt
 > dorthin. Eine einzeilige YAML-Zeichenkette trägt dieses Wissen nicht verlustfrei.
 

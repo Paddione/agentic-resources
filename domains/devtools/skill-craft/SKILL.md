@@ -86,7 +86,7 @@ Non-negotiables from the best-practice guide:
 - **Progressive disclosure**: keep SKILL.md lean; push detail into `references/`, `scripts/`.
 - **Description decides triggering**: third person, explicit "Use when..." triggers.
 - **One skill = one capability**; do not overlap the trigger space of existing skills
-  (check `.opencode/skills/*/SKILL.md` descriptions first).
+  (check installed `.agents/skills/*/SKILL.md` or harness-specific skill descriptions first).
 
 ## 4. Improve
 

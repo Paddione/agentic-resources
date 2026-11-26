@@ -5,7 +5,7 @@ description: 'Pointer to the codebase-memory SSOT for repository code graph anal
 
 # code-graph-interpretation — Verweis auf die SSOT
 
-**Der Inhalt dieses Skills wurde vollständig in [`codebase-memory`](../../core/codebase-memory/SKILL.md)
+**Der Inhalt dieses Skills wurde vollständig in [`codebase-memory`](../../../core/codebase-memory/SKILL.md)
 konsolidiert. Lies dort weiter und folge dem Ablauf von dort.**
 
 ## Warum hier ein Verweis steht
