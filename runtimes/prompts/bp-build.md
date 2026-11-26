@@ -7,7 +7,7 @@ Taskfile, `ENV=`, SealedSecret, OIDC, DSGVO.
 ## SSOT references (read, never duplicate)
 
 - `AGENTS.md` routing + `docs/agent-guide/reference.md` (services, gates, manifests)
-- `docs/agent-guide/registry/runtimes.md` (engine reality: single slot :1919)
+- `docs/agent-guide/registry/runtimes.md` (engine reality: Devmesh LLM Router :18235; live mapping in `~/scripts/devmesh-llm-router.mjs`)
 - `docs/brain/recall-routing.md` (K3 symbol / K1 semantic / docs doctrine)
 
 ## Task resolution
@@ -37,4 +37,4 @@ Full rule: `.claude/lib/behaviors/escalation-protocol.md`.
 - Write: manifests/overlays, Taskfile, environments. MCP: k8s status-only.
 - Secrets: never output plaintext credentials; credential lookup order is
   `docs/runbooks/credentials-finden.md` (stop and ask if nothing is found).
-- Dispatch via task: `local`, `vllm-4b`, `reviewer`, `fixer`, `oracle`.
+- Dispatch via task: `local`, `worker`, `reviewer`, `fixer`, `oracle`.

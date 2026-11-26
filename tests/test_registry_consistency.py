@@ -76,9 +76,9 @@ def _upstream_errors(registry=None, lock=None):
 # Neue Namen fallen hier rot heraus und erzwingen eine Einordnungsentscheidung.
 NON_EXTERNAL_LOCK_TRACKED = frozenset({
     "gitops-cluster-debug", "gitops-knowledge", "gitops-repo-audit", "hf-mem",
-    "huggingface-best", "huggingface-community-evals", "huggingface-datasets",
-    "huggingface-llm-trainer", "huggingface-local-models", "huggingface-lora-space-builder",
-    "huggingface-paper-publisher", "huggingface-papers", "huggingface-tool-builder",
+    "huggingface-best", "huggingface-datasets",
+    "huggingface-lora-space-builder",
+    "huggingface-papers",
     "huggingface-trackio", "huggingface-vision-trainer", "huggingface-zerogpu",
     "lavish", "llama-cpp", "playwright-best-practices", "python-testing-patterns",
     "skill-creator", "sota-testing", "train-sentence-transformers", "transformers-js",

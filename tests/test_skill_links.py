@@ -10,6 +10,11 @@ SKIP_PREFIXES = ("http://", "https://", "mailto:", "file:")
 SKIP_DIRS = frozenset({
     "domains/web/anatomy",
     "domains/devtools/freetoken-setup",
+    "domains/ml-training/huggingface-community-evals",
+    "domains/ml-training/huggingface-llm-trainer",
+    "domains/ml-training/huggingface-local-models",
+    "domains/ml-training/huggingface-paper-publisher",
+    "domains/ml-training/huggingface-tool-builder",
 })
 RETIRED_LITERALS = (
     "../../lib/behaviors/escalation-protocol.md",
@@ -23,7 +28,7 @@ def _owned_skill_dirs(repo: Path = REPO) -> list[Path]:
     vendor_lock = json.loads((repo / "vendor-lock.json").read_text(encoding="utf-8"))["skills"]
     dirs = []
     for name, spec in sorted(registry.items()):
-        if name in vendor_lock:
+        if name in vendor_lock or spec.get("source") == "external":
             continue
         rel = spec["path"]
         if rel in SKIP_DIRS:

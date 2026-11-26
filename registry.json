@@ -1,17 +1,6 @@
 {
  "schema_version": 1,
  "skills": {
-  "2d-pixel-perfect": {
-   "path": "domains/devtools/2d-pixel-perfect",
-   "source": "external",
-   "upstream": {
-    "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
-    "path": "skills/2d-pixel-perfect",
-    "mode": "vendored",
-    "vendor_id": "2d-pixel-perfect"
-   }
-  },
   "agentic-resource-lookup": {
    "path": "domains/devtools/agentic-resource-lookup",
    "source": "bachelorprojekt"
@@ -25,28 +14,6 @@
     "path": ".",
     "mode": "vendored; local kit patches retained (t3 arena batching, cp phase helpers); .github/examples not vendored (local-only)",
     "vendor_id": "anatomy"
-   }
-  },
-  "asset-transformer-toolkit": {
-   "path": "domains/devtools/asset-transformer-toolkit",
-   "source": "external",
-   "upstream": {
-    "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
-    "path": "skills/asset-transformer-toolkit",
-    "mode": "vendored",
-    "vendor_id": "asset-transformer-toolkit"
-   }
-  },
-  "audio-setup-mixers": {
-   "path": "domains/devtools/audio-setup-mixers",
-   "source": "external",
-   "upstream": {
-    "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
-    "path": "skills/audio-setup-mixers",
-    "mode": "vendored",
-    "vendor_id": "audio-setup-mixers"
    }
   },
   "bachelorprojekt-vim": {
@@ -64,12 +31,23 @@
     "vendor_id": "ajoslin/dot"
    }
   },
+  "build-gtk": {
+   "path": "domains/devtools/build-gtk",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/build-gtk",
+    "mode": "vendored",
+    "vendor_id": "build-gtk"
+   }
+  },
   "build-live-game": {
    "path": "domains/devtools/build-live-game",
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/build-live-game",
     "mode": "vendored",
     "vendor_id": "build-live-game"
@@ -94,15 +72,48 @@
    "path": "core/codebase-memory",
    "source": "home"
   },
+  "configure-2d-pixel-perfect": {
+   "path": "domains/devtools/configure-2d-pixel-perfect",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/configure-2d-pixel-perfect",
+    "mode": "vendored",
+    "vendor_id": "configure-2d-pixel-perfect"
+   }
+  },
+  "craft-game-floors": {
+   "path": "domains/devtools/craft-game-floors",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/craft-game-floors",
+    "mode": "vendored",
+    "vendor_id": "craft-game-floors"
+   }
+  },
   "create-2d-physics": {
    "path": "domains/devtools/create-2d-physics",
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/create-2d-physics",
     "mode": "vendored",
     "vendor_id": "create-2d-physics"
+   }
+  },
+  "create-tile-palette-or-rule-tiles": {
+   "path": "domains/devtools/create-tile-palette-or-rule-tiles",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/create-tile-palette-or-rule-tiles",
+    "mode": "vendored",
+    "vendor_id": "create-tile-palette-or-rule-tiles"
    }
   },
   "database-specialist": {
@@ -187,7 +198,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/generate-editor-search-query",
     "mode": "vendored",
     "vendor_id": "generate-editor-search-query"
@@ -238,7 +249,8 @@
   },
   "huggingface-community-evals": {
    "path": "domains/ml-training/huggingface-community-evals",
-   "source": "bachelorprojekt"
+   "source": "bachelorprojekt",
+   "note": "upstream removed in huggingface/skills#312 (aafb3ad); frozen local copy"
   },
   "huggingface-datasets": {
    "path": "domains/ml-training/huggingface-datasets",
@@ -246,11 +258,13 @@
   },
   "huggingface-llm-trainer": {
    "path": "domains/ml-training/huggingface-llm-trainer",
-   "source": "bachelorprojekt"
+   "source": "bachelorprojekt",
+   "note": "upstream removed in huggingface/skills#312 (aafb3ad); frozen local copy"
   },
   "huggingface-local-models": {
    "path": "domains/ml-training/huggingface-local-models",
-   "source": "bachelorprojekt"
+   "source": "bachelorprojekt",
+   "note": "upstream removed in huggingface/skills#312 (aafb3ad); frozen local copy"
   },
   "huggingface-lora-space-builder": {
    "path": "domains/ml-training/huggingface-lora-space-builder",
@@ -258,7 +272,8 @@
   },
   "huggingface-paper-publisher": {
    "path": "domains/ml-training/huggingface-paper-publisher",
-   "source": "bachelorprojekt"
+   "source": "bachelorprojekt",
+   "note": "upstream removed in huggingface/skills#312 (aafb3ad); frozen local copy"
   },
   "huggingface-papers": {
    "path": "domains/ml-training/huggingface-papers",
@@ -266,7 +281,8 @@
   },
   "huggingface-tool-builder": {
    "path": "domains/ml-training/huggingface-tool-builder",
-   "source": "bachelorprojekt"
+   "source": "bachelorprojekt",
+   "note": "upstream removed in huggingface/skills#312 (aafb3ad); frozen local copy"
   },
   "huggingface-trackio": {
    "path": "domains/ml-training/huggingface-trackio",
@@ -285,10 +301,32 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/pbakaus/impeccable",
-    "revision": "b49177d32788f2dc585c42831d845dacf1ebed2c",
+    "revision": "2fc5e1459efbbf06d92c7306517c286bf12490cf",
     "path": ".agents/skills/impeccable",
     "mode": "vendored; LICENSE und NOTICE.md aus Upstream-Wurzel beigelegt, Engine-Binary wird nicht mitgeliefert",
     "vendor_id": "impeccable"
+   }
+  },
+  "implement-in-app-purchases": {
+   "path": "domains/devtools/implement-in-app-purchases",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/implement-in-app-purchases",
+    "mode": "vendored",
+    "vendor_id": "implement-in-app-purchases"
+   }
+  },
+  "import-and-optimize-cad-models": {
+   "path": "domains/devtools/import-and-optimize-cad-models",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/import-and-optimize-cad-models",
+    "mode": "vendored",
+    "vendor_id": "import-and-optimize-cad-models"
    }
   },
   "incident-response": {
@@ -299,6 +337,17 @@
    "path": "domains/gitops/infra-ops",
    "source": "bachelorprojekt"
   },
+  "initialize-ai-navigation": {
+   "path": "domains/devtools/initialize-ai-navigation",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/initialize-ai-navigation",
+    "mode": "vendored",
+    "vendor_id": "initialize-ai-navigation"
+   }
+  },
   "lavish": {
    "path": "domains/devtools/lavish",
    "source": "bachelorprojekt"
@@ -308,7 +357,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/levelplay-unity-integration",
     "mode": "vendored",
     "vendor_id": "levelplay-unity-integration"
@@ -318,12 +367,23 @@
    "path": "domains/ml-training/llama-cpp",
    "source": "bachelorprojekt"
   },
+  "localize-unity-project": {
+   "path": "domains/devtools/localize-unity-project",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/localize-unity-project",
+    "mode": "vendored",
+    "vendor_id": "localize-unity-project"
+   }
+  },
   "manage-sprite-atlas": {
    "path": "domains/devtools/manage-sprite-atlas",
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/manage-sprite-atlas",
     "mode": "vendored",
     "vendor_id": "manage-sprite-atlas"
@@ -349,7 +409,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/migrate-birp-to-urp",
     "mode": "vendored",
     "vendor_id": "migrate-birp-to-urp"
@@ -362,6 +422,17 @@
   "morning": {
    "path": "domains/misc/morning",
    "source": "home"
+  },
+  "new-unity-project": {
+   "path": "domains/devtools/new-unity-project",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/new-unity-project",
+    "mode": "vendored",
+    "vendor_id": "new-unity-project"
+   }
   },
   "opencode-git-workflow": {
    "path": "lifecycle/opencode-git-workflow",
@@ -429,6 +500,17 @@
    "source": "home",
    "note": "implementation in dotfiles scripts/repo-scout.py + scripts/repo_scout/"
   },
+  "route-audio-to-mixer-groups": {
+   "path": "domains/devtools/route-audio-to-mixer-groups",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/route-audio-to-mixer-groups",
+    "mode": "vendored",
+    "vendor_id": "route-audio-to-mixer-groups"
+   }
+  },
   "sandbox-plan-executor": {
    "path": "domains/misc/sandbox-plan-executor",
    "source": "home",
@@ -489,12 +571,34 @@
    "path": "domains/ml-training/trl-training",
    "source": "bachelorprojekt"
   },
+  "unity-ai": {
+   "path": "domains/devtools/unity-ai",
+   "source": "external",
+   "upstream": {
+    "source": "unity-ai CLI plugin",
+    "revision": "0.1.0-beta.1",
+    "path": "skills/unity-ai",
+    "mode": "vendored (CLI plugin)",
+    "vendor_id": "unity-ai"
+   }
+  },
+  "unity-cli": {
+   "path": "domains/devtools/unity-cli",
+   "source": "external",
+   "upstream": {
+    "source": "https://github.com/Unity-Technologies/skills",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
+    "path": "skills/unity-cli",
+    "mode": "vendored",
+    "vendor_id": "unity-cli"
+   }
+  },
   "unity-package-management": {
    "path": "domains/devtools/unity-package-management",
    "source": "external",
    "upstream": {
     "source": "https://github.com/Unity-Technologies/skills",
-    "revision": "5841a34846f3e2b908c37aca1fca2eb15118a440",
+    "revision": "3e285ba9f31edd296d1da992d5d7cf1aa2f3ab7b",
     "path": "skills/unity-package-management",
     "mode": "vendored",
     "vendor_id": "unity-package-management"
