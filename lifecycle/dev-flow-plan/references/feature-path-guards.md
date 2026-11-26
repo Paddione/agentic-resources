@@ -9,7 +9,7 @@ Vollständige Guard-Liste des Feature-Pfads. Der SKILL.md nennt den Preflight
   nur-wenn-Tickets (`repo.tickets != none`): `bash scripts/agent-lock.sh check-merged "$TICKET_EXT_ID"` (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
   (`rc=1` = auf `MAIN` schon gefixt → Ticket `done`, abbrechen). Ohne Tickets:
   `git log origin/MAIN --grep='<slug|symptom>'` — Treffer → abbrechen.
-  Exit-Codes: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md) §Preflight.
+  Exit-Codes: [dev-flow-plan-phases](../../../core/references/dev-flow-plan-phases.md) §Preflight.
 - **Kollisions-Check vor der Worktree-Anlage** (T002444): `bash scripts/agent-collision.sh check --branch "$BRANCH"` —
   meldet von anderen Sessions belegte Branches/Worktrees, bevor der Worktree-Helper läuft.
 - **Brainstorming ist nicht optional** — in keinem der beiden Pfade. Es entscheidet, was überhaupt

@@ -23,9 +23,9 @@ angehängten Proposals.
 | `website` | Brand-Seite mentolder (korczewski eingefroren) | Skill `web-audit` | delegiert |
 | `repo` | Repo-Zustand, PRs | Skill `repo-hygiene` §0–§7 inkl. Runtime-Drift | delegiert |
 | `toolset` | Tool-Registry (`capabilities.yaml`, Bachelorprojekt-Consumer) | Skill `toolset-curate` Schritt 1–2 | delegiert |
-| `security` | SealedSecrets, OIDC, DSGVO, Secret-Alter | Checkliste [§2](references/checklists.md#2-security-sealedsecrets-oidc-dsgvo) (+ infra-ops `references/runbooks-operations.md` §6) | eigen |
-| `database` | PostgreSQL (Backups, Schema, Wachstum) | Checkliste [§3](references/checklists.md#3-datenbank-postgresql) (+ infra-ops `references/runbooks-operations.md` §7) | eigen |
-| `llm-pipeline` | GPU-Host, llm-proxy, Loadouts | Checkliste [§4](references/checklists.md#4-llm-pipeline-gpu-proxy-loadouts) (+ infra-ops `references/runbooks-operations.md` §5) | eigen |
+| `security` | SealedSecrets, OIDC, DSGVO, Secret-Alter | Checkliste [§2](references/checklists.md#2-security-sealedsecrets-oidc-dsgvo) (+ [infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §6) | eigen |
+| `database` | PostgreSQL (Backups, Schema, Wachstum) | Checkliste [§3](references/checklists.md#3-datenbank-postgresql) (+ [infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §7) | eigen |
+| `llm-pipeline` | GPU-Host, llm-proxy, Loadouts | Checkliste [§4](references/checklists.md#4-llm-pipeline-gpu-proxy-loadouts) (+ [infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §5) | eigen |
 | `all` | alle Ziele oben | sequenziell, ein Sammelreport | — |
 
 ## Grundregeln
@@ -79,7 +79,7 @@ axe critical/Lighthouse <50 ⇒ Critical, sonst Warning, kosmetisch ⇒ Info).
 
 ### repo → delegiert an `repo-hygiene`
 
-Führe die aktiven Abschnitte der [`repo-hygiene-ops.md`](../../core/references/repo-hygiene-ops.md)-Referenz aus (§0–§4, §6–§7; §5 entfallen) inklusive
+Führe die aktiven Abschnitte der [`repo-hygiene-ops.md`](../../../core/references/repo-hygiene-ops.md)-Referenz aus (§0–§4, §6–§7; §5 entfallen) inklusive
 `bash scripts/runtime-drift-check.sh` (falls im Repo vorhanden) sowie des Host-weiten Read-Only-Audits (`python3 ~/scripts/repo-hygiene-audit.py` bzw. `~/.cache/repo-hygiene-audit.json` für Multi-Repo-, MCP-Config-, DB-Marker- und Serving-/GGUF-Drift). Die Top-3-Empfehlungen aus §6 und jeder
 Drift-/Aging-Befund werden zu normierten Befunden.
 
@@ -98,11 +98,11 @@ dafür bleibt es bei `toolset-curate`.
 
 SealedSecrets-Status und -Alter, OIDC-Clients DB-vs-Manifest-Drift, Plaintext-Secrets
 im Git-Baum, DSGVO-Basics der Brand-Seiten. Details: [Checkliste §2](references/checklists.md#2-security-sealedsecrets-oidc-dsgvo).
-Rotationsprozeduren selbst: infra-ops `references/runbooks-operations.md` §6.
+Rotationsprozeduren selbst: [infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §6.
 
 ### database → Checkliste §3
 
-Backup-Frische und Restore-Verifikation (infra-ops `references/runbooks-operations.md` §7 Audit), plus read-only SQL-Checks
+Backup-Frische und Restore-Verifikation ([infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §7 Audit), plus read-only SQL-Checks
 über `mcp-postgres` (die `tickets.*`-Tabellen entfielen mit dem Retirement 2026-10-14).
 Details: [Checkliste §3](references/checklists.md#3-datenbank-postgresql).
 
@@ -110,7 +110,7 @@ Details: [Checkliste §3](references/checklists.md#3-datenbank-postgresql).
 
 Proxy-Erreichbarkeit, Backend-Gesundheit, Loadout-Konfiguration vs. laufende Realität,
 GPU-Speicher. Details: [Checkliste §4](references/checklists.md#4-llm-pipeline-gpu-proxy-loadouts).
-Betrieb und Loadout-Wechsel: infra-ops `references/runbooks-operations.md` §5.
+Betrieb und Loadout-Wechsel: [infra-ops/references/runbooks-operations.md](../../gitops/infra-ops/references/runbooks-operations.md) §5.
 
 ## Phase B — Befunde normalisieren und Report schreiben
 

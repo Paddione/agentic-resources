@@ -11,7 +11,7 @@ Use worktrees when isolation helps the requested work or the repository requires
 
 Use explicit repository paths (`git -C <repo> ...`). Inspect `status --short`, the current branch, and `worktree list --porcelain` before mutation. Identify ownership of existing worktrees; reuse a suitable task worktree instead of creating a duplicate. Preserve unrelated dirty changes in the main checkout.
 
-Prefer the repository's worktree convention and helper. For Bachelorprojekt, consult its current `AGENTS.md`: `.worktrees/<slug>` and its creation helper take precedence over OMO defaults. Otherwise choose an appropriate path; `.slim/worktrees/<slug>` is an optional OMO convention, not a requirement. Verify that a nested worktree directory is ignored before creating it; use an existing ignore rule or a narrow local exclude rather than rewriting tracked ignore files unnecessarily.
+Prefer the repository's worktree convention and helper (e.g. `python3 ~/scripts/agent-workspace.py create` per `worktrees.yaml`, or the repo's `AGENTS.md` convention), which take precedence over OMO defaults. Otherwise choose an appropriate path; `.slim/worktrees/<slug>` is an optional OMO convention, not a requirement. Verify that a nested worktree directory is ignored before creating it; use an existing ignore rule or a narrow local exclude rather than rewriting tracked ignore files unnecessarily.
 
 Select the intended base explicitly. Check branch/path collisions, and determine whether a remote update is needed for this task. Do not reset or pull a dirty main checkout merely to create a separate worktree.
 

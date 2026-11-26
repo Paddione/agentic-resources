@@ -112,18 +112,18 @@ bash scripts/agent-lock.sh claim branch "chore/<slug>" --worktree "$PWD" --label
 > trifft ein alter Hauptcheckout-Pfad still die falsche Arbeitskopie (T002350).
 
 Claim-Semantik, main-checkout-Sonderfall (`claim main-checkout`) und Release:
-[session-coordination](.agents/skills/references/session-coordination.md) — ausschließlich
+[session-coordination](../../core/references/session-coordination.md) — ausschließlich
 branch-scoped Claims, kein Ticket-Scope.
 
 ## Schritt 2: Änderungen vornehmen
 
 Setze die Wartung um. Bei mechanischer Arbeit über mehrere Dateien kannst du an einen passend
-provisionierten Subagenten delegieren (siehe [subagent-provisioning](.agents/skills/references/subagent-provisioning.md) — Chores sind i.d.R. `haiku`/`sonnet`, Effort low).
+provisionierten Subagenten delegieren (siehe [subagent-provisioning](../../core/references/subagent-provisioning.md) — Chores sind i.d.R. `haiku`/`sonnet`, Effort low).
 
 ## Schritt 3: Verifizieren
 
 Verify-Block ausführen (die vier Befehle, Freshness-Guard, S1-Ratchet-Erklärung) — **SSOT:**
-[verification-block](.agents/skills/references/verification-block.md). Verifizierende Kommandos
+[verification-block](../../core/references/verification-block.md). Verifizierende Kommandos
 aus `repo.task_runner` lesen; Freshness-Teil nur-wenn-generated-artifacts
 (`repo.generated_artifacts == true`).
 
@@ -132,7 +132,7 @@ aus `repo.task_runner` lesen; Freshness-Teil nur-wenn-generated-artifacts
 > **Restbudget-Check** aus dem verification-block laufen lassen (`plan-lint.sh residual_budget`-
 > Schleife) — bei Restbudget ≤ 0 die Datei **echt verkleinern**, nicht kosmetisch zusammenziehen.
 
-Siehe [dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md) für TypeScript/pnpm-Gotchas in Worktrees.
+Siehe [dev-flow-gotchas](../../core/references/dev-flow-gotchas.md) für TypeScript/pnpm-Gotchas in Worktrees.
 
 ## Schritt 4: Commit, Push & PR
 
@@ -176,7 +176,7 @@ git branch -D "$BRANCH" && git push origin ":$BRANCH"  # verboten (Guard); statt
 Ein Chore ohne Plan hat keinen Plan-Receipt; keinen solchen Archiv-Beleg behaupten.
 Den tatsächlichen Endzustand prüfen: eigener Worktree, lokaler und Remote-Branch
 entfernt, eigene Claims freigegeben. Exit 0 allein reicht nicht. Die gemeinsame
-[repo-hygiene-ops §2](../references/repo-hygiene-ops.md#2-stale-branches) beschreibt
+[repo-hygiene-ops §2](../../core/references/repo-hygiene-ops.md#2-stale-branches) beschreibt
 die positive Prüfung und den Remote-Control-Ausnahmefall ohne Hook-Umgehung.
 
 Beim Test-only-Kurzpfad gibt es keinen Worktree zu entfernen. Nur SID-eigene Claims
@@ -189,7 +189,7 @@ Checkouts.
 ## Schritt 7: Deploy (falls nötig)
 
 Nur wenn die Chore deploybare Pfade berührt — Mapping in
-[deploy-routing](.agents/skills/references/deploy-routing.md) (Single Source of Truth).
+[deploy-routing](../../core/references/deploy-routing.md) (Single Source of Truth).
 
 ---
 
@@ -210,7 +210,7 @@ Nur wenn die Chore deploybare Pfade berührt — Mapping in
 |-------|-----------|
 | `dev-flow-plan` | Geschwister — Features/Fixes (mit Plan + Handoff) statt Chores |
 | `git-workflow` | **SSOT für Schritt 4–6** — Commit/PR/Merge/Cleanup |
-| `using-git-worktrees` | Hintergrund — wird hier durch Worktree-Helper des Repos (git-crypt-safe) ersetzt |
+| `worktrees` | Worktree-Regeln — ergänzt den Repo-Wrapper (`agent-workspace.py` / git-crypt-safe Helper) |
 | `mishap-tracker` | Abschluss — protokolliert Frictions |
 
 ## Nachbereitung & Mishap Report

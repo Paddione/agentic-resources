@@ -25,7 +25,7 @@ Das einheitliche Inferenz-Gateway ist der **Devmesh LLM Router auf `:18235`** (`
 | Schwer | `local` (`reasoning`) | Qwen3.8-27B direkt auf `:1919` (oder `:18235` Modell `reasoning`), 153600 ctx | L-Dispatches bis ~120k | **Review / Oracle / Design + übergroße Arbeit**: Debugging mit Urteil, adversariale Review, Reasoning-lastige Meta-Arbeit |
 | Eskalation | `exe-muse` | Muse Spark 1.3 Contributor via OpenCode Go, 1M ctx | Cloud-Rail | Nur per Eskalationskette im Orchestrator-Prompt (lokal 2× gescheitert oder Bedarf über lokalem Fenster) |
 
-Die früheren dedizierten Standalone-Pools `:8123` (vLLM), `:8080` (Windows-4B) und `:18199` (CPU-Pool) sind abgeschaltet. Das Routing läuft konsolidiert über den Devmesh-Router auf `:18235`.
+Die früheren dedizierten Standalone-Pools `:8123` (vLLM), `:8080` (Windows-4B) und `:18199` (CPU-Pool) sind abgeschaltet. Das Routing läuft konsolidiert über den Devmesh-Router auf `:18235` (live Backend-Mapping SSOT: `~/scripts/devmesh-llm-router.mjs`).
 
 ## 2. Geplant — provisorisch, NICHT live
 
@@ -35,8 +35,8 @@ Orchestrator mappt sie auf reale Agenten, sobald sie live sind):
 - **0.8B-Klasse** — nur triviale mechanische Partials (Rename, Lockfile-Bump,
   reine Doc-Syncs ohne Urteilsvermögen).
 
-Bis zur Inbetriebnahme von 0.8B bleibt `qwen35-2b` die Untergrenze für begrenzte Partials und
-`vllm-4b` (Rückfall `qwen35-4b`) der Standard.
+Bis zur Inbetriebnahme von 0.8B bleibt `worker`/`fast` die Untergrenze für begrenzte Partials und
+`default`/`chat` der Standard (Rückfall Cloud: `plan-worker-muse`).
 
 ## 3. Routing-Signale — nach Komplexitätsklasse, nie pro Partial annotiert
 
@@ -54,7 +54,7 @@ klassifiziert jedes Partial zur Dispatch-Zeit anhand dieser Signale:
   geteiltem Interface-Contract → schwer (Kontext- und Koordinationslast).
 
 Faustregel: mechanisch + voll spezifiziert + ein Subsystem → Standard-Schiene
-(`vllm-4b`, Rückfall `qwen35-4b`); Multi-File mit Debugging/Urteil, Review, oder
+(`default`/`chat`, Cloud-Überlauf `plan-worker-muse`); Multi-File mit Debugging/Urteil, Review, oder
 S1-Budget ≈ 0 → `local`; über lokalem Fenster oder zweimal lokal gescheitert →
 `exe-muse`. Im Zweifel **eine Stufe höher**.
 

@@ -24,15 +24,15 @@ Kontext `fleet`. MCP-first (`mcp-kubernetes_*`, Flux-MCP), Fallback `kubectl --c
 
 ## 2. security (SealedSecrets, OIDC, DSGVO)
 
-Fachprozeduren für Rotation/Seeding: infra-ops `references/runbooks-operations.md` §6/§4. Hier nur Prüfungen:
+Fachprozeduren für Rotation/Seeding: [infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §6/§4. Hier nur Prüfungen:
 
 1. **Plaintext-Secrets im Git-Baum** — `kind: Secret` ohne `sops:`-Metadaten und ohne
    SealedSecret-Bezug in `fleet/`, `prod-fleet/`, `flux/` ⇒ Critical.
 2. **SealedSecrets-Alter** — Erzeugungsdatum der SealedSecret-Manifeste gegen die
-    Rotationsrichtlinie (infra-ops `references/runbooks-operations.md` §6): überfällig ⇒ Warning, deutlich überfällig (> 2×
+    Rotationsrichtlinie ([infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §6): überfällig ⇒ Warning, deutlich überfällig (> 2×
     Richtwert) ⇒ Critical.
 3. **OIDC-Client-Drift** — Clients in `pocket_id.oidc_clients` (read-only SQL) gegen die
-    im Repo dokumentierten/erwarteten Clients (infra-ops `references/runbooks-operations.md` §4): fehlende, verwaiste oder
+    im Repo dokumentierten/erwarteten Clients ([infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §4): fehlende, verwaiste oder
     abweichende Redirect-URIs ⇒ Warning.
 4. **DSGVO-Basics der Brand-Seiten** — Impressum + Datenschutzerklärung erreichbar auf
    jeder gerouteten Brand-Domain; Kontaktformulare ohne sichtbare Datenminimierung
@@ -41,12 +41,12 @@ Fachprozeduren für Rotation/Seeding: infra-ops `references/runbooks-operations.
 
 ## 3. Datenbank (PostgreSQL)
 
-Backup-Audit und Restore-Prozedur: infra-ops `references/runbooks-operations.md` §7. Hier nur Prüfungen (read-only,
+Backup-Audit und Restore-Prozedur: [infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §7. Hier nur Prüfungen (read-only,
 `mcp-postgres`; die `tickets.*`-Tabellen entfielen mit dem Retirement 2026-10-14):
 
 1. **Backup-Frische** — letzter erfolgreicher Backup-Lauf je Brand: älter als das
    Backup-Intervall ⇒ Critical. Kein Backup-Nachweis auffindbar ⇒ Critical.
-2. **Restore-Verifikation** — letzter verifizierter Restore (infra-ops `references/runbooks-operations.md` §7): älter als
+2. **Restore-Verifikation** — letzter verifizierter Restore ([infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §7): älter als
    der Richtwert ⇒ Warning (ein Backup ohne Restore-Test ist eine Hypothese).
 3. **Schema-Gesundheit** — `invalid` Indizes (`pg_index.indisvalid = false`) ⇒ Warning;
    Tabellen ohne Primärschlüssel (ohne System-Schemas) ⇒ Warning.
@@ -56,7 +56,7 @@ Backup-Audit und Restore-Prozedur: infra-ops `references/runbooks-operations.md`
 
 ## 4. llm-pipeline (GPU, Proxy, Loadouts)
 
-Betrieb und Loadout-Wechsel: infra-ops `references/runbooks-operations.md` §5. Konfig-SSOT: `scripts/llm/loadouts.json`.
+Betrieb und Loadout-Wechsel: [infra-ops/references/runbooks-operations.md](../../../gitops/infra-ops/references/runbooks-operations.md) §5. Konfig-SSOT: `scripts/llm/loadouts.json`.
 
 1. **Proxy-Erreichbarkeit** — llm-proxy (:18235) antwortet nicht ⇒ Critical; einzelne
    Backends unhealthy ⇒ Warning (Critical, wenn es der einzige Backend-Pfad einer

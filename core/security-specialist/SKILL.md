@@ -79,4 +79,4 @@ Execute Bash commands and file edits without asking for confirmation.
 Blockiert (fehlender Kontext, Mehrdeutigkeit, unsichere Operation)? Sofort stoppen,
 `bash scripts/agent-escalate.sh --agent "security-specialist" --reason … --tried … --needs …`
 aufrufen und einen ESCALATION-Block zurückgeben. Nie stumm scheitern, nie raten.
-Vollständige Regel: [`escalation-protocol.md`](../../lib/behaviors/escalation-protocol.md).
+Vollständige Regel (Bachelorprojekt-Consumer): `.claude/lib/behaviors/escalation-protocol.md`.

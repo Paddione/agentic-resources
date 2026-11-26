@@ -15,7 +15,7 @@ description: 'Use to choose the development path for a work request in this repo
 > explizitem cd+guard — **nie auf implizites cwd vertrauen**. Ab Phase B tragen **alle**
 > Read/Write/Edit-Pfade den Worktree-Präfix. Gilt für das ganze Dokument.
 
-Der Plan ist der behavior-change-Einstieg des gemeinsamen [Lifecycle-Vertrags](.agents/skills/references/dev-flow-lifecycle.md): Ausgang ist ein Request, Ausgang ein gestagter, gepushter Plan ohne PR; danach übernimmt `dev-flow-execute`. Proposal, Plan-Lint, staged-plan und No-Early-PR-Gates bleiben hier normativ.
+Der Plan ist der behavior-change-Einstieg des gemeinsamen [Lifecycle-Vertrags](../../core/references/dev-flow-lifecycle.md): Ausgang ist ein Request, Ausgang ein gestagter, gepushter Plan ohne PR; danach übernimmt `dev-flow-execute`. Proposal, Plan-Lint, staged-plan und No-Early-PR-Gates bleiben hier normativ.
 
 Nur-wenn-Tickets (`repo.tickets != none`): „Gestagt" heißt Ticket-Status `plan_staged` (Claim ticket-scoped, Stagen nach dem Commit — Ablauf: [ticket-stage-procedure](references/ticket-stage-procedure.md)); `dev-flow-execute` liest den Plan aus der DB. Ohne Tickets (`repo.tickets == none`): „gestagt" heißt Plan committiert und auf den Feature/Fix-Branch gepusht; `dev-flow-execute` liest ihn aus der Branch-Konvention `.agents/plans/<slug>/tasks.md`.
 
@@ -40,7 +40,7 @@ Bei jeder Anfrage in diesem Repo, die etwas verändern will.
 
 ## Schritt −3: Deep Grilling (optional)
 Bei komplexem oder unklarem Feature den User nach einer Grilling-Session fragen. Fragenkatalog:
-[dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md). Q/A-Session über `lavish`
+[dev-flow-gotchas](../../core/references/dev-flow-gotchas.md). Q/A-Session über `lavish`
 (`.lavish/<slug>-grilling.html`, Input-Playbook). Antworten in
 `.agents/plans/<slug>/grill-answers.md` persistieren (nur-wenn-Tickets: zusätzlich
 Ticket-Anlage und Attachments, siehe [ticket-stage-procedure](references/ticket-stage-procedure.md)).
@@ -57,7 +57,7 @@ fi
 
 ## Schritt −1: Reaper & Stale-Worktree-Audit
 Tote Sessions/Zombies/stale Worktrees räumen und sehen, wer gerade was bearbeitet —
-Lock-Lebenszyklus-SSOT: [session-coordination](.agents/skills/references/session-coordination.md) [T000510]:
+Lock-Lebenszyklus-SSOT: [session-coordination](../../core/references/session-coordination.md) [T000510]:
 ```bash
 bash scripts/agent-lock.sh reap            # cwd-tote Prozesse killen, Worktrees prunen, tote Locks räumen  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 bash scripts/agent-lock.sh list            # "Wer macht was": laufende Claims anderer Sessions  # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
@@ -82,7 +82,7 @@ Diese Skill plant nur (Feature/Fix) und stoppt vor der Umsetzung; die übernimmt
 **Artefakt-Ebene:** Die feature/fix/chore-Wahl ist die *Pfad*-Wahl; davor steht die *Artefakt*-Wahl
 (PRD vs. ADR vs. Change-Proposal vs. Chore ohne Plan — nur-wenn-Tickets: Chore-Ticket).
 Entscheidungstabelle + PRD-Checkliste:
-[plan-artifact-level](.agents/skills/references/plan-artifact-level.md).
+[plan-artifact-level](../../core/references/plan-artifact-level.md).
 
 ### Schritt 0.5: Goal-Check — Wiederverwenden vor Anlegen (Modell B)
 
@@ -104,7 +104,7 @@ grep -rln '<pfad/der/betroffenen/datei>' tests/spec/                      # absi
 ```
 Treffer werden zitiert (Datei + Zeilen); die Frage lautet dann „bestehende Entscheidung behalten
 oder ersetzen?". Ersetzen geht über ein `RENAMED`/`MODIFIED`-Delta auf den SSOT-Spec. Begründung
-und Fallbeispiel: T002817 in [dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md).
+und Fallbeispiel: T002817 in [dev-flow-gotchas](../../core/references/dev-flow-gotchas.md).
 
 ## Feature-Pfad
 
@@ -118,9 +118,9 @@ Die Planphase startet auf `MAIN`; danach entsteht der Worktree.
 | **C — Partial-Pipeline** | Worktree | Decompose in Partials, pro Partial: Plan schreiben → committen (nur-wenn-Tickets: → stagen → enqueuen); danach plan-lint, Embedding, finaler Push |
 
 Vollständige Schrittfolge samt Befehlen, Decompose-/Fan-out-Mechanik und Kontext-Injektion für
-Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
+Plan-Subagenten: [dev-flow-plan-phases](../../core/references/dev-flow-plan-phases.md).
 
-**Intel-Quellen des Bundles** (Phase A.1.5) — jede Sektion ist an ihre Quelle gebunden: `symbols`/`signature`/`type_text`/`call_graph` aus **codebase-memory** + **LSP**-Hover; `db_tables` aus **mcp-postgres** (read-only); `external_types` aus **context7**; `impact_files`/`s1_*` aus `wc -l` + Baseline (`docs/code-quality/baseline.json` bzw. Repo-Äquivalent). Unerreichbare Quelle → `risks[]`-Eintrag statt leerer Sektion. Format: [plan-intel-bundle](.agents/skills/references/plan-intel-bundle.md).
+**Intel-Quellen des Bundles** (Phase A.1.5) — jede Sektion ist an ihre Quelle gebunden: `symbols`/`signature`/`type_text`/`call_graph` aus **codebase-memory** + **LSP**-Hover; `db_tables` aus **mcp-postgres** (read-only); `external_types` aus **context7**; `impact_files`/`s1_*` aus `wc -l` + Baseline (`docs/code-quality/baseline.json` bzw. Repo-Äquivalent). Unerreichbare Quelle → `risks[]`-Eintrag statt leerer Sektion. Format: [plan-intel-bundle](../../core/references/plan-intel-bundle.md).
 
 ### Guards des Feature-Pfads
 - **Preflight: Check merged** (T002279) — beide Pfade, vor der Worktree-Anlage: prüfen, ob der
@@ -128,14 +128,14 @@ Plan-Subagenten: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-
 - Alle weiteren Guards (Kollisions-Check T002444, Brainstorming-Pflicht, Ticket-vor-Branch nur-wenn-Tickets, disjunkte Partials, Plan-Mutation, Slot-Gating, Design-Asset-Qualität): [feature-path-guards](references/feature-path-guards.md).
 
 ### Schritt 3.7: Plan-Erstellung — Decompose, dann paralleler Fan-out (T002074)
-Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos, `scripts/plan-intel.sh` bzw. Repo-Äquivalent) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md).
+Zweistufig aus `intel.json` (deterministisch via Plan-Intel-Helper des Repos, `scripts/plan-intel.sh` bzw. Repo-Äquivalent) in Partials mit disjunkten `target_files` decomposen (Tests separat, Obergrenze 9), dann schreiben **parallele Plan-Subagenten** je ihre `tasks.d/pX-<name>.md`; der Orchestrator schreibt den `tasks.md`-Index mit Partial-Manifest, `## File Structure` und finalem Verify-Task. Mechanik, Kontext-Injektion und Provisionierung: [dev-flow-plan-phases](../../core/references/dev-flow-plan-phases.md).
 
 **SID-Propagation (PFLICHT, T006365):** Ermittle deine Session-SID mit
 `bash scripts/agent-lock.sh mine` und weise die Plan-Subagenten an, in jedem Bash-Call zuerst (verboten, statt dessen `python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]`)
 `export AGENT_LOCK_SID=<deine-sid>` auszuführen — sonst blockiert der Worktree-Write-Guard ihre
 Datei-Tools.
 
-**Der Subagent-Prompt MUSS [plan-quality-gates](.agents/skills/references/plan-quality-gates.md) verbindlich einbinden** —
+**Der Subagent-Prompt MUSS [plan-quality-gates](../../core/references/plan-quality-gates.md) verbindlich einbinden** —
 der Subagent liest die Datei und schreibt den Plan dagegen. Sie ist die kanonische Referenz für
 alle plan-lint Hard Rules (Details dort, nicht hier dupliziert).
 
@@ -158,7 +158,7 @@ bash scripts/plan-lint.sh .agents/plans/<slug>/tasks.md
 ### Schritt 4: Plan prüfen & übernehmen
 Du behältst deinen vollen Brainstorming-Kontext: lies den zurückgegebenen Plan und prüfe ihn gegen
 die im Brainstorming getroffenen Entscheidungen. Zusätzlich die Gate-Konformität (Checkliste in
-[plan-quality-gates](.agents/skills/references/plan-quality-gates.md)): S1-Budgets gegen die **wirksame Schwelle**
+[plan-quality-gates](../../core/references/plan-quality-gates.md)): S1-Budgets gegen die **wirksame Schwelle**
 (Baseline-Wert falls gebaselined, sonst Limit) pro Datei notiert — und bei Budget≈0 ein echter
 Verkleinerungs-/Split-Schritt statt kosmetischem Zusammenziehen? Finaler Verifikations-Task aus
 `repo.task_runner` lesen (bei `taskfile`: `task test:changed`; Freshness-Teil nur-wenn-generated-artifacts: `+ task freshness:regenerate + task freshness:check`)? Keine
@@ -178,7 +178,7 @@ am Issue, der einen Grund nennt. Unbekannte Evidenz (stale Graph, Judge down)
 wird nie als niedriger Score gewertet, sondern erneut versucht.
 
 ### Schritt 4.5: Claim (PFLICHT vor Commit)
-Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-procedure](.agents/skills/references/ticket-stage-procedure.md)), dann ticket-scoped claimen, bevor der Pre-Commit-Guard die Lock-Datei liest:
+Nur-wenn-Tickets — Ticket anlegen oder wiederverwenden (SSOT: [ticket-stage-procedure](references/ticket-stage-procedure.md)), dann ticket-scoped claimen, bevor der Pre-Commit-Guard die Lock-Datei liest:
 ```bash
 # verboten (Guard); statt dessen: python3 ~/scripts/agent-workspace.py lock <claim|check|release|list|reap|mine> <scope> [<id>]
 bash scripts/agent-lock.sh claim ticket "$TICKET_EXT_ID" \
@@ -220,13 +220,13 @@ git -C "$WT" commit -m "chore(plans): stage <slug> for execution"   # nur-wenn-T
 git -C "$WT" push -u origin "$(git -C "$WT" branch --show-current)"
 ```
 Nur-wenn-Tickets: ERST JETZT stagen — Flag-Semantik (`--hold`/`--partials`/`--allow-empty-touched`):
-[ticket-stage-procedure](.agents/skills/references/ticket-stage-procedure.md) §Flag-Semantik.
+[ticket-stage-procedure](references/ticket-stage-procedure.md) §Flag-Semantik.
 Ohne Tickets: der Push IST das Stagen — `echo "plan done $(date -u +%FT%TZ) plan-gestagt" >> .agents/plans/<slug>/phase-events.log` nicht vergessen.
 
 ### Schritt 6: Optionaler Plan-Review (interaktiv)
 Der Plan lässt sich annotierbar rendern und im Browser reviewen
 (`bash scripts/plan-review/plan-review.sh render .agents/plans/<slug>/tasks.md`). Details:
-[plan-review-ui](.agents/skills/references/plan-review-ui.md).
+[plan-review-ui](../../core/references/plan-review-ui.md).
 
 **STOPP.** Branch, Spec und Plan sind committed und gepusht (nur-wenn-Tickets: Ticket per
 `execution_released=false` zurückgehalten, bis `dev-flow-execute` es mit `release-hold` freigibt).
@@ -241,7 +241,7 @@ einen externen Dienst voraus, gehört
 der Verfügbarkeits-Guard (`if shutil.which("<binary>") is None: pytest.skip("<binary> binary not installed")`)
 schon in die **Rotphase**. Vorher prüfen: `grep -rn '<binary>' .github/workflows/`; **0 Treffer
 heißt: in CI nicht vorhanden**. Begründung: T002820 in
-[dev-flow-gotchas](.agents/skills/references/dev-flow-gotchas.md).
+[dev-flow-gotchas](../../core/references/dev-flow-gotchas.md).
 
 **Bug-Triage: Ursachen-Verifikation vor Brainstorming [T002448-M5]:** Beobachtetes Symptom (Fakt)
 und angenommene Ursache (Hypothese) trennen. Die Ursache MUSS vor „Lösung entwerfen" mit einem
@@ -251,7 +251,7 @@ and validate the cause with evidence before designing the solution.
 
 Schritte 1–5 im Detail (nur-wenn-Tickets: Ticket, Worktree, Claims, Lavish-Board, Brainstorming mit
 Root-Cause-Fokus, failing Test, Plan, Stagen, Commit — ohne Tickets: ohne Ticket-Schritte):
-[dev-flow-plan-phases](.agents/skills/references/dev-flow-plan-phases.md) §Fix-Pfad. Der abschließende Stage-Commit:
+[dev-flow-plan-phases](../../core/references/dev-flow-plan-phases.md) §Fix-Pfad. Der abschließende Stage-Commit:
 
 ```bash
 git -C "$WT" add tests/ .agents/plans/<slug>/tasks.md
@@ -283,7 +283,7 @@ Status-Übersicht und Ausführungsoptionen: [plan-batch-status](references/plan-
 ## Verwandte Skills
 | Skill | Beziehung |
 |-------|-----------|
-| `using-git-worktrees` | Hintergrund — ersetzt durch Worktree-Helper des Repos (git-crypt-safe) |
+| `worktrees` | Worktree-Regeln — ergänzt den Repo-Wrapper (`agent-workspace.py` / git-crypt-safe Helper) |
 | `explore` | **IMMER** aufgerufen — Feature-Pfad Schritt 3, Fix-Pfad Schritt 2.8 |
 | `writing-plans` | Aufgerufen vom Plan-Subagenten (Schritt 3.7) |
 | `dev-flow-execute` | **Nachfolger im Kreislauf** — implementiert den erstellten Plan |
