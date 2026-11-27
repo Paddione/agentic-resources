@@ -26,8 +26,8 @@ a **clean seam** (a narrow neck, a ring, a gap). Decline plainly otherwise
 ```
 the intent (what moves, about what)
    │  1. offer or decline                                        (free)
-   │  2. concept:  an image designed for the split (SKILL.md's Text to 3D, plus step 2)
-   │  3. mesh:     model3d-tripo-p2 on the approved concept, as SKILL.md says
+   │  2. concept:  an image designed for the split (`models.md`'s Text to 3D, plus step 2)
+   │  3. mesh:     model3d-tripo-p2 on the approved concept, as `models.md` says
    │  4. read it:  model_parts.py inspect, preview --views pivots   (free)
    │  5. plan:     parts.json: a box per part, its mode, axis, pivot  (free)
    │  6. split:    model_parts.py split                              (free) → <stem>-parts.glb, the report
@@ -36,7 +36,7 @@ the intent (what moves, about what)
 a GLB whose nodes are the parts, pivots placed, every check passed
 ```
 
-Steps 2 and 3 are SKILL.md's Text to 3D route: each paid step follows the
+Steps 2 and 3 are the Text to 3D route of `models.md`: each paid step follows the
 normal flow (quote and consent, generate, look). Everything after the mesh
 is free and local: a box placed wrong costs a rerun of the script, never a
 generation. When the user already has the model (a GLB), start at step 4.
@@ -89,7 +89,7 @@ check each row:
 
 | Offer | Decline, and say what instead |
 |---|---|
-| A turret turning on its hull, a gun turret's head on its base (yaw, a ring or neck under it) | A character or creature bending: rig it (SKILL.md, Rigging; `sequences/creature-rig-and-animate.md`) |
+| A turret turning on its hull, a gun turret's head on its base (yaw, a ring or neck under it) | A character or creature bending: rig it (`models.md`, Rigging a non-biped creature; `sequences/creature-rig-and-animate.md`) |
 | A barrel or arm lifting at its root (pitch at a mantlet, a trunnion, a hinge) | A door, hatch or bonnet that opens onto an inside the model never had (a cab, an engine bay): the cut shows a flat cap, not an interior; offer it closed, or a separate model of the inside |
 | Wheels, rollers, a propeller, a rotor spinning (a separate piece, or one at a hub) | A part fused along a long overhanging surface (a tank track wrapped round its wheels, a sail on its rigging): no clean seam to cut |
 | A lid or a flap on a hinge (a chest, a crate, a mailbox) | A part that changes shape (a track that bends, a cloth, a spring): a swap of models or a rig |
@@ -101,7 +101,7 @@ When every row is declined, nothing is generated for this route.
 ## 2. The concept, designed for the split
 
 When the intent is known before the model is made, the concept prompt
-(SKILL.md, Text to 3D goes through one image: one image model call, a
+(`models.md`, Text to 3D goes through one image: one image model call, a
 transparent background, three-quarter front view, the camera at the object's
 own height, never from above) adds, for each part that will move:
 
@@ -119,7 +119,7 @@ own height, never from above) adds, for each part that will move:
   truck came back with oval tyres from three-quarter concepts (they bounce
   7 to 15% over a turn and fail step 6) and round ones from a side view (1.8
   to 2.7%). From a side view the model's front is the vehicle's side, turned
-  90° about the vertical (SKILL.md, the concept's view becomes the model's
+  90° about the vertical (`models.md`, the concept's view becomes the model's
   orientation): say so in the plan, and turn it on import (a node rotation in
   Unity), never by redrawing.
 - **Always:** "whole object in frame on a fully transparent background: no
@@ -130,14 +130,14 @@ own height, never from above) adds, for each part that will move:
   model". A concept that looks like a real car is refused by the 3D model
   (`CONTENT_BLOCKED`, nothing charged).
 
-Look at the concept before the mesh is quoted (SKILL.md): each moving part
+Look at the concept before the mesh is quoted (`models.md`): each moving part
 visibly separate or on its ring, no shadow. A concept that misses is
 regenerated as `-v2`, an image, never reconstructed.
 
 ## 3. The mesh
 
 `model3d-tripo-p2` on the approved concept, `--param face_limit=10000`, as
-SKILL.md says, then its facing check. Its meshes are many connected pieces
+`models.md` says, then its facing check. Its meshes are many connected pieces
 (about 50 to 170): a wheel is usually one piece, a turret is usually fused
 to its hull. `model3d-tripo3-1` with `generate_parts` returns 40 to 60
 semantic parts, but untextured, as open shells, with every pivot at the

@@ -20,13 +20,14 @@ one approved frame  ── (optional, asked once) an end frame: the same file, o
    │                                                                                          │
    │  3. unity ai generate --model video-minimax-h3 --in sprite.png --in-param first_frame_image  (recommended)
    │         [--in <end>.png --in-param last_frame_image] --param duration=5 --param resolution=768P --out clip.mp4
+   │     or: --model video-minimax-h3-fast  (same keys and params as H3; a walk only)
    │     or: --model video-seedance-2-5 --in sprite.png --in-param image
    │         [--in <end>.png --in-param last_frame_image] --param duration=4 --param generate_audio=false --out clip.mp4
-   │     or: --model video-kling-v3-i2v-pro --in sprite.png --in-param start_image
-   │         [--in <end>.png --in-param end_image] --param generate_audio=false --out clip.mp4
+   │     or: --model video-kling-v4-i2v --in sprite.png --in-param start_image
+   │         [--in <end>.png --in-param end_image] --param duration=3 --param resolution=720p --out clip.mp4
    ▼
 short clip of the sprite animating in place (.mp4)
-   │  4. sample N frames evenly into a grid, locally (ffmpeg), write sheet.png + sheet.png.unityai.json
+   │  4. sample N frames evenly into a grid, locally (ffmpeg) → sheet.png, then unity ai sidecar derive sheet.png --from clip.mp4 ...
    ▼
 sprite sheet (.png)   ← done, two paid generations
    │  5. offered: key the flat backdrop out locally (free) → sheet-keyed.png
@@ -104,7 +105,7 @@ end, on the sheet.
 
 **The video model.** Ask it ONCE, right after the sprite checkpoint and
 before the end-frame question (whose keys depend on the answer), with the
-question tool. Quote all three first, for free, so each answer carries its
+question tool. Quote all four first, for free, so each answer carries its
 figure (typical cost and worst case, as Plan to propose says). Offer them in
 this order:
 
@@ -113,19 +114,30 @@ this order:
   knight sprite (2026-10-14) its walk stayed crisp in every sampled frame, kept the backdrop colour and drew no ground
   shadow, and its last sampled frame came closest to its first; its jump
   had a visible crouch, stayed well inside the frame and landed cleanly,
-  but rose less than Kling's. Its quote follows length and resolution:
+  but rose less than Kling V3 I2V Pro's. Its quote follows length and resolution:
   about 72 credits for 5 s at 768P, 114 for the default 5 s at 2K, 332 for 15 s
   at 2K, each with a worst case of the quote plus 20% (87, 137, 399). With
   reference videos, or more than five reference images, it quotes 240 with a
   worst case of 720, because those cost more than the length
   shows. One walk and one jump are all it has been checked on; the
-  measured rules below come from Kling clips, so on H3 they are a starting
+  measured rules below come from Kling V3 I2V Pro clips, so on H3 they are a starting
   point, not a calibration.
+- **`video-minimax-h3-fast`**: the cheapest clean walk, at under half H3's
+  quote and about twice as fast. On a knight (2026-11-02) and a fox
+  (2026-11-12) its walks were as clean as H3's, the fox's loop closer, but
+  the knight's attack slashed and then held the lowered sword still for the
+  second half of the clip, so the sheet did not loop. Offer it for a walk;
+  for an attack or other fast motion, recommend H3. An idle is untested.
+  It takes 480P or 768P (no 2K) and 4 to 15 s. Its quote follows length
+  and resolution: about 32 credits for the default 5 s at 768P, 18 for 4 s at
+  480P, 85 for 15 s at 768P, each with a worst case of the quote plus 20%
+  (39, 22, 102). With reference videos, or more than five reference images,
+  it quotes 60 with a worst case of 190.
 - **`video-seedance-2-5`**: frames that stay sharp through fast motion, at
   about twice H3's quote for this sequence's clip (161 for 4 s at 720p against
-  72). Its frames stay sharp through motion where Kling's smear (on the
-  same sprite and prompt, Kling's airborne frames blurred and Seedance's did
-  not; Kling's clip was high bitrate, so the smear is the model, not
+  72). Its frames stay sharp through motion where Kling V3 I2V Pro's smear (on the
+  same sprite and prompt, V3 Pro's airborne frames blurred and Seedance's did
+  not; V3 Pro's clip was high bitrate, so the smear is the model, not
   compression). Its catalog figure (195) is only the typical clip: its quote
   follows the clip's length and resolution, about 75 credits for 4 s at
   480p, 161 for 4 s at 720p, 200 for 5 s at 720p, and up to about 2877 for
@@ -136,20 +148,28 @@ this order:
   those are about six times as much. Say the quote and its worst case; the user
   plans on the quote and consents on the worst case. The measured rules below
   (start-pose hold, loop-score thresholds, backdrop shift, shadow remnant)
-  come from Kling clips; on Seedance they are a starting point, not a
+  come from Kling V3 I2V Pro clips; on Seedance they are a starting point, not a
   calibration. The 160-credit walk was checked against the start-pose,
   loop-closure and backdrop rules; the note beside each rule gives the
   result. Still
   untested on Seedance: the shadow remnant, the period pick, and any motion
   but a walk.
-- **`video-kling-v3-i2v-pro`**: third for sharpness, about as cheap as H3,
-  and the one this sequence was tuned on. No resolution setting; fast
-  motion smears. Its quote follows length and audio: about 147 credits for the
-  default 5 s with audio, 100 without, up to 433 for 15 s with audio, each
-  with a worst case of the quote plus 20% (177, 120, 520).
+- **`video-kling-v4-i2v`**: the Kling option. On the same knight walk, knight
+  attack and slime hop (2026-11-16, one take each) it left no ground shadow
+  where Kling V3 I2V Pro left one on the walk and the hop, and its attack
+  stayed side-on and returned to guard where V3 Pro turned toward the camera.
+  It keeps the sprite's own aspect ratio. Its quote follows length and
+  resolution: about 84 credits for 3 s at 720p (V3 Pro: about 62 without
+  audio), 202 for its default 5 s at 1080p, with a worst case of the quote
+  plus 20%. `video-kling-v3-i2v-pro`, the model this sequence was tuned on,
+  still runs; the Kling parameters below are written for it, and V4's
+  differences follow the H3 Fast paragraph. Use V3 Pro only when the user
+  names it. The measured rules below (start-pose hold, loop-score
+  thresholds, backdrop shift, shadow remnant) come from V3 Pro clips; on V4
+  they are a starting point, not a calibration.
 
 The end-frame question below uses whichever model was chosen: Seedance's
-keys are `image` and `last_frame_image`, MiniMax H3's `first_frame_image`
+keys are `image` and `last_frame_image`, MiniMax H3's and H3 Fast's `first_frame_image`
 and `last_frame_image`, Kling's `start_image` and `end_image`. Below, `<start key>` and `<end key>` stand for the chosen
 model's pair.
 
@@ -175,7 +195,7 @@ default:
 
 Only the third answer adds a step to the plan. Whatever the answer, the
 start frame is uploaded by `--in sprite.png --in-param <start key>` (`image`
-for Seedance, `first_frame_image` for H3, `start_image` for Kling). An end frame is a second pair in
+for Seedance, `first_frame_image` for H3 and H3 Fast, `start_image` for Kling). An end frame is a second pair in
 the same run: `--in sprite.png --in-param <start key> --in <end>.png
 --in-param <end key>` (`last_frame_image` or `end_image`) on the paid step;
 quote it with the same two pairs (`quote` uploads nothing). Say the path in
@@ -209,6 +229,25 @@ sprite's own ratio is the clip's; it always adds a soundtrack and has no
 A last frame needs a first frame, and frames cannot be combined with its
 reference inputs, which this sequence does not use. The bullets marked
 i2v-pro only do not apply to it.
+
+For `video-minimax-h3-fast` (`models show video-minimax-h3-fast`), everything
+above for H3 applies, with two differences: `duration` runs from 4 to 15, and
+`resolution` is `480P` or `768P` (default `768P`, no 2K), so pass
+`--param duration=5 --param resolution=768P` as for H3; `480P` is cheaper but
+gives smaller cells.
+
+For `video-kling-v4-i2v` (`models show video-kling-v4-i2v`), the keys are
+Kling's `start_image` and `end_image`, and the differences from i2v-pro are:
+`duration` is an integer from 3 to 30, so a cycle is `duration=3`; pass
+`--param resolution=720p`, enough for sprite cells (its 1080p default costs
+half as much again); it follows the sprite's own aspect ratio and has no
+`aspect_ratio` key; it always adds a soundtrack and has no `generate_audio`
+key, which step 4 ignores; and there is no `negative_prompt` and no
+`cfg_scale`, so the default exclusions list goes into the prompt as plain
+wording ("no shadow, no ground, no motion blur, ..."). Its frames may be up
+to 30 MB, against V3 Pro's 10 MB. The bullets marked i2v-pro only do not
+apply to it, and neither does the `duration` bullet's string enum, which is
+V3 Pro's schema.
 
 Input constraints (from Pro's `params_schema`, `models show
 video-kling-v3-i2v-pro`; re-read it, this is the state at the time of
@@ -247,8 +286,8 @@ Parameters:
   motion" in the prompt, then the clean-loop search picks the move out of
   the longer clip. Not the default: longer clips drift more, so it is for
   a move the 3 s clip showed too few poses of.
-- `--param aspect_ratio=<the sprite's ratio>` (Kling i2v-pro only; Seedance
-  and H3 follow the first frame): the value chosen in step 1
+- `--param aspect_ratio=<the sprite's ratio>` (Kling i2v-pro only; Seedance,
+  H3 and H3 Fast follow the first frame): the value chosen in step 1
   (`1:1`, `16:9` or `9:16`, the enum). Pro's default is 16:9 whatever the
   start frame is, so this is never left out.
 - `--param duration=3`: the schema's `duration` is a string enum from "3" to
@@ -375,7 +414,7 @@ moves for 1.4 s and returns to its start pose at 2.7 s; the sheet takes 12
 frames from 1.3 s to 2.7 s; the loop point matches to within <score>, and
 the clip's own pace is about 9 fps against the 12 fps default") so the user
 can judge the choice, not just the result. Record the range in the sheet's
-sidecar (`"range": { "startSeconds": S, "durationSeconds": L }`) so a
+sidecar (`--set "range=..."` on `sidecar derive`, below) so a
 re-sample or a later session starts from it. The search picks a range, nothing more: the checkpoint on the sheet
 still happens, and the user can still ask for another range by hand.
 
@@ -464,38 +503,21 @@ Windows, winget puts a link under `%LOCALAPPDATA%\Microsoft\WinGet\Links`
 and the build under `%LOCALAPPDATA%\Microsoft\WinGet\Packages`); look
 there before reporting the install as failed.
 
-**The sidecar.** A sheet made locally has no provenance of its own, so write
-one next to it, `sheet.png.unityai.json`, before opening the preview. The
-preview reads `modality` and `sheet` from it and slices the sheet on its own
-(the launcher's `--sheet <C>x<R>` does the same for one visit; the sidecar
-makes it stick), the library lists the file as a generated asset because a
-`.unityai.json` sits next to it, and the fields tell a later session where
-the sheet came from. `frameCount` tells the preview how many cells are
-frames (a spare cell is skipped), `fps` sets its strip's rate when the sheet
-opens; a sheet without them plays every cell at the strip's last rate:
+**The sidecar.** Give the sheet its own sidecar before opening the preview,
+with the command, never by hand (free, local):
 
-```json
-{
-  "schemaVersion": 1,
-  "sequence": "image-to-spritesheet",
-  "modality": "spritesheet",
-  "sheet": "4x3",
-  "frameCount": 12,
-  "fps": 12,
-  "range": { "startSeconds": 1.3, "durationSeconds": 1.4 },
-  "inputs": [ { "param": "source_video", "file": "clip.mp4", "assetId": "<from the clip's sidecar>", "jobId": "<from the clip's sidecar>" } ],
-  "createdAt": "<ISO 8601>"
-}
+```
+unity ai sidecar derive sheet.png --from clip.mp4 --edit spritesheet --set modality=spritesheet --set sheet=4x3 --set frameCount=12 --set fps=12 --set "range={startSeconds:1.3,durationSeconds:1.4}"
 ```
 
-No `generator`: the CLI writes its own name and build version there and the
-preview shows the field verbatim, so a skill name in it would read as a
-generator. No `modelId`, `jobId` or `pointsCost` at the top level: nothing
-was generated and nothing was charged, and a made-up id would read as a
-generation. No `prompt`: it belongs to the generation that produced the
-clip, whose sidecar next to `clip.mp4` keeps it (or leaves it out when the
-user set `--no-prompt-in-sidecar`, which a copy here would undo); the clip
-is linked through its `assetId` and `jobId` instead.
+(`range` is JSON; its key names may go unquoted, as here, so the argument
+reads the same in every shell). It keeps the clip's provenance, records the sheet's own hash and the edit, and
+leaves the clip's charge on the clip. The preview reads `modality` and
+`sheet` and slices the sheet on its own (the launcher's `--sheet <C>x<R>`
+does the same for one visit; the sidecar makes it stick), `frameCount` tells
+it how many cells are frames (a spare cell is skipped) and `fps` sets its
+strip's rate; `range` lets a re-sample or a later session start from the
+same stretch of the clip.
 
 Checkpoint: open the preview on the sheet (the strip plays it at the sidecar's
 fps; Space to pause, `,` and `.` to step). The user judges the cycle:
@@ -598,10 +620,11 @@ from the sheet at its full size, never a downscaled copy:
    `frameCount` is all backdrop and keys to fully transparent, as it
    should.
 
-Output `sheet-keyed.png`, never over the sheet. Its sidecar is a copy of the
-sheet's plus `"derivedFrom": "sheet.png"` and `"localEdit": "backdrop key
-#<hex>, tolerance <t>"` (enclosed and despill added when on), so a later
-session knows the pixels were keyed locally and with what. A ground shadow
+Output `sheet-keyed.png`, never over the sheet. Its sidecar comes from
+`unity ai sidecar derive sheet-keyed.png --from sheet.png --edit backdrop-key
+--detail "key #<hex>, tolerance <t>"` (`, enclosed` and `, despill` added to
+the detail when on), so a later session knows the pixels were keyed locally
+and with what. A ground shadow
 the video model drew is darker than the key and survives it as an opaque
 patch under the feet: rule 3 of step 6 takes it out, on the keyed sheet as
 on a cut-out.
@@ -640,12 +663,12 @@ running the sheet again. Cut that cell out on its own (crop, remove, paste
 back at the same offset) or accept the sheet without it. `generate` writes
 `sheet-cutout.png.unityai.json` itself, with the removal's `modelId`, `jobId` and
 `pointsCost`, and it refuses to run when a sidecar already sits at that path, so
-never copy the sheet's sidecar there, before or after. Once the cut-out is done,
-add to the generated sidecar the fields that make it a sheet: `modality:
-"spritesheet"`, `sheet`, `frameCount`, `fps`, `range` and the `source_video`
-input, read from the sheet's sidecar (the clean-up's sidecar copies the
-cut-out's, so a field dropped here is lost to every later step); leave
-every generated field as it is.
+never copy or derive the sheet's sidecar there, before or after. Once the cut-out is done,
+add to the generated sidecar only the fields that make it a sheet: `modality:
+"spritesheet"`, `sheet`, `frameCount`, `fps` and `range`, read from the
+sheet's sidecar (the clean-up's sidecar is derived from the cut-out's, so a
+field dropped here is lost to every later step); leave every generated
+field as it is.
 
 When the user declines both, the sheet stays as it is and the background
 colour of step 1 is what they will key out elsewhere.
@@ -755,13 +778,13 @@ skipped; do not install anything.
 The same holds for every free pixel step of this document (crop, scale,
 the crop box of step 4): local first, with whatever the machine has, and
 never a paid image edit for a resize. Output `sheet-cutout-clean.png`, never over the
-cut-out. Its sidecar is a copy of the cut-out's (the removal's provenance
-still applies) plus `"derivedFrom": "sheet-cutout.png"` and `"localEdit":
-"edge clean-up, key #<hex>"`, so a later session knows the pixels were
-touched after the generation. On a keyed sheet, where only rule 3 runs, the
-output is `sheet-keyed-clean.png`, its sidecar a copy of `sheet-keyed.png`'s
-with `"derivedFrom": "sheet-keyed.png"` and `", shadow remnant"` added to the
-end of its `localEdit`, so the key's values stay on record. Preview it next to the cut-out at the same
+cut-out. Its sidecar comes from `unity ai sidecar derive sheet-cutout-clean.png
+--from sheet-cutout.png --edit edge-cleanup --detail "key #<hex>"` (the
+removal's provenance still applies), so a later session knows the pixels
+were touched after the generation. On a keyed sheet, where only rule 3 runs,
+the output is `sheet-keyed-clean.png`, derived `--from sheet-keyed.png
+--edit edge-cleanup --detail "shadow remnant"`: the key's values stay on
+record in the edit before it. Preview it next to the cut-out at the same
 `sheet` hint and check one cell at high zoom: the halo is gone and the
 outline is unchanged.
 
@@ -797,10 +820,10 @@ and say which file is the final sheet in the report.
 
 For "a sprite sheet of <character> <doing motion>", propose the plan before
 the first quote and let the user trim it, with the quote of the first step
-and the typical cost of the three video models from `models` as estimates,
+and the typical cost of the four video models from `models` as estimates,
 marked as such, for the clip step 3 requests (MiniMax H3 about 72 for 5 s
-at 768P, Seedance about 161 for 4 s at 720p, Kling i2v-pro about 62 for 3 s
-without audio; a longer or sharper clip costs more), so the user sees the recommended video's cost before paying for
+at 768P, MiniMax H3 Fast about 32 for 5 s at 768P, Seedance about 161 for 4 s at 720p, Kling V4 about 84 for 3 s
+at 720p; a longer or sharper clip costs more), so the user sees the recommended video's cost before paying for
 the sprite. The model question itself, with the free quotes, stays after
 the sprite checkpoint.
 
@@ -813,8 +836,8 @@ Seedance, plan on its quote, which already follows the clip's length and
 resolution (see its model bullet), rather than a past sidecar's charge for a
 different clip. Report the settled charge as it is ("charged N"); do not
 predict a charge above the quote.
-Say both in the plan, per model ("MiniMax H3: plan on about 72 credits, Seedance
-about 161, Kling i2v-pro about 62, at most <worst case> if the service
+Say both in the plan, per model ("MiniMax H3: plan on about 72 credits, H3 Fast
+about 32, Seedance about 161, Kling V4 about 84, at most <worst case> if the service
 charges the maximum"), and do not let a large worst case steer the user to the
 one-image alternative on cost alone; its sheet is cheaper and usually
 moves less (see What this sequence does not do).
@@ -823,12 +846,13 @@ moves less (see What this sequence does not do).
 catches otherwise cost credits:
 
 - `models show gemini-nano-banana-2-1`, `models show video-seedance-2-5`,
-  `models show video-minimax-h3`, `models show video-kling-v3-i2v-pro` (and
+  `models show video-minimax-h3`, `models show video-minimax-h3-fast`,
+  `models show video-kling-v4-i2v` (and
   `photoroom-bg-removal`): the keys (`image` / `last_frame_image`,
   `first_frame_image` / `last_frame_image`, `start_image` / `end_image`,
   `generate_audio`, `duration`), the input limits, the duration range. A
   model missing from `unity ai models` still resolves with `show`; treat the
-  listing and the quote as separate gates, as SKILL.md says.
+  listing and the quote as separate gates, as `models.md` says.
 - The `tools` row of `unity ai doctor --format json`, read from its
   `details`, not from its code (the row carries one code for two tools, and
   ffmpeg's wins): `ffmpeg`, `ffmpegVersion` and `ffprobe` say whether step 4
@@ -847,7 +871,7 @@ catches otherwise cost credits:
   to fix first), probe by hand: `ffmpeg -version`, and the isolated Python
   probes of step 6 (`-E`, the current folder dropped from `sys.path`, then
   `import PIL`; `python`, then `python3`, `py -3`).
-- The three video models' catalog costs, for the plan. Step 2's questions are
+- The four video models' catalog costs, for the plan. Step 2's questions are
   asked after the sprite checkpoint; the plan names the end-pose answer as
   the one that adds an image step.
 
@@ -855,17 +879,18 @@ catches otherwise cost credits:
    plain flat background, centred, or small and low for a motion that
    travels, the video's aspect). Checkpoint.
 2. Video model question, then end frame question (section 2). Model
-   recommended: `video-minimax-h3`, with the three quotes shown and Seedance
-   offered when fast motion must stay sharp. End frame recommended: none. "A different
+   recommended: `video-minimax-h3`, with the four quotes shown, H3 Fast
+   offered for a walk, and Seedance offered when fast motion must stay sharp. End frame recommended: none. "A different
    end pose" adds an image step here, `--ref` on the approved sprite, with
    its own checkpoint.
 3. Video, the model step 2 chose. Seedance: `--in sprite.png --in-param
    image`, `duration=4`. MiniMax H3: `--in sprite.png --in-param
-   first_frame_image`, `duration=5`, `resolution=768P`. Kling i2v-pro: `--in sprite.png --in-param
-   start_image`, `aspect_ratio` the sprite's, `duration=3`,
-   `negative_prompt` as section 3 says. All: prompt as section 3 says (on
-   Seedance and H3 with the exclusions in it), `generate_audio=false` (H3
-   has no such key),
+   first_frame_image`, `duration=5`, `resolution=768P`; H3 Fast the same. Kling V4: `--in sprite.png --in-param
+   start_image`, `duration=3`, `resolution=720p` (Kling i2v-pro, when the user
+   names it: `aspect_ratio` the sprite's, `duration=3`, `negative_prompt` as
+   section 3 says). All: prompt as section 3 says (on
+   Seedance, H3, H3 Fast and Kling V4 with the exclusions in it), `generate_audio=false` (H3,
+   H3 Fast and Kling V4 have no such key),
    the end frame only when step 2 asked for it. This is the last paid step of
    the normal plan. Checkpoint, with the contact strip read first.
 4. Sheet: N frames (default 12, 4x3) over the range in which the character
@@ -898,7 +923,7 @@ catches otherwise cost credits:
   project); this
   document stops at the file and its sidecar.
 - **The one-image alternative** (a grid asked of the image model in one
-  prompt, SKILL.md's model table) stays the cheap fallback for a user who
+  prompt, the model table in `models.md`) stays the cheap fallback for a user who
   wants no video: one call, weaker frame-to-frame consistency, cells that
   drift, and often fewer distinct poses than cells (an 8-cell walk with 4
   poses and 4 near-copies is a common result), so count the poses before

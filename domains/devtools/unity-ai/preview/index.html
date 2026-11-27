@@ -1548,9 +1548,11 @@
   // image the browser can show.
   function canWrapHere(item) { return SERVED || !/^file:/i.test(item.url); }
   // An equirectangular image is exactly twice as wide as it is tall; only those are wrapped on their shape alone (O).
-  // One whose metadata says panorama wraps whatever its size, as it did before this view could be switched: an
-  // upscaled, dome or cropped output a pixel off 2:1 is still the panorama its model made.
-  function isWrappable(item) { return !!item.natW && (item.natW === 2 * item.natH || skyHinted(item)); }
+  // One whose metadata says panorama wraps within 10% of 2:1: an upscaled or cropped output a pixel off is still the
+  // panorama its model made, but a square or portrait image is not one, whatever its metadata says (a URL's
+  // modality=skybox reaching every file it names).
+  const nearTwoToOne = (item) => !!item.natW && Math.abs(item.natW / item.natH - 2) <= 0.2;
+  function isWrappable(item) { return !!item.natW && (item.natW === 2 * item.natH || (skyHinted(item) && nearTwoToOne(item))); }
   function baseName(p) { return String(p || '').split(/[\\/]/).pop(); }
 
   // ───────────────────────── paths → URLs ─────────────────────────
@@ -1653,12 +1655,27 @@
   const SIDECAR_SUFFIXES = ['.unityai.json', '.provenance.json'];
   const SIDECAR_RE = /\.(provenance|unityai)\.json$/i;
   // One precedence for every sidecar path (URL params, gallery, drop, served auto-read): values already
-  // present (URL, gallery) win; the sidecar fills the rest.
+  // present (URL, gallery) win, except a modality the URL gave as a default for several assets (urlMeta); the
+  // sidecar fills the rest.
   function mergeSidecar(it, json, sidecarName) {
     if (!json || typeof json !== 'object' || Array.isArray(json)) { setStatus(`${baseName(sidecarName)}: not a provenance object`, true); return false; }
     // What the sidecar filled is remembered, so a file rewritten in place takes its new sidecar's values (fileRewritten).
     it.sidecarKeys = it.sidecarKeys || new Set();
-    for (const [k, v] of Object.entries(normaliseMeta(json))) if (it.meta[k] === undefined) { it.meta[k] = v; it.sidecarKeys.add(k); }
+    const own = normaliseMeta(json);
+    // A modality the URL gave was only a default (urlMeta): the file's own sidecar says what it is.
+    const yielded = it.urlModality !== undefined && own.modality !== undefined && it.meta.modality === it.urlModality && String(own.modality).toLowerCase() !== String(it.urlModality).toLowerCase();
+    const slicedBefore = yielded && !!sheetFromMeta(it);
+    if (yielded) delete it.meta.modality;
+    for (const [k, v] of Object.entries(own)) if (it.meta[k] === undefined) { it.meta[k] = v; it.sidecarKeys.add(k); }
+    if (yielded) {
+      it.kind = kindOf(it);
+      // Wrapped on the URL's word before the sidecar came: back to the flat image, unless the user chose the view.
+      if (it.asSky && !it.skyByHand && !skyHinted(it)) it.asSky = false;
+      // Sliced on the URL's word (modality=spritesheet) when it was selected: the sidecar's modality ends that, unless
+      // the user set a layout for it.
+      if (current() === it && slicedBefore && !sheetFromMeta(it) && !it.sheet && state.sheet.on) { state.sheet.on = false; stopPlayback(); syncSheetInputs(); }
+      if (current() === it && state.view === 'single') { renderStage(); renderToolbar(); }
+    }
     if (!it.meta.sidecar) { it.meta.sidecar = sidecarName; it.sidecarKeys.add('sidecar'); }
     it.generated = true;
     libraryRev++;
@@ -1732,7 +1749,7 @@
     return p;
   }
   const SIDECAR_LABEL = SIDECAR_SUFFIXES[0];   // the name shown in messages
-  function addItem({ url, path, name, meta = {}, mime, bytes, mtime, file, generated = false, explicit = false, sidecarHandled = false }) {
+  function addItem({ url, path, name, meta = {}, urlModality, mime, bytes, mtime, file, generated = false, explicit = false, sidecarHandled = false }) {
     if (!url) return null;   // toUrl refused it (network path, bad scheme): nothing to show, so no entry
     const item = {
       id: state.items.length,
@@ -1741,6 +1758,7 @@
       natW: 0, natH: 0, error: '',
       generated, explicit,   // a sidecar was found beside it / the user named it: either puts it in the library
     };
+    if (urlModality !== undefined && item.meta.modality === undefined) item.meta.modality = item.urlModality = urlModality;
     item.ext = extOf(item.name);
     item.kind = kindOf(item);
     if (explicit && isLocalFile(item)) unhideFile(displayPath(item));   // named by the user again: no longer removed
@@ -1863,12 +1881,25 @@
   // assets the address brings in (an org, a model, a prompt).
   const SOURCE_PARAMS = ['file', 'f', 'path', 'items', 'gallery', 'dir', 'all', 'deep', 'hide', 'reset', 'capture'];
   const sharedParamsFrom = (q) => { const shared = {}; for (const [k, v] of q.entries()) if (!SOURCE_PARAMS.includes(k)) shared[k] = v; return shared; };
+  // addItem's meta and urlModality for an asset the URL brings in. A modality given once for several assets
+  // (`--modality skybox` with three files, or a folder) is a default, not a fact about each: a file whose sidecar names
+  // its own keeps it, so a skybox opened beside two images does not wrap the images. For one file it is about that
+  // file and wins (`single`), as `preview --png` lets it. One an entry names itself (items=, gallery.js) stays its own.
+  const urlMeta = (shared, raw = {}, single = false) => {
+    if (single) return { meta: { ...shared, ...raw } };
+    const { modality, ...rest } = normaliseMeta(shared), own = normaliseMeta(raw);
+    return { meta: { ...rest, ...own }, urlModality: own.modality === undefined ? modality : undefined };
+  };
   function loadFromQuery() {
     const q = new URLSearchParams(location.search);
+    // The URL's values are about one file when it names one and nothing else, counted before the tab's earlier files
+    // join: those take its modality as a default, the named one keeps it (urlMeta).
+    const own = [...q.getAll('file'), ...q.getAll('f'), ...q.getAll('path')];
+    const singleKey = own.length === 1 && !q.get('items') && !q.getAll('dir').length && !q.getAll('material').length && !q.get('gallery') ? pathKey(own[0]) : null;
     try {
       const prev = new URLSearchParams(sessionStorage.getItem(VIEW_KEY) || '');
       if (!q.has('reset') && (prev.has('dir') || prev.has('file'))) {
-        const mine = new Set([...q.getAll('file'), ...q.getAll('f'), ...q.getAll('path'), ...q.getAll('dir')].map(pathKey));
+        const mine = new Set([...own, ...q.getAll('dir')].map(pathKey));
         for (const d of prev.getAll('dir')) if (!mine.has(pathKey(d))) q.append('dir', d);     // the URL's own files come first: they get selected
         for (const f of prev.getAll('file')) if (!mine.has(pathKey(f))) q.append('file', f);
         for (const h of prev.getAll('hide')) if (!mine.has(pathKey(h))) q.append('hide', h);   // a file the new URL names is shown, removed or not
@@ -1887,14 +1918,14 @@
         for (const raw of Array.isArray(arr) ? arr : [arr]) {
           const p = raw.path || raw.file || raw.url;
           if (!p) continue;
-          if (addItem({ url: toUrl(p), path: /^(blob|data|https?):/i.test(p) ? '' : p, meta: { ...shared, ...raw }, explicit: true })) added++;
+          if (addItem({ url: toUrl(p), path: /^(blob|data|https?):/i.test(p) ? '' : p, ...urlMeta(shared, raw), explicit: true })) added++;
         }
       } catch (e) { setStatus(`Could not parse ?items= JSON: ${e.message}`, true); }
     }
     for (const p of files) {
       const url = toUrl(p), path = /^(blob|data|https?):/i.test(p) ? '' : p;
       if (findExisting({ url, path })) continue;   // the same file twice in the URL
-      if (addItem({ url, path, meta: shared, explicit: true })) added++; else refused.push(p);
+      if (addItem({ url, path, ...urlMeta(shared, {}, pathKey(p) === singleKey), explicit: true })) added++; else refused.push(p);
     }
     for (const raw of q.getAll('material')) {   // ?material={"name":"…","albedo":"…","normal":"…"}
       try { if (addMaterialItem({ ...shared, ...JSON.parse(raw) })) added++; else setStatus('?material= had no recognised map channel (albedo, normal, roughness, metallic, height, ao, emissive).', true); }
@@ -1965,8 +1996,7 @@
         const p = raw.path || raw.file || raw.url; if (!p) return;
         const url = toUrl(p, galleryUrl);
         const local = /^(blob|data|https?):/i.test(p) ? '' : displayPath({ url, path: '' }) || `${norm}/${p}`;   // absolute: gallery.js names files relative to itself
-        const meta = { ...shared, ...raw };
-        const add = () => { const it = fromGallery(addItem({ url, path: local, meta, generated: true }), rank); if (it) it.gallery = true; };   // a gallery entry is provenance too
+        const add = () => { const it = fromGallery(addItem({ url, path: local, ...urlMeta(shared, raw), generated: true }), rank); if (it) it.gallery = true; };   // a gallery entry is provenance too
         if (isHidden(local)) holdGallery(local, add);
         else if (!findExisting({ url, path: local })) add();
       });
@@ -1990,7 +2020,7 @@
           if (f.mtimeMs) dup.mtime = f.mtimeMs;
           continue;
         }
-        const it = addItem({ url, path, name: leaf, meta: shared, bytes: f.size, mtime: f.mtimeMs, generated: f.generated });
+        const it = addItem({ url, path, name: leaf, ...urlMeta(shared), bytes: f.size, mtime: f.mtimeMs, generated: f.generated });
         if (it) { if (sub) it.sub = sub; fresh++; }
       }
       if (inPlace) keepListingOrder(dirKey, files.map((f) => `${norm}/${f.name}`));
@@ -2048,6 +2078,7 @@
     // The old sidecar's values go before the new one is read (mergeSidecar fills only what is missing); values the URL
     // or a gallery gave stay.
     if (it.sidecarKeys) { for (const k of it.sidecarKeys) delete it.meta[k]; it.sidecarKeys = null; }
+    if (it.urlModality !== undefined && it.meta.modality === undefined) { it.meta.modality = it.urlModality; it.kind = kindOf(it); }
     it.sidecarTried = false; autoSidecar(it);
     const users = state.items.filter((m) => m !== it && (
       (m.kind === 'material' && m.maps && Object.values(m.maps).some((u) => urlKey(u) === key)) || (m.deps && m.deps.has(key))));

@@ -5,7 +5,7 @@ this file has you ask, but money, is your own call; say what you chose in the fi
 
 This holds for any biped motion step, after a rig (`rig-and-retarget.md`)
 or alone. A biped motion comes from text (`uthana-text-to-motion-3`, the
-default), from the user's own clip (`uthana-video-to-motion`), or it can be
+default), from the user's own clip (`uthana-video-to-motion-3`), or it can be
 acted out: a generated video of an actor doing the move, converted with
 video to motion (`generated-video-to-motion.md`, read only once the user
 picks it). The agent does not choose that route on its own. It is offered
@@ -50,5 +50,5 @@ reading of the motion:
 | Its balance ("floats", "sinks", "fell over") | act it out | video led by about 8 points, a small lead from one trial and inside its noise (one more sample moves a score by about 25); text floated or sank the body by 15 to 25 cm and turned a stumble into a fall onto the hands |
 | Its count, side or order ("two jumps", "wrong leg", "punches swapped"), or anything else | revise the prompt | text led by about 21 points on exact moves; a video model makes these same mistakes and the conversion copies them, while a prompt that states the move precisely fixed them more often |
 
-The trial: 12 motions, two samples per route, Uthana's default character.
+The trial: 12 motions, two samples per route, Uthana's default character, video converted with Video to Motion 2.1.
 Overall the routes tied (about 76 of 100 each).
