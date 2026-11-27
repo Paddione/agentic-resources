@@ -16,7 +16,7 @@ mode, defaults, ordering, background installs, handoffs.
 - **`unity-cli`** — install, auth/license, Editor install, creation, source control, open. Its
   "Bootstrap a new project from scratch" workflow is the backbone here.
 - **`unity-package-management`** — packages with the Pipeline `package` commands (C# script fallback).
-- **`urp-postprocessing`**, **`ui`**, **`2d-pixel-perfect`** — visual-baseline mechanics (Step 7).
+- **`urp-postprocessing`**, **`ui`**, **`configure-2d-pixel-perfect`** — visual-baseline mechanics (Step 7).
 - **`craft-game-floors`** — the craft floors (look, feel, audio, shell, live floor, the done gate),
   loaded at Step 6 and carried through the build.
 - **`implement-in-app-purchases`**, **`levelplay-unity-integration`**, **`build-live-game`** —
