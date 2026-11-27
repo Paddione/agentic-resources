@@ -7,6 +7,10 @@ allowed-tools:
 
 # Unity CLI
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 **Always use the latest version of the Unity CLI unless you are told to use a
 specific version.** Newer releases regularly add commands and output fields
 these docs describe, so an outdated CLI fails in ways that read like the docs

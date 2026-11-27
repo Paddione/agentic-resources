@@ -5,6 +5,10 @@ description: Analysiert und entwirft Verhaltenstests, Teststrategie und Testumge
 
 # SOTA Testing (2026)
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Expert-level, language-agnostic rules for producing and auditing production test
 suites. Per-language runner/tooling details live in the installed specialist
 skills (e.g. `python-testing-patterns` / `sota-python`, `vitest` /

@@ -5,6 +5,10 @@ description: 'Pointer to the git-workflow SSOT for opencode sessions. Use when c
 
 # opencode-git-workflow — Verweis auf die SSOT
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 **Der Inhalt dieses Skills steht in [`git-workflow`](../../core/git-workflow/SKILL.md)
 (SSOT; vom Repo-Root zusätzlich über `.agents/skills/git-workflow/` bzw.
 `.opencode/skills/git-workflow/` erreichbar). Lies dort weiter und folge dem

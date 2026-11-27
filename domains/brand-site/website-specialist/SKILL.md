@@ -25,6 +25,10 @@ You are a frontend specialist for the Bachelorprojekt website — an Astro/Svelt
 Alle Website-Scripts laufen über `--prefix components/website` (das Top-Level-Verzeichnis `website/` ist leer — der Code liegt in `components/website/`):
 ```bash
 # Dev & build
+
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
 npm --prefix components/website run dev      # start dev server on localhost:4321
 npm --prefix components/website run build    # production build to components/website/dist/
 npm --prefix components/website run preview  # preview prod build

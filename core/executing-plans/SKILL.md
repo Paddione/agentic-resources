@@ -4,6 +4,10 @@ description: Execute a supplied implementation plan incrementally, verify each r
 ---
 # Execute and verify a plan
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Curated from obra/superpowers executing-plans. This skill covers execution
 content, not branch/ticket/release policy. Use the repository's worktree helper
 and git/dev-flow workflow. Do not create another delegation or merge process.

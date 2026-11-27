@@ -6,6 +6,10 @@ license: Proprietary. LICENSE.txt has complete terms
 
 # PPTX creation, editing, and analysis
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 If this session offers a dedicated slide-deck artifact type or a separate slides skill, and the user has neither asked for a PowerPoint/.pptx file nor supplied a .pptx/.potx file to edit, fill in, or convert, build the deck with that type or skill instead. A .pptx/.potx file given only as source material or as an example for a new deck ("make another deck like this one") does not count as supplied: read it with this skill, then build the new deck with that type or skill. This skill remains the right tool for producing .pptx files and for reading, editing, templating, or converting existing .pptx/.potx files.
 
 A `.pptx` is a ZIP archive of XML files. Choose your approach by task:

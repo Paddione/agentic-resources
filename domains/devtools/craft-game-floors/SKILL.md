@@ -10,6 +10,10 @@ allowed-tools:
 
 # Craft Game Floors
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 A functional game that looks and feels like programmer art reads as a failure to the person who
 asked for it. This skill is the craft layer: **floors** — disciplines where every game needs a
 minimum and the engine's defaults are unacceptable — each carried by a reference below with

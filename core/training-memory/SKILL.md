@@ -5,6 +5,10 @@ description: Track and resume Unsloth training and finished GGUF evaluations for
 
 # Training Memory
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Maintain the experiment history for the local CPU agent team. Read `memory/project.json` and run `python3 scripts/ledger.py summary` with paths resolved relative to this skill. The ledger is durable memory, not live process status. Check launcher/process state before claiming a job is still running. Empty history means no runs recorded, not no runs ever occurred.
 
 ## Scope and roles

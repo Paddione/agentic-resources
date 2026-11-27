@@ -7,6 +7,10 @@ metadata:
   source: Generated from https://github.com/vitest-dev/vitest, scripts located at https://github.com/antfu/skills
 ---
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Vitest ist ein Vite-natives Testframework mit Jest-kompatibler API, ESM-, TypeScript- und JSX-Support ohne Konfiguration. Nutzt Config, Transformer, Resolver und Plugins der Vite-App.
 
 Stand: Vitest 5.1.0-beta.1, generiert 2026-10-23. Runner-Themen (verschobene Config-Keys, vi-API, Pools, Coverage-Provider, Browser Mode, hängefreie Runs) gehören zu `vitest-testing`; dieser Skill besitzt Testinhalt und -struktur.

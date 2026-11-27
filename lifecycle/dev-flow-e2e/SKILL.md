@@ -6,6 +6,10 @@ agent: bp-ship
 
 # dev-flow-e2e — Playwright E2E Tests schreiben & ausführen
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Repo-Spezifika stehen nicht hier, sondern in `repo.yaml` im Consumer-Repo-Root:
 Vor Beginn `repo.tickets` (`none` oder Ticket-Backend — Ticket-IDs in
 Dateinamen/Titeln nur only-if-tickets), `repo.scopes` (Commit-Scope-Allowlist)

@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # FreeToken Setup
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 > [!CAUTION]
 > **RETIRED [T900363]:** FreeToken has been retired on this host. The serving port `:1919` is now dedicated exclusively to the live `llama-server` instance running `Muse-Glimmer-30B` (`Muse-Glimmer-30B-UD-IQ3_XXS.gguf` + DFlash2 drafter, 131072 ctx) via the systemd user service `glimmer.service` [T900365; before that `Qwen3.8-27B-gsq` via `qwen38-gsq.service`]. This skill is preserved for historical reference only.
 

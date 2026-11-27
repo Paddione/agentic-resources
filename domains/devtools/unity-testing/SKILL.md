@@ -5,6 +5,10 @@ description: Run Unity EditMode and PlayMode tests via the Unity CLI or hardened
 
 # Unity Testing
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Run Unity tests cheapest-first: EditMode before PlayMode, targeted filters while iterating, full unfiltered suites once per mode on final code. Never re-run a failing suite unchanged; branch on the exit code and (with `--format json`) `errors[0].code`.
 
 ## Run tests

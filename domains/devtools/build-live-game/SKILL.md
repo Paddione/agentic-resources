@@ -5,6 +5,10 @@ description: Builds and operates a live game backend on Unity Gaming Services. M
 
 # Build a Live Game With Unity Gaming Services
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 ## Before You Start
 
 1. Read the Editor version from `ProjectSettings/ProjectVersion.txt` and the installed UGS package versions from `Packages/packages-lock.json`. Pick the steps below that match (for example `.ccmu` or `.ccmr` modules), because the right workflow depends on the Editor and package versions.

@@ -5,6 +5,10 @@ description: Explore ideas, investigate problems, and clarify technical choices 
 
 # Explore
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Help the user develop a clearer understanding of their problem and promising ways forward. Adapt to the conversation rather than running an interview, checklist, or fixed sequence. A useful exploration may end with a decision, a better question, or an explicit uncertainty.
 
 ## Work from the problem
