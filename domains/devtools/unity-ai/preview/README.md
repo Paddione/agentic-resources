@@ -93,7 +93,8 @@ uses the same keys on stderr and a non-zero exit.
   `xdg-open`).
 - The `fallback:` line needs no server: it is the page from disk, with the
   sidecar fields already in the query, since a `file://` page cannot read a
-  sidecar itself. Several files each keep their own fields (through the
+  sidecar itself (its details, and a sprite sheet's `sheet`, `frameCount` and
+  `fps`, so a sheet keeps its grid there too). Several files each keep their own fields (through the
   page's `items=` parameter), so no asset is shown with another one's model,
   cost or ids. `--open` falls back to this URL when the server could not
   start.
@@ -168,7 +169,7 @@ gets that command: a `?dir=` link to an unserved folder shows the plain error,
 and a relative path or a whole drive gets no command. That is not a security
 check, since a folder's `gallery.js` can fill and submit the dialog or draw a
 notice of its own; the agent therefore builds the command from the folder the
-user names, never from what the page shows (see SKILL.md).
+user names, never from what the page shows (see `show-result.md`, next to SKILL.md).
 
 The server does not stay around for ever: it exits after 60 minutes without
 a request (`--idle <minutes>`; `0` keeps it up until stopped, which is for a
@@ -484,7 +485,7 @@ or colour change, so two images compare as they are.
 | `material` | JSON `{ name, albedo, normal, roughness, metallic, height, ao, emissive }` with paths, for a lit PBR material preview. |
 | `sheet` | Slice a sprite sheet on load: `sheet=4x2` (cols × rows) or `sheet=8` (one row). |
 | `frameCount`, `fps` | With `sheet`: play only the first `frameCount` cells (a grid with a spare cell), at `fps`. Without them the sheet plays every cell at the strip's last rate; a layout typed into the strip plays every cell again. `frames` is an alias of `frameCount`. |
-| `modality` | `sprite`, `texture`, `skybox`, `sound`, `music`, `model3d`, … — overrides the guess from the file extension and decides how the asset is viewed (`skybox` opens the 360° viewer, `spritesheet` slices). |
+| `modality` | `sprite`, `texture`, `skybox`, `sound`, `music`, `model3d`, … — overrides the guess from the file extension and decides how the asset is viewed (`skybox` opens the 360° viewer, `spritesheet` slices). With one `file=`, it wins over the file's sidecar. With several assets (files, `items=`, a folder), it is a default: a file whose sidecar names its own modality keeps it, and one an `items=` entry or `gallery.js` gives stays. |
 | `character` | The character a motion saved without its mesh is drawn on: a path to its glTF or GLB, absolute or relative to the motion's folder. Without it, the character is found by the sidecars' ids (see 3D models below). A model that has a mesh ignores it. `unity ai preview --character <file>` passes it and serves the file's folder. |
 | `modelId`, `prompt`, `pointsCost`, `createdAt`, `jobId`, `assetId`, `bytes`, `sidecar` | Generation details shown in the right-hand panel; these are the sidecar's own field names. Short aliases for hand-typed URLs: `model`, `cost`, `created`, `job`, `asset`. |
 | `orgName` | Display name of the organization charged (shown as-is). |
@@ -656,7 +657,8 @@ frame; duration and frame size in the details panel. A frame drawn from a
 
 **Skyboxes / panoramas** (`.hdr`, `.exr`, `modality=skybox`, a 2:1 image whose
 sidecar names a skybox model but no modality, or any 2:1 image switched with
-**View as 360°**, `O`) in a 360° viewer built on
+**View as 360°**, `O`; a panorama by its metadata opens in 360° within 10% of
+2:1, so a square or portrait image stays flat whatever it says) in a 360° viewer built on
 three.js, loaded from the unpkg CDN on first use (every module is
 integrity-pinned in the page's import map, so a tampered download is refused;
 the same modules power the 3D and material viewers):

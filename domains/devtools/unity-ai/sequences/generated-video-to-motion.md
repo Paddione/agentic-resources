@@ -4,7 +4,7 @@ A user who said not to ask (SKILL.md, When the user says not to ask): every ques
 this file has you ask, but money, is your own call; say what you chose in the final reply.
 
 A biped motion comes from text (`uthana-text-to-motion-3`, the default) or
-from a video of a person doing it (`uthana-video-to-motion`). When the user
+from a video of a person doing it (`uthana-video-to-motion-3`). When the user
 has no clip, the video can be generated: one still of a neutral actor, a
 short image-to-video take of the actor performing the move, then the take
 converted to motion. The user calls this "act it out". The take is where
@@ -27,7 +27,7 @@ one approved start frame
    │  4. contact sheet of the take, read locally (free); a wrong take is regenerated here, not converted
    ▼
 approved take
-   │  5. unity ai generate --model uthana-video-to-motion --in take.mp4 --in-param video_reference.asset_id
+   │  5. unity ai generate --model uthana-video-to-motion-3 --in take.mp4 --in-param video_reference.asset_id
    │         [--param target_character_id=<rig partnerResultId>] --out motion.glb
    ▼
 motion (.glb or .fbx)   ← done, three paid generations (the still is reused across takes)
@@ -145,7 +145,7 @@ its own parameter with a 16:9 default.
 
 Check the take against the conversion's input limits before step 5; the
 limits are the ones `rig-and-retarget.md` section 3 lists from `models show
-uthana-video-to-motion`. Read the take's duration, frame rate and size with
+uthana-video-to-motion-3`. Read the take's duration, frame rate and size with
 `ffprobe -v error -select_streams v:0 -show_entries
 stream=width,height,r_frame_rate:format=duration -of csv=p=0 take.mp4`, run
 by the path the `tools` row of `unity ai doctor --format json` gives under
@@ -241,7 +241,7 @@ revised prompt and runs it only after the user says yes.
 
 ```
 # bash; PowerShell form, the <consent> flag and the <log> / <err log> paths in SKILL.md, Running `generate`
-unity ai generate --model uthana-video-to-motion \
+unity ai generate --model uthana-video-to-motion-3 \
   --in take.mp4 --in-param video_reference.asset_id \
   [--param target_character_id=<rig partnerResultId>] \
   --out <path>.glb --format ndjson <consent> \
@@ -265,9 +265,10 @@ them yourself with `unity ai preview "<motion>" --png --views poses,path,feet`
 then for the user in the preview with the ground grid on (key G): the
 conversion is noisier than text-to-motion on the same move.
 
-- **Foot sliding** on moves done in place: 6 to 17 cm/s in the trial, against
-  2 to 4 for text. Plan on foot locking in the Editor or a trim of the
-  sliding stretch.
+- **Foot sliding** on moves done in place: 6 to 17 cm/s in the trial, on
+  Video to Motion 2.1, against 2 to 4 for text. Video to Motion 3.0 measured
+  0.1 to 1.8 cm/s on four takes (2026-11-13), so check `feet` before planning
+  foot locking in the Editor.
 - **Jitter** up to about 2.5 times text's on fast moves.
 - **Airborne height exaggerated**: a hop of about 20 cm became close to a
   metre of flight. A jump whose height matters is checked against the take.
@@ -284,7 +285,8 @@ From two runs (the trial on 2026-10-07, and a test on 2026-10-08 that
 recorded quotes and worst cases; the take was quoted 13, worst case 39, until
 its price was raised on 2026-10-16 so long clips are charged in full; the
 text-to-motion and take quotes follow their params as of 2026-10-23, and the
-conversion was quoted 42, worst case 126, until 2026-10-26). Prices rose about
+conversion was quoted 42, worst case 126, until 2026-10-26, then 122, worst
+case 366, on Video to Motion 2.1). Prices rose about
 sixfold (Uthana about twofold) in the October 2026 price change; the charges
 below were measured before it, so the Charged column is the old charge and
 the sentence after the table converts it. Quote every step, these are for the
@@ -294,7 +296,7 @@ plan only:
 |---|---|---|---|
 | Actor still, once per session | 11 | 67 | 2 (both runs) |
 | Take | follows length and audio: 100 for 5 s without audio, 147 with | the quote plus 20%: 120, 177 | 16 (both runs) |
-| Conversion | 122 | 366 | 17 (both runs) |
+| Conversion | 147 | 440 | 17 (both runs, Video to Motion 2.1) |
 | Text to motion, for comparison | follows `length`: 49 at the default 4 s, 98 at 8 s, 122 at 10 s | the quote plus 20%: 59, 118, 147 | 27 (3 of 3, 2026-10-08); 33 (23 of 24, trial) |
 
 So at today's prices the first motion acted out charges about 140 credits
@@ -302,8 +304,9 @@ So at today's prices the first motion acted out charges about 140 credits
 about 96 per extra take; one text-to-motion charges about 49 to 61. The take's
 quote follows its length and audio (100 for 5 s without audio, up to 433 for
 15 s with audio). The conversion charges by the take's length, about 6 credits
-a second (about 31 for a 5 s take, 90 for 15 s), whatever its quote of 122: say
-that at consent with its worst case of 366. Consent
+a second as charged on 2026-11-13 (31 for a 5 s take, 90 for 15 s), up to 7.2
+at the provider's announced rate, whatever its quote of 147: say that at consent
+with its worst case of 440. Both runs converted with Video to Motion 2.1. Consent
 is still given on the worst case, as SKILL.md says. A rejected take costs
 about 96; a rejected conversion costs about 31 and the take behind it.
 
@@ -324,7 +327,7 @@ Once the user has answered **Act it out** (`motion-source.md`),
 at either point:
 
 Preflight, free: `models show` for `gpt-image-2-5-flare`,
-`video-kling-v3-i2v-pro` and `uthana-video-to-motion` (keys, duration enum,
+`video-kling-v3-i2v-pro` and `uthana-video-to-motion-3` (keys, duration enum,
 input limits); the plugin build and the rig, as `rig-and-retarget.md`'s
 preflight says when the motion goes onto a rig; and whether ffmpeg and
 ffprobe are there for the take check (the `tools` row of `unity ai doctor

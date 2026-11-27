@@ -69,8 +69,9 @@ const SERVICE_ID = 'unity-ai-asset-preview';                    // what serve.mj
 const SERVE_EXIT_PORT_TAKEN = 3;                                 // serve.mjs's exit code when a non-preview program holds the port — keep in step
 const SIDECAR_SUFFIXES = ['.unityai.json', '.provenance.json'];  // same list as serve.mjs and index.html
 // Sidecar fields the page shows in its details panel or views the asset by, copied into the file:// URL (README:
-// "Query parameters").
-const SIDECAR_FIELDS = ['modelId', 'modelName', 'modality', 'pointsCost', 'prompt', 'createdAt', 'jobId', 'assetId'];
+// "Query parameters"): `sheet`, `frameCount` and `fps` slice and play a sprite sheet, so a sheet keeps its grid there
+// too. Same list as PreviewCommand.SidecarFields; tests/argv_errors.py checks the two match.
+const SIDECAR_FIELDS = ['modelId', 'modelName', 'modality', 'pointsCost', 'prompt', 'createdAt', 'jobId', 'assetId', 'sheet', 'frameCount', 'fps'];
 // Query keys the positional arguments decide; passing them as --key would fight the launcher's own output.
 const ARGUMENT_KEYS = new Set(['file', 'f', 'path', 'items', 'dir']);
 const START_TIMEOUT_MS = 6000, PROBE_TIMEOUT_MS = 1500, POLL_MS = 150, OPENER_TIMEOUT_MS = 4000;
@@ -354,30 +355,73 @@ async function ensureServer() {
   }
   return { ok: false, why: `no usable port between ${port - PORT_TRIES} and ${port - 1}`, skipped };
 }
+// Start serve.mjs detached. On Windows a child inherits every inheritable handle of this process, including the
+// pipe a caller reads our output from (`unity ai preview` run by an agent), so the hour-long server would hold that
+// pipe open and the caller would wait for it after we have printed the link and exited. There the server is started
+// through PowerShell's Start-Process, which hands it no inherited handles: without a -Redirect* parameter it goes through
+// ShellExecute, which does not inherit. Never add -RedirectStandardOutput/-RedirectStandardError here: they switch it to
+// CreateProcess with inheritance, and the pipe hang is back (the log is redirected by cmd for that reason).
+function spawnServer(args, log) {
+  if (process.platform === 'win32') {
+    // cmd does the redirection itself (append, as the opened log was), so the log keeps working without handing
+    // this process's handles on; `log` is the path here, not a descriptor. Paths reach cmd through environment
+    // variables, never in its command line: cmd expands %NAME% even inside quotes, which would turn a folder
+    // named %USERNAME% into another folder, and the server would serve that one too.
+    const root = process.env.SystemRoot || 'C:/Windows';
+    const vars = {};
+    [process.execPath, ...args, ...(log === null ? [] : [log])].forEach((v, i) => { vars[`UNITY_AI_SERVE_${i}`] = String(v); });
+    const refs = [process.execPath, ...args].map((_, i) => `"%UNITY_AI_SERVE_${i}%"`).join(' ');
+    const cmdline = `/d /v:off /c "${refs} >> ${log === null ? 'NUL' : `"%UNITY_AI_SERVE_${args.length + 1}%"`} 2>&1"`;
+    const ps = (a) => `'${a.replace(/'/g, "''")}'`;
+    const script = `Start-Process -WindowStyle Hidden -FilePath ${ps(join(root, 'System32', 'cmd.exe'))} -ArgumentList ${ps(cmdline)}`;
+    return spawn(join(root, 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe'),
+      ['-NoProfile', '-NonInteractive', '-Command', script], { stdio: 'ignore', windowsHide: true, env: { ...process.env, ...vars } });
+  }
+  return spawn(process.execPath, args, { detached: true, stdio: log === null ? 'ignore' : ['ignore', log, log], windowsHide: true });
+}
 // Start serve.mjs on `port` and wait for it to answer. Its output is not ours to show (it outlives us), but an
 // early exit is: a refused --root, a port taken meanwhile, a Node that will not run — each would otherwise look
 // like a timeout.
 async function startServer() {
   let exited = null, h = null;
   const previous = previousStop(port);
-  const log = openServerLog(port);
-  const child = spawn(process.execPath, [SERVE, String(port), ...serveRoots.flatMap((r) => ['--root', r]), ...(idle === null || idle === 'default' ? [] : ['--idle', String(idle)])],
-    { detached: true, stdio: log === null ? 'ignore' : ['ignore', log, log], windowsHide: true });
-  if (log !== null) closeSync(log);   // the server holds its own handle
-  child.on('error', (e) => { exited = `node could not start serve.mjs (${e.message})`; });
+  let log = openServerLog(port);
+  // Windows hands cmd the log's path, not the descriptor (see spawnServer).
+  const logPath = process.platform === 'win32' && log !== null ? serverLog(port) : null;
+  let logStart = 0;
+  if (logPath !== null) { closeSync(log); log = logPath; try { logStart = lstatSync(logPath).size; } catch { /* new file */ } }
+  // On Windows the child is PowerShell, which says nothing of how the server ended: its early exit is read from what
+  // the server wrote to the log since this start (a port held by another program, a refused --root, a crash).
+  const logTail = () => { try { return readFileSync(logPath).subarray(logStart).toString('utf8'); } catch { return ''; } };
+  const serveArgs = [SERVE, String(port), ...serveRoots.flatMap((r) => ['--root', r]), ...(idle === null || idle === 'default' ? [] : ['--idle', String(idle)])];
+  const child = spawnServer(serveArgs, log);
+  if (log !== null && logPath === null) closeSync(log);   // the server holds its own handle
+  child.on('error', (e) => { exited = process.platform === 'win32' ? `PowerShell could not be started (${e.message})` : `node could not start serve.mjs (${e.message})`; });
   let exitCode = null;
-  child.on('exit', (code, signal) => { exitCode = code; exited = `serve.mjs exited with ${signal ? `signal ${signal}` : `code ${code}`}`; });
+  // On Windows the child is PowerShell, which exits as soon as it has started the server: only a failure counts.
+  child.on('exit', (code, signal) => {
+    if (process.platform === 'win32' && code === 0) return;
+    const how = signal ? `signal ${signal}` : `code ${code}`;
+    exitCode = code; exited = process.platform === 'win32' ? `PowerShell could not start serve.mjs (exit ${how})` : `serve.mjs exited with ${how}`;
+  });
   child.unref();
   const deadline = Date.now() + START_TIMEOUT_MS;
   while (!h && exited === null && Date.now() < deadline) {
     await sleep(POLL_MS);
     h = await health(Math.max(200, Math.min(PROBE_TIMEOUT_MS, deadline - Date.now())));
+    if (!h && logPath !== null && logTail().includes(`port ${port} is taken by something else`)) { exitCode = SERVE_EXIT_PORT_TAKEN; exited = 'serve.mjs found the port taken by something else'; }
   }
   // Ours may have exited 0 precisely because another instance won the port; that one is a stranger to our roots,
   // so it goes through the same usable() check as any server we did not start.
   if (!h && exited) h = await health();
   if (h) return outdated(h) ? { portTaken: true } : { ...(await usable(h, exited === null)), previous };   // an older server may have won the port meanwhile
   if (exitCode === SERVE_EXIT_PORT_TAKEN) return { portTaken: true };
+  if (logPath !== null && exited === null) {
+    // Anything the server wrote besides its start lines (serve.mjs's `asset preview:`, `serving files only under:`,
+    // `exits after`/`stays up` and `already running:`) is what it printed on the way out.
+    const last = logTail().split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !/^(asset preview:|serving files only under:|exits after |stays up until |already running: )/.test(l)).at(-1);
+    if (last) exited = `serve.mjs stopped (${last.slice(0, 200)})`;
+  }
   if (exited) return { ok: false, why: `${exited} before answering — run it by hand to see why: node "${SERVE}" ${port} --root "<folder>"` };
   return { ok: false, why: `nothing answered on port ${port} within ${START_TIMEOUT_MS / 1000}s (is the port taken by another program?)` };
 }

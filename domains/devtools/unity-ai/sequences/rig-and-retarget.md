@@ -26,7 +26,7 @@ character model (.glb / .fbx)
 rigged character  ── partnerResultId = <character id> ──┐
                                                         │
 video or text                                           ▼
-   │  2. unity ai generate --model uthana-video-to-motion (or uthana-text-to-motion-3)
+   │  2. unity ai generate --model uthana-video-to-motion-3 (or uthana-text-to-motion-3)
    │         --param target_character_id=<character id>
    ▼
 motion on the rigged character (.glb or .fbx)   ← done, two generations
@@ -46,7 +46,7 @@ step is quoted). Before each checkpoint, look yourself: `unity ai preview
 "<file>" --png --views skeleton` for a rig (the joints inside the mesh at the
 knees, elbows and hips), `--views poses,path,feet` for a motion (the move asked
 for, a walk going straight, every leg moving, nothing under the floor), and read
-`details.motion` by SKILL.md's table. Lead the checkpoint with what you saw. Every `generate` runs as SKILL.md's Running `generate`
+`details.motion` by the table in `show-result.md`. Lead the checkpoint with what you saw. Every `generate` runs as SKILL.md's Running `generate`
 says: `--format ndjson`, stdout and stderr in logs where that section puts
 them (next to `--out`, or under `Logs/unity-ai/` when `--out` is under a
 project's `Assets/`), never piped through a filter, and its own exit code
@@ -77,7 +77,7 @@ explain the constraint before spending anything: the motion is retargeted onto
 the Uthana character, and the Tripo rig is a separate asset.
 
 **The concept's pose matters little for a biped.** A T-pose or an A-pose,
-front view (SKILL.md, "Text to 3D goes through one image") keeps the arms
+front view (`models.md`, "Text to 3D goes through one image") keeps the arms
 off the body; in the 2026-10-26 run a T-pose, an A-pose and a relaxed
 adventurer all rigged cleanly with Uthana, Tripo Rigging 1.0 and Meshy, and
 walked alike. A chibi rigged and moved too; its head is half the mesh.
@@ -132,8 +132,8 @@ rigged, leave `enable_pbr` off. Two remedies for dense geometry, by when the
 mesh exists:
 
 - **Not generated yet:** cap the face count at generation.
-  `model3d-tripo-p2` (the recommended model, see SKILL.md's "Text to 3D goes
-  through one image") has `texture_quality` but no `geometry_quality`; its
+  `model3d-tripo-p2` (the recommended model, see "Text to 3D goes
+  through one image" in `models.md`) has `texture_quality` but no `geometry_quality`; its
   density is set with `--param face_limit=<48-50000>`, and 10000 applies
   when it is unset. `model3d-tripo3-1` takes `face_limit` too and also applies
   10000 when it is unset, while a mesh generated with a high limit can still be
@@ -144,7 +144,7 @@ mesh exists:
   <model> --in-param reference_model --param face_limit=<1000-20000>`)
   rebuilds the topology at a game-ready face count and bakes the textures
   onto it (`bake` is on by default), which takes such a mesh under the cap
-  with room to spare and costs a fraction of the rig. It is a normal step of
+  with room to spare (quote it: it costs more than the Uthana rig). It is a normal step of
   this sequence whenever the measured size says so, so the chain for a
   generated character is:
 
@@ -169,7 +169,7 @@ Which id it is depends on the model that produced it:
 | Produced by | `partnerResultId` is | Feed it to |
 |---|---|---|
 | `uthana-character-rig` | a character id | `target_character_id` |
-| `uthana-video-to-motion`, `uthana-text-to-motion-3`, `uthana-retarget` | a motion id | `motion_id` |
+| `uthana-video-to-motion-3`, `uthana-text-to-motion-3`, `uthana-retarget` | a motion id | `motion_id` |
 
 Take the ids from the events or the sidecars; never ask the user to hunt for
 them, and never guess one. The ids are for the commands, not for the user: in
@@ -222,15 +222,16 @@ generation, with consent) or ask the user whether they kept the id.
 
 ## 3. The motion step
 
-`uthana-video-to-motion` takes the video as a nested object, so the upload flag
+`uthana-video-to-motion-3` takes the video as a nested object, so the upload flag
 needs the dotted key: `--in <clip.mp4> --in-param video_reference.asset_id`.
 Video requirements (from the model's schema and help text): 2 to 60 seconds,
 24 to 120 fps, 300 to 4096 px, one person, full body visible, stable camera,
 plain background, both feet on the ground at the start. A generated video
 should be checked against these before it is uploaded; a clip that breaks them
-produces a poor motion and still costs credits. The quote is a flat 122 (worst
-case 366) whatever the clip's length, but the charge follows it: about 6
-credits a second (31 for 5 s, 360 for 60 s). For a clip over 20 s, say before
+produces a poor motion and still costs credits. The quote is a flat 147 (worst
+case 440) whatever the clip's length, but the charge follows it: about 6
+credits a second as charged on 2026-11-13 (31 for 5 s), up to 7.2 at the
+provider's announced rate (432 for 60 s). For a clip over 20 s, say before
 consent that the charge will be above the quote.
 
 Where the motion comes from (text, the user's clip, or acting it out) and
@@ -274,7 +275,7 @@ rig saved beside it (the glTF or GLB whose `partnerResultId` is the motion's
 clip to the rig's joints by name. A game that loads GLBs at runtime (glTFast) needs
 legacy clips there, since a player cannot build Mecanim clips.
 `model3d-tripo-rigging-v1` presets behave the same on one input model; a
-`model3d-tripo-rigging-v2-5` or `model3d-meshy-rigging` run rigs the model
+`model3d-rodin-hyper3d-rigging` or `model3d-meshy-rigging` run rigs the model
 again each time, with a different skeleton, so motions from separate runs do
 not share a rig. A saved motion's clip is named after its file
 (`knight-walk`), since Uthana leaves it unnamed.
@@ -362,7 +363,7 @@ gone:
   against `texture_quality`), so when a file is over the cap and it is not a
   dense generated mesh, look at what fills it before choosing the fix.
 
-1. Character model: an existing file, or image to 3D exactly as SKILL.md's
+1. Character model: an existing file, or image to 3D exactly as `models.md`'s
    "Text to 3D goes through one image" says (one approved concept image,
    `model3d-tripo-p2`, no multiview). This plan ends in a rig, so the
    concept image is drawn without accessories, as that subsection says:
@@ -376,7 +377,7 @@ gone:
    a Uthana character id).
 4. Motion on that character, from the user's answer to where it comes from
    (`motion-source.md`): `uthana-text-to-motion-3` from text (recommended),
-   `uthana-video-to-motion` from their clip, or from a generated take
+   `uthana-video-to-motion-3` from their clip, or from a generated take
    (Act it out, `generated-video-to-motion.md`), each with
    `--param target_character_id=<rig partnerResultId>`. This is the last paid
    step of the normal plan, and it still gets the checkpoint (SKILL.md's
