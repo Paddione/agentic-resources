@@ -5,6 +5,10 @@ description: Use to discover MCP servers and agent plugins on-demand without ins
 
 # agentic-resource-lookup — On-Demand MCP/Agent Discovery
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Findet externe MCP-Server und Agent-Plugins **bei Bedarf**, ohne sie zu installieren und ohne
 ihre Beschreibungen dauerhaft im Kontext zu tragen.
 

@@ -9,6 +9,10 @@ agent: bp-build
 
 # infra-ops — Unified Infrastructure Runbook
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Sieben frühere Einzel-Skills sind hier konsolidiert. Nur bei explizitem Bedarf aufrufen — kein
 Auto-Trigger.
 

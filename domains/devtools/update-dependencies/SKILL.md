@@ -7,6 +7,10 @@ disable-model-invocation: true
 
 # ARCHIVIERT → Multi-Repo Dependency Routine
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Dieser Skill wird **nicht mehr auto-getriggert**, sondern läuft planmäßig als Cloud-Routine bzw. wird manuell mit `/update-dependencies` ausgeführt.
 
 > **Kollisionsschutz:** Der Host führt täglich um `03:00 CET` den systemd-Timer `nightly-update.timer` aus (`Bachelorprojekt/scripts/nightly-update.sh`), der Systempakete, Tooling und globale Skills aktualisiert (Sperre: `/tmp/wsl-nightly-update.lock`). Vor manuellen Updates prüfen, ob kein nächtlicher Lauf aktiv ist.

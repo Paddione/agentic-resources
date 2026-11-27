@@ -9,6 +9,10 @@ allowed-tools:
 
 # Unity Package Management (Pipeline commands first, C# script as the fallback)
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Add, remove, upgrade, and discover UPM (Unity Package Manager) packages with the `package`
 commands of the project's Pipeline package, run through `unity command`. Only when no Editor can
 answer those commands, fall back to `UnityEditor.PackageManager.Client` driven headless from a

@@ -5,6 +5,10 @@ description: Use whenever the user asks to generate, make or create a sound, sou
 
 # unity-ai — Unity AI Generators in the Unity CLI
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 `unity ai <command>` is dispatched by the Unity CLI to a standalone binary named
 `unity-ai` found on PATH (kubectl-style plugin dispatch). The binary also runs
 standalone as `unity-ai <command>`. It is an early preview: the command

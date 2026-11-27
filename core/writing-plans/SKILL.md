@@ -4,6 +4,10 @@ description: Write concrete implementation plans with exact interfaces, files, v
 ---
 # Writing executable plans
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Curated from obra/superpowers writing-plans. Repository instructions and the
 user's chosen execution method take precedence. This skill writes plan content;
 it does not replace branch, review or release rules.

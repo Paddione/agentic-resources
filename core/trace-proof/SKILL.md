@@ -5,6 +5,10 @@ description: Verifies AI tracing end to end and records or analyzes local teleme
 
 # Trace Proof
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Deliver evidence of where telemetry goes and what can actually be read back. Support the existing backend; provide local SQLite telemetry when remote access is unavailable or a backend-independent recorder is requested. This skill is an agent workflow plus a local recorder, focused on recording telemetry and verifying ingestion.
 
 ## Installed WSL harness hooks

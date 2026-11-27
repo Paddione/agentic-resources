@@ -5,6 +5,10 @@ description: Dateibasierter Ziel-Polyfill für Harness ohne natives Goal-Trackin
 
 # Goal
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Ein Ziel pro Ordner als Datei-Polyfill pflegen. Auf Muse mit nativem Goal das native Goal bevorzugen; der Datei-Spiegel entsteht nur auf Wunsch. Auf allen anderen Harnessen diesen Datei-Vertrag nutzen.
 
 ## Ablage

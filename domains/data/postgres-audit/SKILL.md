@@ -5,6 +5,10 @@ description: "Evaluate existing PostgreSQL databases or clusters for schema inte
 
 # PostgreSQL audit
 
+## Repo-Graph zuerst (nur bei Code-Suche)
+
+Suchst oder navigierst du Repo-Code, beginne am zentralen MCP-Hub `fleet-workspace`: `search_graph` → `trace_path` → `get_code_snippet`; Übersicht via `get_architecture`/`query_graph`/`search_code`. Nicht indiziertes Projekt zuerst mit `index_repository` indizieren. Belegpfade mit `check_index_coverage` prüfen und Lücken benennen. `grep`/`rg` nur für nicht-indizierte Nicht-Code-Dateien oder als belegten Fallback. Details: SSOT-Skill `codebase-memory`.
+
 Establish the actual target: cluster, namespace, instance, database, schemas, server
 version, role, replica state and statistics window. Tool descriptions and topology
 notes can be stale. Enumerate all databases when cluster scope is requested;
