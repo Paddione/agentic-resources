@@ -8,7 +8,7 @@ description: Analysiert und entwirft Verhaltenstests, Teststrategie und Testumge
 Expert-level, language-agnostic rules for producing and auditing production test
 suites. Per-language runner/tooling details live in the installed specialist
 skills (e.g. `python-testing-patterns` / `sota-python`, `vitest` /
-`vitest-testing`, `sota-golang`, `sota-rust`, `sota-javascript-typescript`,
+`vitest-testing`, `unity-testing`, `sota-golang`, `sota-rust`, `sota-javascript-typescript`,
 `playwright-best-practices`) — this skill defines the strategy, design
 discipline, and quality bar those tools execute against; languages without a
 dedicated skill fall back to their toolchain docs. Every rule states the *why*;

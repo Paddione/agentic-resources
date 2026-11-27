@@ -319,3 +319,13 @@ Harness-Setup je Client (Codex, Gemini CLI): `docs/runbooks/context7-harnesses.m
   - Sämtliche mutierenden Tools (`keychain_create_*`, `keychain_delete_*`, `keychain_edit_*`, `keychain_send_*`, `keychain_update_*`, etc.) unterliegen striktem ask-Gating in `.claude/settings.json` (`permissions.ask`) und `.opencode/opencode.jsonc` (`permission`). Schreiben nur nach ausdrücklicher Rückfrage.
 - **Bitwarden CLI-Kompatibilität:** Windows und WSL benötigen `bw <= 2026.6.x`, da neuere Versionen der Bitwarden CLI Vaultwarden 1.36.0 nicht entschlüsseln können. Der Launcher prüft PATH, `~/.local/bin/bw` und winget automatisch [T900404].
 - **Wann bevorzugen:** Persönliche Tresor-Credentials lesen; Schreiben nur nach Rückfrage.
+
+## `unity-sandbox` — Official Unity MCP Relay
+
+- **Transport & Ziel:** stdio über `/home/patrick/.unity/relay/relay_linux --mcp --project-path /home/patrick/unity-sandbox/sandbox` (in `runtimes/mcp-servers.json` für alle sechs Harnesses registriert). Verbindet mit dem dauerhaft laufenden Headless-Editor (`unity-sandbox-editor.service`, Unity `6000.0.85f2`) des **Hauptcheckouts**.
+- **Tools (7):** `Unity_GetConsoleLogs`, `Unity_RunCommand`, `Unity_Camera_Capture`, `Unity_SceneView_Capture2DScene`, `Unity_SceneView_CaptureMultiAngleSceneView`, `Unity_AssetGeneration_GetModels`, `Unity_AssetGeneration_GenerateAsset`.
+- **Wann bevorzugen vs. Fallback (`unity-cli`):**
+  - Für C#-Diagnosen, Recompiles oder Szenen-/Test-Operationen in einem **Worktree** **nicht** den globalen MCP-Server nutzen (er zielt fest auf den Hauptcheckout!), sondern die Unity-CLI mit Worktree-Pfad (`unity --json recompile "$PWD/sandbox"`, `unity command ... --project-path "$PWD/sandbox"`) bzw. die Batchmode-Wrapper (`scripts/run-unity-tests.sh`, `scripts/run-unity-build.sh`).
+  - Für schnelle Editor-Konsole-Abfragen, Captures oder kleine C#-Kommandos am Hauptcheckout-Editor MCP nutzen; bei `Unity_RunCommand` gilt der Vertrag `internal class CommandScript : IRunCommand` (exakter Klassenname + `internal` zwingend).
+  - Wenn Shell-Zugriff vorhanden ist und Pipeline-Kommandos außerhalb der 7 MCP-Tools benötigt werden, `unity command` über den `unity-cli`-Skill bevorzugen.
+- **Stale-Socket-Recovery:** Wenn `tools/list` nach einem Editor-Neustart hängt: `bash scripts/unity-mcp-cleanup.sh`, danach `systemctl --user stop unity-sandbox-editor.service`, `systemctl --user reset-failed unity-sandbox-editor.service`, `systemctl --user start unity-sandbox-editor.service` und mit `unity status --until-ready --project-path ~/unity-sandbox/sandbox --format json` verifizieren (Details im Consumer-Repo unter `docs/mcp.md`).

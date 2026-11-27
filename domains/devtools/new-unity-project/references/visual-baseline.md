@@ -71,7 +71,7 @@ asked for Built-in.
    `currentRenderPipeline`, not `defaultRenderPipeline`: a quality tier can carry its own pipeline
    asset, and item 3 above just set the tier.
 6. **Pixel art only.** Point filter mode on sprites and a Pixel Perfect Camera — see
-   `2d-pixel-perfect`. If missing, do both yourself and note the skill-setup install route in the
+   `configure-2d-pixel-perfect`. If missing, do both yourself and note the skill-setup install route in the
    report.
 
 Save the scene, then confirm both of these — **not with `unity logs`**, which reads the CLI's own
