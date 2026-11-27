@@ -360,11 +360,13 @@
   "harnesses": {
     "opencode": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "codex": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "claude": [
       "fleet-workspace",
@@ -381,7 +383,8 @@
     ],
     "muse": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ]
   },
   "hub_backend_allowlists": {
