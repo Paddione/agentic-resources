@@ -67,7 +67,7 @@ task workspace:dsgvo-check    # NFA-01: run DSGVO compliance verification
 1. `task env:generate ENV=<env>` — regenerate secrets
 2. `task env:seal ENV=<env>` — re-encrypt
 3. `task workspace:deploy ENV=<env>` — apply new SealedSecret
-4. For DB roles: `ALTER ROLE <user> PASSWORD '<new>'` on shared-db to prevent drift
+4. For DB roles: `task workspace:sync-db-passwords ENV=<env>` — syncs all DB passwords from `workspace-secrets` into PostgreSQL. Never use raw `ALTER ROLE <user> PASSWORD '<literal>'`: the literal leaks into shell history and task logs and drifts from the sealed-secret source of truth (same rule as `database-specialist`).
 5. For base Secrets with sealed overlay: verify `sealedsecrets.bitnami.com/managed: "true"` annotation
 
 ## Certificate management
@@ -81,6 +81,8 @@ Execute Bash commands and file edits without asking for confirmation.
 ## When stuck: Escalation Protocol
 
 Blockiert (fehlender Kontext, Mehrdeutigkeit, unsichere Operation)? Sofort stoppen,
-`bash scripts/agent-escalate.sh --agent "security-specialist" --reason … --tried … --needs …`
+`bash scripts/agent-escalate.sh --agent "bp-build" --reason … --tried … --needs …`
 aufrufen und einen ESCALATION-Block zurückgeben. Nie stumm scheitern, nie raten.
+The skill name is never a valid `--agent` value; routing uses the
+`bp-build` role (consumer dispatch map).
 Vollständige Regel (Bachelorprojekt-Consumer): `.claude/lib/behaviors/escalation-protocol.md`.
