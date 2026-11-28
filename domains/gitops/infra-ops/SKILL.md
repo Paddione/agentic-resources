@@ -39,7 +39,7 @@ liegen in zwei Referenzdateien und werden erst gelesen, wenn die Sektion tatsäc
 
 ## §1 — Cluster Deployment
 
-Neues Environment aufsetzen, Fresh-Cluster-Bringup, Gap-Analyse, Cross-Brand-Fleet-Operationen.
+Neues Environment aufsetzen, Fresh-Cluster-Bringup, Gap-Analyse, Cross-Brand-Operationen.
 
 ### ⚠️ Mandatory Ordering for Fresh Clusters
 
@@ -99,7 +99,7 @@ OIDC-Clients reconcilen — Redirect-URIs, Client-Secrets, SSO-Login-Fehler.
 
 > **Nie** Clients direkt im Pocket-ID-Admin-UI anlegen oder ändern — der Seed-Job läuft bei
 > **jedem** `task workspace:deploy` und überschreibt UI-Änderungen. Änderungen gehören in
-> `fleet/pocket-id-client-seed.yaml`.
+> `k3d/pocket-id-client-seed.yaml`.
 
 Der Client-State liegt ausschließlich in der DB (`pocket_id.oidc_clients`), nicht in Git.
 State-Tabelle, Phasen und Troubleshooting:
@@ -107,7 +107,9 @@ State-Tabelle, Phasen und Troubleshooting:
 
 ## §5 — LLM Ops
 
-LLM-Pipeline über GPU-Host (wg-fleet, 10.10.0.3) und den Dev-Namespace (workspace-dev) auf Fleet.
+LLM-Pipeline über GPU-Host und die Live-Namespaces; Kontext je ENV via
+`env-resolve.sh` — `workspace-dev` existiert nicht mehr (devmesh nutzt die
+lokalen bge-Gateways).
 
 > **Kein in-cluster LiteLLM-Router** (seit PR #895). Apps rufen die Gateway-Services direkt:
 > `llm-gateway-embed` → TEI bge-m3 (`:8081`); `llm-gateway-lmstudio` → LM Studio (`:1234`).
@@ -136,10 +138,12 @@ D Claude-Code-Token, E einzelner Service), die Cross-Brand-Checkliste und die Ve
 
 Schema-Migrationen, Backup/Restore-Audits, Permissions auf beiden Brands.
 
-### ⚠️ Zwei unabhängige shared-db Instanzen
+### ⚠️ Unabhängige shared-db Instanzen — nur live ENVs
 
-`workspace` (mentolder) und `workspace-korczewski` (korczewski, eingefroren seit 2026-07-23, T002479) sind getrennte Instanzen —
-Migrationen und Backup-Audits **immer auf beiden** ausführen. Eine einseitig angewandte Migration
+`workspace` und `workspace-korczewski` (korczewski, eingefroren seit 2026-07-23, T002479) sind getrennte Instanzen.
+Migrationen und Backup-Audits auf dem **live ENV** ausführen; `korczewski` ist
+ausgenommen, solange der Freeze gilt (T002479) — erst nach dem Thaw wieder
+beidseitig. Eine einseitig angewandte Migration
 fällt erst auf, wenn der andere Brand bricht.
 
 > **Filen 2FA-Invariante:** 2FA muss auf **beiden** Filen-Accounts deaktiviert bleiben.
