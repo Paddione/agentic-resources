@@ -128,7 +128,7 @@
    "source": "external",
    "upstream": {
     "source": "https://github.com/vercel-labs/skills",
-    "revision": "57217cf86ba38148a57af9e90d14a4c049558330",
+    "revision": "e7fd0e9e52f029fe87729d8185cb8caf7049f678",
     "path": "skills/find-skills",
     "mode": "vendored",
     "vendor_id": "find-skills"
