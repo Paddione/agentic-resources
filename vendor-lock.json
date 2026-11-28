@@ -25,7 +25,7 @@
       "path": "skills/find-skills",
       "dest": "domains/devtools/find-skills",
       "track": "branch",
-      "ref": "57217cf86ba38148a57af9e90d14a4c049558330",
+      "ref": "e7fd0e9e52f029fe87729d8185cb8caf7049f678",
       "version": null
     },
     "frontend-design": {
@@ -226,7 +226,7 @@
       "path": "skills/sota-testing",
       "dest": "domains/testing/sota-testing",
       "track": "branch",
-      "ref": "ad494520cad5ffbf190d8d50b0da1dd5732558a8",
+      "ref": "2c88111b8643e867667593d3eb04bad7f950371a",
       "version": null
     },
     "train-sentence-transformers": {
@@ -282,7 +282,7 @@
       "path": "skills/vitest",
       "dest": "domains/testing/vitest",
       "track": "branch",
-      "ref": "4a6bb39e7b45e26402eb215393c51ccf5df1ca4c",
+      "ref": "0ecc25a6dcc805074133f7315fb6965450c70990",
       "version": null
     },
     "vitest-testing": {
@@ -290,7 +290,7 @@
       "path": "skills/vitest-testing",
       "dest": "domains/testing/vitest-testing",
       "track": "branch",
-      "ref": "b7595b3f93c7569cfc312edd7ad10f7801c676f6",
+      "ref": "b59906a79a23b0c284e7ece761c0d54fd6ae4e6d",
       "version": null
     }
   }
