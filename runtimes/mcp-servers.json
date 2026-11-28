@@ -368,45 +368,22 @@
   },
   "harnesses": {
     "opencode": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "blender",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ],
     "codex": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "blender",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ],
     "claude": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "blender",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ],
     "gemini": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "blender",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ],
     "qwen": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ],
     "muse": [
-      "fleet-workspace",
-      "unity-sandbox",
-      "blender",
-      "browse",
-      "board-mcp"
+      "fleet-workspace"
     ]
   },
   "hub_backend_allowlists": {
@@ -427,7 +404,10 @@
       "voice-mcp",
       "mcp-security",
       "mcp-audit",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ],
     "codex": [
       "codebase-memory-mcp",
@@ -446,7 +426,10 @@
       "voice-mcp",
       "mcp-security",
       "mcp-audit",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ],
     "claude": [
       "codebase-memory-mcp",
@@ -464,7 +447,10 @@
       "voice-mcp",
       "mcp-security",
       "mcp-audit",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ],
     "gemini": [
       "codebase-memory-mcp",
@@ -483,7 +469,10 @@
       "voice-mcp",
       "mcp-security",
       "mcp-audit",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ],
     "qwen": [
       "codebase-memory-mcp",
@@ -502,7 +491,10 @@
       "voice-mcp",
       "mcp-security",
       "mcp-audit",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ],
     "muse": [
       "codebase-memory-mcp",
@@ -519,7 +511,10 @@
       "python-sandbox",
       "mcp-kubernetes",
       "voice-mcp",
-      "board-mcp"
+      "board-mcp",
+      "unity-sandbox",
+      "blender",
+      "browse"
     ]
   },
   "upstreams": {
