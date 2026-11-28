@@ -4,6 +4,8 @@ description: Build, refresh, export, embed, validate, and navigate repository co
 compatibility: Harness-independent. Use tools exposed by the central MCP hub; Python 3 for the bundled portable-artifact validator. Codebase Memory CLI is an explicit local diagnostic fallback, not a new MCP registration.
 ---
 
+<!-- graph-first: exempt (Graph-SSOT-Skill) -->
+
 # Repository code graphs
 
 Make navigation reproducible and source-grounded. A useful graph resolves the right symbol, explains its relationships, exposes gaps, and opens the exact source at the indexed revision. More nodes or attractive layouts alone do not establish quality.
