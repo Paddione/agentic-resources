@@ -10,14 +10,17 @@ bei einem **frischen Cluster-Setup** oder **Node-Replacement** ausgeführt — i
 - WireGuard-Mesh-Keys in `environments/.secrets/<env>.yaml` (Schema-Key pro Node)
 - SSH-Public-Key in `~/.ssh/id_ed25519.pub`
 
-## Node-Layout (Fleet-Cluster)
+## Node-Layout (Hetzner-Nodes, Kontext je ENV)
 
 - 3 Control-Plane: `pk-hetzner-4/6/8`
 - 2 Worker: `gekko-hetzner-3/4` (`gekko-hetzner-2` ist derzeit **kein** Mitglied)
-- Maßgeblich ist der lebende Cluster, nicht diese Liste: `kubectl --context fleet get nodes`
+- Maßgeblich ist der lebende Cluster, nicht diese Liste: erst
+  `source scripts/env-resolve.sh <env>`, dann
+  `kubectl --context "$ENV_CONTEXT" get nodes`
 - Mentolder brand: namespace `workspace`, domain `mentolder.de`
 - Korczewski brand: namespace `workspace-korczewski`, domain `korczewski.de`
-- Alte Kontexte `mentolder`/`korczewski` sind DEAD — `--context fleet` für alles.
+- Die kubectl-Kontexte `mentolder`/`korczewski` sind DEAD, der `fleet`-Kontext wurde
+  am 2026-10-22 abgeschaltet — Kontext immer je ENV via `env-resolve.sh` auflösen.
 
 ## Control-Plane INIT (erster CP)
 
@@ -39,7 +42,7 @@ hcloud server create \
   --image ubuntu-24.04 \
   --ssh-key <KEY_NAME> \
   --user-data-from-file /tmp/ci-pk4.yaml
-kubectl --context fleet get nodes -w
+kubectl --context "$ENV_CONTEXT" get nodes -w  # nach source scripts/env-resolve.sh <env>
 ```
 
 ## Worker (JOIN)
@@ -63,7 +66,7 @@ hcloud server create \
   --image ubuntu-24.04 \
   --ssh-key <KEY_NAME> \
   --user-data-from-file /tmp/ci-pk6.yaml
-kubectl --context fleet get nodes -w
+kubectl --context "$ENV_CONTEXT" get nodes -w  # nach source scripts/env-resolve.sh <env>
 ```
 
 > Node data (IPs, WG IPs, schema keys) ist Single Source of Truth in `wireguard/wg-mesh-nodes.yaml`.

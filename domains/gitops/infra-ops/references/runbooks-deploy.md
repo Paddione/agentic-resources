@@ -74,24 +74,23 @@ kubectl --context <ctx> -n <WORKSPACE_NAMESPACE> get deploy
 task workspace:check-connectivity ENV=<env>
 ```
 
-### Phase 5 — Cross-Brand Fleet Operations
+### Phase 5 — Cross-Brand Operations
 
 ```bash
-task feature:deploy        # workspace:deploy + post-setup BOTH brands
-task feature:website       # Rebuild + rollout BOTH brands
+task feature:deploy        # workspace:deploy + post-setup (live ENVs)
+task feature:website       # Rebuild + rollout (live ENVs)
 task workspace:verify:all-prods
 task clusters:status
 
-# Per-brand deploy
-task workspace:deploy ENV=mentolder
-task workspace:deploy ENV=korczewski
+# Per-ENV deploy (korczewski ausgenommen solange frozen, T002479)
+task workspace:deploy ENV=<env>
 ```
 
 ### Troubleshooting
 
 | Symptom | Fix |
 |---------|-----|
-| Merged PR nicht live | Prod ist **pull-based via Flux**. Erst `kubectl --context fleet get kustomizations -n flux-system` prüfen (suspendierte zählen nicht als gesund). `task workspace:deploy ENV=<env>` nur als Break-Glass. |
+| Merged PR nicht live | Prod ist **pull-based via Flux**. Erst Kontext je ENV auflösen (`source scripts/env-resolve.sh <env>`), dann `kubectl --context "$ENV_CONTEXT" get kustomizations -n flux-system` prüfen (suspendierte zählen nicht als gesund). `task workspace:deploy ENV=<env>` nur als Break-Glass. |
 | SealedSecret: adoption refused | `kubectl delete secret <name> -n <ns>` |
 | Longhorn PVC Pending | `kubectl get storageclass longhorn`; iscsid auf allen Nodes? |
 | `office.` 404 | `task workspace:office:deploy ENV=<env>` |
