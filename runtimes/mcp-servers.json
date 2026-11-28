@@ -355,6 +355,15 @@
           "MCP_DISABLE_TELEMETRY": "true"
         }
       }
+    },
+    "browse": {
+      "doc": "Browse MCP (platform rollout 2026-11-28): drives the user's real Chrome via the browse extension (tabs, snapshot/click/fill, handoff for logins). Local stdio server at /home/patrick/.local/bin/browse; personal browser, takeover-capable — agents use it only where curated.",
+      "stdio": {
+        "command": [
+          "/home/patrick/.local/bin/browse",
+          "mcp"
+        ]
+      }
     }
   },
   "harnesses": {
@@ -371,16 +380,19 @@
     "claude": [
       "fleet-workspace",
       "unity-sandbox",
-      "blender"
+      "blender",
+      "browse"
     ],
     "gemini": [
       "fleet-workspace",
       "unity-sandbox",
-      "blender"
+      "blender",
+      "browse"
     ],
     "qwen": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "browse"
     ],
     "muse": [
       "fleet-workspace",
