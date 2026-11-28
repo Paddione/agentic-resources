@@ -375,7 +375,8 @@
     ],
     "gemini": [
       "fleet-workspace",
-      "unity-sandbox"
+      "unity-sandbox",
+      "blender"
     ],
     "qwen": [
       "fleet-workspace",
