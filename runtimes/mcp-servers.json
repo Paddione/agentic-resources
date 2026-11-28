@@ -370,34 +370,43 @@
     "opencode": [
       "fleet-workspace",
       "unity-sandbox",
-      "blender"
+      "blender",
+      "browse",
+      "board-mcp"
     ],
     "codex": [
       "fleet-workspace",
       "unity-sandbox",
-      "blender"
+      "blender",
+      "browse",
+      "board-mcp"
     ],
     "claude": [
       "fleet-workspace",
       "unity-sandbox",
       "blender",
-      "browse"
+      "browse",
+      "board-mcp"
     ],
     "gemini": [
       "fleet-workspace",
       "unity-sandbox",
       "blender",
-      "browse"
+      "browse",
+      "board-mcp"
     ],
     "qwen": [
       "fleet-workspace",
       "unity-sandbox",
-      "browse"
+      "browse",
+      "board-mcp"
     ],
     "muse": [
       "fleet-workspace",
       "unity-sandbox",
-      "blender"
+      "blender",
+      "browse",
+      "board-mcp"
     ]
   },
   "hub_backend_allowlists": {
