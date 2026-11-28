@@ -4,6 +4,8 @@ description: Derive prioritized, actionable code improvements from repository co
 compatibility: Harness-independent. Existing central graph hub, Git and project-configured analysis tools. Graph access is optional with explicit evidence limitations.
 ---
 
+<!-- graph-first: exempt (Graph-SSOT-Skill) -->
+
 # Actionable code analysis
 
 Turn evidence into a small set of changes worth making. Read [sources](references/sources.md) for provenance. Use the finding contract below rather than a quota or a generic best-practices checklist.

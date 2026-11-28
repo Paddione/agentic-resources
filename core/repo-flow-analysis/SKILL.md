@@ -3,6 +3,8 @@ name: repo-flow-analysis
 description: Analysiert Repository- und Agent-Workflows auf Zielabweichungen, unterbrochene Übergaben und Fehlerpfade. Verbindet Soll/Ist-Abgleich, Codegraph, Breadboarding, Laufzeitbelege, Verhaltenstests und Mermaid. Für zusammenhängende Flow-Analysen, nicht für einzelne Diagramme oder bekannte Bugfixes.
 ---
 
+<!-- graph-first: exempt (Graph-SSOT-Skill) -->
+
 # Repository-Flows analysieren
 
 Ein Ablauf für O1–O6. Bestehende Fachskills bleiben zuständig; keine zweite Graph-, Test- oder Telemetrie-Infrastruktur installieren. Analyse erlaubt keine Produktänderungen, Deployments oder veröffentlichten Issues. Explizit beauftragte Skill-Updates bleiben erlaubt.

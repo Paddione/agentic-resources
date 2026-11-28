@@ -41,4 +41,4 @@ Context budgeting:
 
 ## Graph-Context (Hub zuerst)
 
-Code-Discovery läuft über die Hub-Graph-Tools (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`, `search_code`) vor `grep`/`glob`; der im Task-Packet mitgelieferte `<graph-context>`/`<task-context>`-Block (Signaturen, `file:line`-Spans, Call-Chains) ist die primäre Quelle statt blinder Repo-weite-Suchschleifen.
+Code-Discovery läuft über die Hub-Graph-Tools (`search_graph`, `trace_path`, `get_code_snippet`, `query_graph`, `get_architecture`, `search_code`) vor `grep`/`glob`; der im Task-Packet mitgelieferte `<graph-context>`/`<task-context>`-Block (Signaturen, `file:line`-Spans, Call-Chains) ist die primäre Quelle statt blinder Repo-weite-Suchschleifen. Negative oder erschöpfende Graph-Konklusionen („existiert nicht", „keine Caller", „vollständig") brauchen einen `check_index_coverage`-Beleg; ohne Beleg ist die Aussage als ungeprüft zu markieren.
